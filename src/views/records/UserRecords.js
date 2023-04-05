@@ -145,7 +145,8 @@ function UserRecords() {
       activity: 'Last week',
     },
   ]
-  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'http://localhost:5000/api'
+  let apiUrl = 'https://binnox.herokuapp.com/api'
   async function getUserRecords() {
     // url: `${apiUrl}/auth/admin/login`,
     // axios POST request

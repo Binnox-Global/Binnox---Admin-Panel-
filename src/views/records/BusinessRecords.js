@@ -145,7 +145,8 @@ function BusinessRecords() {
     data: [],
   })
   const [cookies] = useCookies()
-  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'http://localhost:5000/api'
+  let apiUrl = 'https://binnox.herokuapp.com/api'
   async function getBusinessRecords() {
     // url: `${apiUrl}/auth/admin/login`,
     // axios POST request

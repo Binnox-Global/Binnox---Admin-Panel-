@@ -22,7 +22,8 @@ import { useCookies } from 'react-cookie'
 const Login = () => {
   const [cookies, setCookie] = useCookies()
   const navigate = useNavigate()
-  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'http://localhost:5000/api'
+  let apiUrl = 'https://binnox.herokuapp.com/api'
   async function loginUserFunction(e) {
     e.preventDefault()
     // return console.dir(e.target)

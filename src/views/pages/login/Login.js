@@ -18,12 +18,14 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useCookies } from 'react-cookie'
+import logoSm from '../../../assets/brand/binnox_logo_small.png'
+import { AdminContext } from 'src/context/adminContext'
 
 const Login = () => {
   const [cookies, setCookie] = useCookies()
   const navigate = useNavigate()
-  // let apiUrl = 'http://localhost:5000/api'
-  let apiUrl = 'https://binnox.herokuapp.com/api'
+  const [loading, setLoading] = React.useState(false)
+  const { apiUrl } = React.useContext(AdminContext)
   async function loginUserFunction(e) {
     e.preventDefault()
     // return console.dir(e.target)
@@ -39,7 +41,7 @@ const Login = () => {
     if (formElement[1].value === '' || formElement[0] === '') {
       return
     }
-
+    setLoading(true)
     // setLoading(true)
     const data = {
       email: formElement[0].value,
@@ -60,7 +62,7 @@ const Login = () => {
     axios(options)
       .then((response) => {
         console.log(response.data)
-        // setLoading(false)
+        setLoading(false)
         // setLoggedIn(true)
         const userToken = response.data.token
         const userProfile = response.data.profile
@@ -78,7 +80,7 @@ const Login = () => {
         toast.success('Welcome Back Admin')
       })
       .catch((error) => {
-        // setLoading(false)
+        setLoading(false)
         // console.log(error)
         if (error.response.status || error.response.status === 400) {
           return toast.error(error.response.data.message)
@@ -88,29 +90,18 @@ const Login = () => {
         }
         toast.error(error.message)
       })
-    // const rawResponse = await fetch(apiUrl, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
-    // const content = await rawResponse.json();
-
-    // console.log(content);
   }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <CCardGroup>
+            <CCardGroup className="">
               <CCard className="p-4">
                 <CCardBody>
                   <CForm onSubmit={(e) => loginUserFunction(e)}>
-                    <h1>Login</h1>
-                    <p className="text-medium-emphasis">Sign In to your account</p>
+                    <h1>Admin Login</h1>
+                    <p className="text-medium-emphasis">Admin Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
@@ -129,32 +120,27 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4" type="submit">
-                          Login
-                        </CButton>
-                      </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
+                        <CButton
+                          color="primary"
+                          className="px-4"
+                          loading={loading}
+                          type="submit"
+                          disabled={loading}
+                        >
+                          {loading ? 'Loading...' : 'Login'}
                         </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+              <CCard className="text-white bg-primary py-5  d-none d-md-block">
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
-                      </CButton>
-                    </Link>
+                    <img className="sidebar-brand-narrow" src={logoSm} width={80} />
+                    <h2>
+                      Binnox Admin <br /> Login
+                    </h2>
                   </div>
                 </CCardBody>
               </CCard>

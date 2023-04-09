@@ -155,6 +155,43 @@ account_type=${account_type}`,
         console.error(error)
       })
   }
+  async function updateOrderStatusFunction(_id, status) {
+    // return
+    // console.log(cookies?.BinnoxAdmin?.token)
+    axios
+      .put(
+        `${apiUrl}/admin/status?order_id=${_id}&
+status=${status}`,
+        {},
+        {
+          headers: {
+            Authorization: cookies?.BinnoxAdmin?.token,
+          },
+        },
+      )
+      .then((res) => {
+        console.log(res.data)
+        toast.success('Successfully')
+
+        setOrderList({
+          loading: false,
+          data: res.data.update,
+        })
+      })
+      .catch((error) => {
+        if (error.response.status || error.response.status === 400) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 401) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          return toast.error(error.response.data.message)
+        }
+        // toast.success('Successfully')
+        console.error(error)
+      })
+  }
 
   return (
     <AdminContext.Provider
@@ -165,6 +202,7 @@ account_type=${account_type}`,
         getOrderRecordsFunction,
         getAdminRecordsFunction,
         activeAccountFunction,
+        updateOrderStatusFunction,
         userList,
         businessList,
         orderList,

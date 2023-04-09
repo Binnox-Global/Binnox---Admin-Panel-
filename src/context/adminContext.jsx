@@ -8,7 +8,8 @@ import { toast } from 'react-toastify'
 export const AdminContext = createContext()
 
 function AdminProvider({ children }) {
-  const [cookies] = useCookies()
+  const [cookies, removeCookie] = useCookies()
+  // const navigate = useNavigate()
   let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
   const [userList, setUserList] = React.useState({
@@ -241,6 +242,20 @@ status=${status}`,
       })
   }
 
+  function logoutFunction() {
+    if (window.confirm('You will be logged out of your account !!!')) {
+      // localStorage.removeItem("telecomMerchant");
+
+      // setUserAccountInformation([]);
+      // setUserProfile([]);
+      // setLoggedIn(false);
+      removeCookie('BinnoxAdmin', { path: '/' })
+      // navigate('./')
+      // window.location('/')
+      window.location.href = '/'
+    }
+  }
+
   return (
     <AdminContext.Provider
       value={{
@@ -256,6 +271,7 @@ status=${status}`,
         orderList,
         adminList,
         verifyAccountFunction,
+        logoutFunction,
       }}
     >
       {children}

@@ -120,13 +120,7 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton
-                          color="primary"
-                          className="px-4"
-                          loading={loading}
-                          type="submit"
-                          disabled={loading}
-                        >
+                        <CButton color="primary" className="px-4" type="submit" disabled={loading}>
                           {loading ? 'Loading...' : 'Login'}
                         </CButton>
                       </CCol>

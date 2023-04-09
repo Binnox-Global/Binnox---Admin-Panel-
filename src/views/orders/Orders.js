@@ -26,7 +26,7 @@ import { cilPeople } from '@coreui/icons'
 import { AdminContext } from 'src/context/adminContext'
 
 function Orders() {
-  const { orderList } = React.useContext(AdminContext)
+  const { orderList, updateOrderStatusFunction } = React.useContext(AdminContext)
 
   return (
     <CRow>
@@ -73,6 +73,8 @@ function Orders() {
                   <CTableHeaderCell>Count</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Amount</CTableHeaderCell>
                   <CTableHeaderCell>Statues</CTableHeaderCell>
+                  <CTableHeaderCell>Rider</CTableHeaderCell>
+                  <CTableHeaderCell>User</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -121,14 +123,32 @@ function Orders() {
                             <div>{item?.statues}</div>
                           </CTableDataCell>
                           <CTableDataCell>
+                            {/* <div className="small text-medium-emphasis">Last login</div> */}
+                            <div>{item?.delivered ? 'Delivered' : 'Not delivered'}</div>
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {/* <div className="small text-medium-emphasis">Last login</div> */}
+                            <div>{item?.received ? 'Received' : 'Not received'}</div>
+                          </CTableDataCell>
+                          <CTableDataCell>
                             <CDropdown variant="btn-group">
                               <CDropdownToggle color="primary">Actions</CDropdownToggle>
                               <CDropdownMenu>
-                                <CDropdownItem>Action</CDropdownItem>
-                                {/* <CDropdownItem href="#">Another action</CDropdownItem>
-                                <CDropdownItem href="#">Something else here</CDropdownItem>
-                                <CDropdownDivider />
-                                <CDropdownItem href="#">Separated link</CDropdownItem> */}
+                                <CDropdownItem
+                                  onClick={() => updateOrderStatusFunction(item?._id, 'Pending')}
+                                >
+                                  Pending
+                                </CDropdownItem>
+                                <CDropdownItem
+                                  onClick={() => updateOrderStatusFunction(item?._id, 'Picked up')}
+                                >
+                                  Picked up
+                                </CDropdownItem>
+                                <CDropdownItem
+                                  onClick={() => updateOrderStatusFunction(item?._id, 'Delivered')}
+                                >
+                                  Delivered
+                                </CDropdownItem>
                               </CDropdownMenu>
                             </CDropdown>
                           </CTableDataCell>

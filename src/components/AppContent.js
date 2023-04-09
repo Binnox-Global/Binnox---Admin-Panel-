@@ -4,8 +4,25 @@ import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
+import { AdminContext } from 'src/context/adminContext'
 
 const AppContent = () => {
+  const {
+    getBusinessRecordsFunction,
+    getUserRecordsFunction,
+    getOrderRecordsFunction,
+    getAdminRecordsFunction,
+  } = React.useContext(AdminContext)
+  React.useEffect(() => {
+    getBusinessRecordsFunction()
+    getAdminRecordsFunction()
+  }, [])
+  React.useEffect(() => {
+    getUserRecordsFunction()
+  }, [])
+  React.useEffect(() => {
+    getOrderRecordsFunction()
+  }, [])
   return (
     <CContainer lg>
       <Suspense fallback={<CSpinner color="primary" />}>

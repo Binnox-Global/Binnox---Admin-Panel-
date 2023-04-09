@@ -11,26 +11,8 @@ import BusinessRecords from '../records/BusinessRecords'
 import UserRecords from '../records/UserRecords'
 
 const Dashboard = () => {
-  const {
-    getBusinessRecordsFunction,
-    getUserRecordsFunction,
-    getOrderRecordsFunction,
-    getAdminRecordsFunction,
-    userList,
-    adminList,
-    businessList,
-    orderList,
-  } = React.useContext(AdminContext)
-  React.useEffect(() => {
-    getBusinessRecordsFunction()
-    getAdminRecordsFunction()
-  }, [])
-  React.useEffect(() => {
-    getUserRecordsFunction()
-  }, [])
-  React.useEffect(() => {
-    getOrderRecordsFunction()
-  }, [])
+  const { userList, adminList, businessList, orderList } = React.useContext(AdminContext)
+
   return (
     <>
       <CContainer>

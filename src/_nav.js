@@ -61,19 +61,24 @@ const _nav = [
     ],
   },
   // Authentication
-  {
-    component: CNavTitle,
-    name: 'Authentication',
-  },
+  // {
+  //   component: CNavTitle,
+  //   name: 'Authentication',
+  // },
   {
     component: CNavGroup,
-    name: 'Forms',
+    name: 'Authentication',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Form Control',
-        to: '/forms/form-control',
+        name: 'Create Admin',
+        to: '/auth/create-admin',
+      },
+      {
+        component: CNavItem,
+        name: 'Admin List',
+        to: '/records/admins',
       },
     ],
   },

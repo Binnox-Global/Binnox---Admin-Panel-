@@ -53,7 +53,9 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 // new edit
 const UserRecords = React.lazy(() => import('./views/records/UserRecords'))
+const AdminRecords = React.lazy(() => import('./views/records/AdminRecords'))
 const BusinessRecords = React.lazy(() => import('./views/records/BusinessRecords'))
+const Register = React.lazy(() => import('./views/pages/register/Register'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -104,7 +106,9 @@ const routes = [
   // new edit
   { path: '/records/users', name: 'UserRecords', element: UserRecords },
   { path: '/records/businesses', name: 'UserRecords', element: BusinessRecords },
+  { path: '/records/admins', name: 'UserRecords', element: AdminRecords },
   { path: '/orders/new', name: 'UserRecords', element: Orders },
+  { path: '/auth/create-admin', name: 'UserRecords', element: Register },
 ]
 
 export default routes

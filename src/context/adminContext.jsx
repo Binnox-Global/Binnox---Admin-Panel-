@@ -155,6 +155,54 @@ account_type=${account_type}`,
         console.error(error)
       })
   }
+
+  async function verifyAccountFunction(account_type, account_id) {
+    axios
+      .put(
+        `${apiUrl}/admin/verify?account_id=${account_id}&
+account_type=${account_type}`,
+        {},
+        {
+          headers: {
+            Authorization: cookies?.BinnoxAdmin?.token,
+          },
+        },
+      )
+      .then((res) => {
+        // console.log(res.data)
+        toast.success('Successfully')
+        if (account_type === 'admin') {
+          return setAdminList({
+            loading: false,
+            data: res.data.update,
+          })
+        }
+        if (account_type === 'business') {
+          return setBusinessList({
+            loading: false,
+            data: res.data.update,
+          })
+        }
+
+        setUserList({
+          loading: false,
+          data: res.data.update,
+        })
+      })
+      .catch((error) => {
+        if (error.response.status || error.response.status === 400) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 401) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          return toast.error(error.response.data.message)
+        }
+        // toast.success('Successfully')
+        console.error(error)
+      })
+  }
   async function updateOrderStatusFunction(_id, status) {
     // return
     // console.log(cookies?.BinnoxAdmin?.token)
@@ -207,6 +255,7 @@ status=${status}`,
         businessList,
         orderList,
         adminList,
+        verifyAccountFunction,
       }}
     >
       {children}

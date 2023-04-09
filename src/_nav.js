@@ -8,7 +8,8 @@ import {
   cilDescription,
   cilDrop,
   cilNotes,
-  cilPencil,
+  cilSettings,
+  cilDrink,
   cilPuzzle,
   cilSpeedometer,
   cilStar,
@@ -51,7 +52,7 @@ const _nav = [
   {
     component: CNavGroup,
     name: 'Orders',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilDrink} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
@@ -68,7 +69,7 @@ const _nav = [
   {
     component: CNavGroup,
     name: 'Authentication',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,

@@ -9,9 +9,13 @@ export const AdminContext = createContext()
 
 function AdminProvider({ children }) {
   const [cookies] = useCookies()
-  // let apiUrl = 'http://localhost:5000/api'
-  let apiUrl = 'https://binnox.herokuapp.com/api'
+  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'https://binnox.herokuapp.com/api'
   const [userList, setUserList] = React.useState({
+    loading: true,
+    data: [],
+  })
+  const [adminList, setAdminList] = React.useState({
     loading: true,
     data: [],
   })
@@ -23,6 +27,25 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+
+  async function getAdminRecordsFunction() {
+    axios
+      .get(`${apiUrl}/admin/admin`, {
+        headers: {
+          Authorization: cookies?.BinnoxAdmin?.token,
+        },
+      })
+      .then((res) => {
+        // console.log(res.data)
+        setAdminList({
+          loading: false,
+          data: res.data.admins,
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 
   async function getUserRecordsFunction() {
     // url: `${apiUrl}/auth/admin/login`,
@@ -100,6 +123,12 @@ account_type=${account_type}`,
       .then((res) => {
         // console.log(res.data)
         toast.success('Successfully')
+        if (account_type === 'admin') {
+          return setAdminList({
+            loading: false,
+            data: res.data.update,
+          })
+        }
         if (account_type === 'business') {
           return setBusinessList({
             loading: false,
@@ -134,10 +163,12 @@ account_type=${account_type}`,
         getUserRecordsFunction,
         getBusinessRecordsFunction,
         getOrderRecordsFunction,
+        getAdminRecordsFunction,
         activeAccountFunction,
         userList,
         businessList,
         orderList,
+        adminList,
       }}
     >
       {children}

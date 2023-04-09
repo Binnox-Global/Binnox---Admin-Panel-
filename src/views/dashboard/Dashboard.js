@@ -15,12 +15,15 @@ const Dashboard = () => {
     getBusinessRecordsFunction,
     getUserRecordsFunction,
     getOrderRecordsFunction,
+    getAdminRecordsFunction,
     userList,
+    adminList,
     businessList,
     orderList,
   } = React.useContext(AdminContext)
   React.useEffect(() => {
     getBusinessRecordsFunction()
+    getAdminRecordsFunction()
   }, [])
   React.useEffect(() => {
     getUserRecordsFunction()
@@ -32,7 +35,23 @@ const Dashboard = () => {
     <>
       <CContainer>
         <CRow>
-          <CCol sm="4">
+          <CCol sm="3">
+            {' '}
+            <CWidgetStatsF
+              className="mb-3"
+              color="warning"
+              footer={
+                <Link to={'/records/admins'}>
+                  View more
+                  <CIcon icon={cilArrowRight} className="float-end" width={16} />
+                </Link>
+              }
+              icon={<CIcon icon={cilLibraryBuilding} height={24} />}
+              title=" Admin"
+              value={adminList?.loading ? 'Loading...' : adminList?.data?.length}
+            />
+          </CCol>
+          <CCol sm="3">
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -48,7 +67,7 @@ const Dashboard = () => {
               value={businessList?.loading ? 'Loading...' : businessList?.data?.length}
             />
           </CCol>
-          <CCol sm="4">
+          <CCol sm="3">
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -64,7 +83,7 @@ const Dashboard = () => {
               value={userList?.loading ? 'Loading...' : userList?.data?.length}
             />
           </CCol>
-          <CCol sm="4">
+          <CCol sm="3">
             {' '}
             <CWidgetStatsF
               className="mb-3"

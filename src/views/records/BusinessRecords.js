@@ -24,7 +24,8 @@ import { cilPeople } from '@coreui/icons'
 import { AdminContext } from 'src/context/adminContext'
 
 function BusinessRecords() {
-  const { businessList, activeAccountFunction } = React.useContext(AdminContext)
+  const { businessList, activeAccountFunction, verifyAccountFunction } =
+    React.useContext(AdminContext)
 
   return (
     <CRow>
@@ -68,10 +69,10 @@ function BusinessRecords() {
                   <CTableHeaderCell>Full Name</CTableHeaderCell>
                   <CTableHeaderCell>Email</CTableHeaderCell>
                   <CTableHeaderCell>Contact</CTableHeaderCell>
-                  <CTableHeaderCell>Verification Docs</CTableHeaderCell>
+                  {/* <CTableHeaderCell>Verification Docs</CTableHeaderCell> */}
                   <CTableHeaderCell>Location</CTableHeaderCell>
                   <CTableHeaderCell>Status</CTableHeaderCell>
-                  <CTableHeaderCell>Availability</CTableHeaderCell>
+                  <CTableHeaderCell>Verified</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -129,7 +130,7 @@ function BusinessRecords() {
 
                             {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
                           </CTableDataCell>
-                          <CTableDataCell>
+                          {/* <CTableDataCell>
                             <div>
                               <b> CAC Dcc:</b>{' '}
                               {item?.business_verification_document?.cac_registration_doc
@@ -148,7 +149,7 @@ function BusinessRecords() {
                                 ? 'submitted'
                                 : 'Not submitted'}
                             </div>
-                          </CTableDataCell>
+                          </CTableDataCell> */}
                           <CTableDataCell>
                             <div>
                               <b> Lat:</b>{' '}
@@ -168,7 +169,7 @@ function BusinessRecords() {
                             <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>
                           </CTableDataCell>
                           <CTableDataCell className="text-center">
-                            <div>{item?.business_online ? 'Online' : 'Offline'}</div>
+                            <div>{item?.business_verified ? 'Verified' : 'Not verified'}</div>
                           </CTableDataCell>
                           <CTableDataCell>
                             <CDropdown variant="btn-group">
@@ -192,9 +193,21 @@ function BusinessRecords() {
                                   </CDropdownItem>
                                 )}
                                 {item.business_verified && item.account_type === 'business' ? (
-                                  <CDropdownItem>DeVerify {item.account_type}</CDropdownItem>
+                                  <CDropdownItem
+                                    onClick={() =>
+                                      verifyAccountFunction(item.account_type, item._id)
+                                    }
+                                  >
+                                    DeVerify {item.account_type}
+                                  </CDropdownItem>
                                 ) : (
-                                  <CDropdownItem>Verify {item.account_type}</CDropdownItem>
+                                  <CDropdownItem
+                                    onClick={() =>
+                                      verifyAccountFunction(item.account_type, item._id)
+                                    }
+                                  >
+                                    Verify {item.account_type}
+                                  </CDropdownItem>
                                 )}
                               </CDropdownMenu>
                             </CDropdown>

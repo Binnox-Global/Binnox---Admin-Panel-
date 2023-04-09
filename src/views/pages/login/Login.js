@@ -61,7 +61,7 @@ const Login = () => {
 
     axios(options)
       .then((response) => {
-        console.log(response.data)
+        // console.log(response.data)
         setLoading(false)
         // setLoggedIn(true)
         const userToken = response.data.token

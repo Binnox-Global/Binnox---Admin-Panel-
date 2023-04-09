@@ -6,18 +6,18 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
 import store from './store'
-// import { AdminProvider } from './context/adminContext'
+import AdminProvider from './context/adminContext'
 import { CookiesProvider } from 'react-cookie'
 import 'react-toastify/dist/ReactToastify.css'
 
 createRoot(document.getElementById('root')).render(
-  // <AdminProvider>
-  <CookiesProvider>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </CookiesProvider>,
-  // </AdminProvider>,
+  <AdminProvider>
+    <CookiesProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </CookiesProvider>
+  </AdminProvider>,
 )
 
 // If you want to start measuring performance in your app, pass a function

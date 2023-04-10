@@ -67,9 +67,10 @@ function Orders() {
                   <CTableHeaderCell className="text-center">
                     <CIcon icon={cilPeople} />
                   </CTableHeaderCell>
-                  <CTableHeaderCell>User</CTableHeaderCell>
                   <CTableHeaderCell>Product</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Location</CTableHeaderCell>
+                  <CTableHeaderCell>User</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">BusinessLocation</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Customer Location</CTableHeaderCell>
                   <CTableHeaderCell>Count</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Amount</CTableHeaderCell>
                   <CTableHeaderCell>Statues</CTableHeaderCell>
@@ -108,7 +109,11 @@ function Orders() {
                           </CTableDataCell>
                           <CTableDataCell className="text-center">
                             {/* <CIcon size="xl" icon={item?.address} title={item?.country?.name} /> */}
-                            <div>{item?.address}</div>
+                            <div>https://www.google.com/maps/search/?api=1&query={item?.user?.business_location?.lat},{item?.user?.business_location?.long}</div>
+                          </CTableDataCell>
+                          <CTableDataCell className="text-center">
+                            {/* <CIcon size="xl" icon={item?.address} title={item?.country?.name} /> */}
+                            <div>https://www.google.com/maps/search/?api=1&query={item?.address}</div>
                           </CTableDataCell>
                           <CTableDataCell>
                             <div>{item?.item_count}</div>

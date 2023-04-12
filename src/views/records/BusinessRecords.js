@@ -22,6 +22,7 @@ import CIcon from '@coreui/icons-react'
 import { cilPeople } from '@coreui/icons'
 
 import { AdminContext } from 'src/context/adminContext'
+import { LocationDropdown } from '../orders/Orders'
 
 function BusinessRecords() {
   const { businessList, activeAccountFunction, verifyAccountFunction } =
@@ -151,18 +152,16 @@ function BusinessRecords() {
                             </div>
                           </CTableDataCell> */}
                           <CTableDataCell>
-                            <div>
-                              <b> Lat:</b>{' '}
-                              {item?.business_location?.lat
-                                ? item?.business_location?.lat
-                                : 'Not Set'}
-                            </div>
-                            <div>
-                              <b> Long:</b>{' '}
-                              {item?.business_location?.long
-                                ? item?.business_location?.long
-                                : 'Not Set'}
-                            </div>
+                            {item?.business_location?.lat &&
+                            item?.business_location?.long &&
+                            item?.business_location?.lat !== '' &&
+                            item?.business_location?.long !== '' ? (
+                              <LocationDropdown
+                                location={`https://www.google.com/maps/search/?api=1&query=${item?.business_location?.lat},${item?.business_location?.long}`}
+                              />
+                            ) : (
+                              'Location not Set'
+                            )}
                           </CTableDataCell>
 
                           <CTableDataCell className="text-center">

@@ -24,6 +24,8 @@ import CIcon from '@coreui/icons-react'
 import { cilPeople } from '@coreui/icons'
 
 import { AdminContext } from 'src/context/adminContext'
+import PropTypes from 'prop-types'
+import { toast } from 'react-toastify'
 
 function Orders() {
   const { orderList, updateOrderStatusFunction } = React.useContext(AdminContext)
@@ -61,7 +63,13 @@ function Orders() {
                 label="Radio 3"
               />
             </CButtonGroup> */}
-            <CTable align="middle" className="mb-0 border" hover responsive>
+            <CTable
+              align="middle"
+              className="mb-0 border"
+              hover
+              responsive
+              style={{ overflow: 'visible' }}
+            >
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell className="text-center">
@@ -108,12 +116,33 @@ function Orders() {
                             </div>
                           </CTableDataCell>
                           <CTableDataCell className="text-center">
-                            {/* <CIcon size="xl" icon={item?.address} title={item?.country?.name} /> */}
-                            <div>https://www.google.com/maps/search/?api=1&query={item?.user?.business_location?.lat},{item?.user?.business_location?.long}</div>
+                            {item?.business?.business_location?.lat &&
+                            item?.business?.business_location?.long &&
+                            item?.business?.business_location?.lat !== '' &&
+                            item?.business?.business_location?.long !== '' ? (
+                              <LocationDropdown
+                                location={`https://www.google.com/maps/search/?api=1&query=${item?.business?.business_location?.lat},${item?.business?.business_location?.long}`}
+                              />
+                            ) : (
+                              'Location not valid'
+                            )}
                           </CTableDataCell>
                           <CTableDataCell className="text-center">
                             {/* <CIcon size="xl" icon={item?.address} title={item?.country?.name} /> */}
-                            <div>https://www.google.com/maps/search/?api=1&query={item?.address}</div>
+                            {item?.address.split(',')[0] &&
+                            item?.address.split(',')[1] &&
+                            item?.address.split(',')[0] !== '' &&
+                            item?.address.split(',')[1] !== '' ? (
+                              <LocationDropdown
+                                location={`https://www.google.com/maps/search/?api=1&query=${
+                                  item?.address.split(',')[0]
+                                },${item?.address.split(',')[1]}`}
+                              />
+                            ) : (
+                              'Location not valid'
+                            )}
+                            {/* {console.log(item?.address.split(''))} */}
+                            <div></div>
                           </CTableDataCell>
                           <CTableDataCell>
                             <div>{item?.item_count}</div>
@@ -172,3 +201,31 @@ function Orders() {
 }
 
 export default Orders
+
+export function LocationDropdown({ location }) {
+  async function copyLocation(link) {
+    // return console.log(link)
+    try {
+      await navigator.clipboard.writeText(link)
+      toast.info('Link Copied')
+    } catch {
+      toast.error('Error copying link')
+    }
+  }
+  function openMapLocation(link) {
+    window.open(link)
+  }
+  return (
+    <CDropdown variant="btn-group">
+      <CDropdownToggle color="">Location</CDropdownToggle>
+      <CDropdownMenu>
+        <CDropdownItem onClick={() => openMapLocation(location)}>Open Map</CDropdownItem>
+        <CDropdownItem onClick={() => copyLocation(location)}>Copy Link</CDropdownItem>
+      </CDropdownMenu>
+    </CDropdown>
+  )
+}
+
+LocationDropdown.propTypes = {
+  location: PropTypes.string,
+}

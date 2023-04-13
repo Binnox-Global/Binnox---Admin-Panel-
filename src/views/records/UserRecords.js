@@ -65,7 +65,13 @@ function UserRecords() {
                 label="Radio 3"
               />
             </CButtonGroup> */}
-            <CTable align="middle" className="mb-0 border" hover responsive>
+            <CTable
+              align="middle"
+              className="mb-0 border"
+              hover
+              responsive
+              style={{ overflow: 'visible' }}
+            >
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell className="text-center">

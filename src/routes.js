@@ -1,5 +1,6 @@
 import React from 'react'
 import Orders from './views/orders/Orders'
+import PaymentRequest from './views/records/PaymentRequest'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -109,6 +110,7 @@ const routes = [
   { path: '/records/admins', name: 'UserRecords', element: AdminRecords },
   { path: '/orders/new', name: 'UserRecords', element: Orders },
   { path: '/auth/create-admin', name: 'UserRecords', element: Register },
+  { path: '/payment/request', name: 'UserRecords', element: PaymentRequest },
 ]
 
 export default routes

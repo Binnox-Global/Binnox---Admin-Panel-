@@ -2,7 +2,6 @@ import React from 'react'
 
 import {
   CAvatar,
-  CButtonGroup,
   CCard,
   CCardBody,
   CCardHeader,
@@ -11,7 +10,6 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-  CFormCheck,
   CRow,
   CTable,
   CTableBody,
@@ -75,8 +73,8 @@ function Orders() {
                   <CTableHeaderCell className="text-center">
                     <CIcon icon={cilPeople} />
                   </CTableHeaderCell>
-                  <CTableHeaderCell>Product</CTableHeaderCell>
                   <CTableHeaderCell>User</CTableHeaderCell>
+                  <CTableHeaderCell>Product</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">BusinessLocation</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Customer Location</CTableHeaderCell>
                   <CTableHeaderCell>Count</CTableHeaderCell>
@@ -103,16 +101,17 @@ function Orders() {
                               status={'success'}
                             />
                           </CTableDataCell>
-                          <CTableDataCell>
-                            <div>{item?.product?.name}</div>
-                            <div className="small text-medium-emphasis">
-                              Business: {item?.user?.business_name}
-                            </div>
-                          </CTableDataCell>
+
                           <CTableDataCell>
                             <div>{item?.user?.full_name}</div>
                             <div className="small text-medium-emphasis">
                               Email: {item?.user?.email} || Contact: {item?.user?.phone_number}
+                            </div>
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            <div>{item?.product?.name}</div>
+                            <div className="small text-medium-emphasis">
+                              Business: {item?.business?.business_name}
                             </div>
                           </CTableDataCell>
                           <CTableDataCell className="text-center">

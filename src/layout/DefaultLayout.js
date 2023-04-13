@@ -3,6 +3,7 @@ import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/inde
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { AdminContext } from 'src/context/adminContext'
 
 const DefaultLayout = () => {
   const [cookies, setCookie, removeCookie] = useCookies()
@@ -12,6 +13,22 @@ const DefaultLayout = () => {
       toast.info('Login expired')
       navigate('/login')
     }
+  }, [])
+  const {
+    getBusinessRecordsFunction,
+    getUserRecordsFunction,
+    getOrderRecordsFunction,
+    getAdminRecordsFunction,
+  } = React.useContext(AdminContext)
+  React.useEffect(() => {
+    getBusinessRecordsFunction()
+    getAdminRecordsFunction()
+  }, [])
+  React.useEffect(() => {
+    getUserRecordsFunction()
+  }, [])
+  React.useEffect(() => {
+    getOrderRecordsFunction()
   }, [])
   return (
     <div>

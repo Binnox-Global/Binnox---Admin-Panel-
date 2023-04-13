@@ -10,8 +10,8 @@ export const AdminContext = createContext()
 function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  // let apiUrl = 'http://localhost:5000/api'
-  let apiUrl = 'https://binnox.herokuapp.com/api'
+  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'https://binnox.herokuapp.com/api'
   const [userList, setUserList] = React.useState({
     loading: true,
     data: [],
@@ -27,6 +27,11 @@ function AdminProvider({ children }) {
   const [orderList, setOrderList] = React.useState({
     loading: true,
     data: [],
+  })
+  const [paymentRequest, setPaymentRequest] = React.useState({
+    loading: true,
+    data: [],
+    history: [],
   })
 
   async function getAdminRecordsFunction() {
@@ -101,6 +106,26 @@ function AdminProvider({ children }) {
       .then((res) => {
         // console.log('orders', res.data)
         setOrderList({ loading: false, data: res.data.orders })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+  async function getPaymentRequestFunction() {
+    //  console.log(cookies.BinnoxAdmin.token)
+    axios
+      .get(`${apiUrl}/admin/payment-request`, {
+        headers: {
+          Authorization: cookies?.BinnoxAdmin?.token,
+        },
+      })
+      .then((res) => {
+        console.log('payment-request', res.data)
+        setPaymentRequest({
+          loading: false,
+          data: res.data.requests,
+          history: res.data.history,
+        })
       })
       .catch((error) => {
         console.error(error)
@@ -241,6 +266,43 @@ status=${status}`,
         console.error(error)
       })
   }
+  async function updatePaymentRequestStatusFunction(_id, status) {
+    // return
+    // console.log(cookies?.BinnoxAdmin?.token)
+    axios
+      .put(
+        `${apiUrl}/admin/payment-request?request_id=${_id}`,
+        { ...status },
+        {
+          headers: {
+            Authorization: cookies?.BinnoxAdmin?.token,
+          },
+        },
+      )
+      .then((res) => {
+        console.log(res.data)
+        toast.success('Successfully')
+
+        setPaymentRequest({
+          loading: false,
+          data: res.data.requests,
+          history: res.data.history,
+        })
+      })
+      .catch((error) => {
+        if (error.response.status || error.response.status === 400) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 401) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          return toast.error(error.response.data.message)
+        }
+        // toast.success('Successfully')
+        console.error(error)
+      })
+  }
 
   function logoutFunction() {
     if (window.confirm('You will be logged out of your account !!!')) {
@@ -272,6 +334,9 @@ status=${status}`,
         adminList,
         verifyAccountFunction,
         logoutFunction,
+        getPaymentRequestFunction,
+        paymentRequest,
+        updatePaymentRequestStatusFunction,
       }}
     >
       {children}

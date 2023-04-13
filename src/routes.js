@@ -57,6 +57,7 @@ const UserRecords = React.lazy(() => import('./views/records/UserRecords'))
 const AdminRecords = React.lazy(() => import('./views/records/AdminRecords'))
 const BusinessRecords = React.lazy(() => import('./views/records/BusinessRecords'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
+const PaymentRequestHistory = React.lazy(() => import('./views/records/PaymentRequestHistory'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -111,6 +112,7 @@ const routes = [
   { path: '/orders/new', name: 'UserRecords', element: Orders },
   { path: '/auth/create-admin', name: 'UserRecords', element: Register },
   { path: '/payment/request', name: 'UserRecords', element: PaymentRequest },
+  { path: '/payment/history', name: 'UserRecords', element: PaymentRequestHistory },
 ]
 
 export default routes

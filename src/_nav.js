@@ -93,6 +93,11 @@ const _nav = [
         name: 'Request List',
         to: '/payment/request',
       },
+      {
+        component: CNavItem,
+        name: 'Request History',
+        to: '/payment/history',
+      },
     ],
   },
   // {

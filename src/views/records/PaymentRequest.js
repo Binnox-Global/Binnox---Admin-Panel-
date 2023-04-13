@@ -37,7 +37,13 @@ function PaymentRequest() {
         <CCard className="mb-4">
           <CCardHeader>Payment Request</CCardHeader>
           <CCardBody>
-            <CTable align="middle" className="mb-0 border" hover responsive>
+            <CTable
+              align="middle"
+              className="mb-0 border"
+              hover
+              responsive
+              style={{ overflow: 'visible' }}
+            >
               <CTableHead color="light">
                 <CTableRow>
                   {/* <CTableHeaderCell className="text-center">
@@ -47,6 +53,7 @@ function PaymentRequest() {
                   <CTableHeaderCell>Amount</CTableHeaderCell>
                   {/* <CTableHeaderCell>Contact</CTableHeaderCell> */}
                   <CTableHeaderCell>Activity</CTableHeaderCell>
+                  <CTableHeaderCell>Date</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -94,39 +101,39 @@ function PaymentRequest() {
                             <div>{item?.pending ? 'Pending' : null}</div>
                             <div>{item?.rejected ? 'Rejected' : null}</div>
                           </CTableDataCell>
+                          <CTableDataCell>{item?.createdAt.split('T')[0]}</CTableDataCell>
                           <CTableDataCell>
-                            <CTableDataCell>
-                              <CDropdown variant="btn-group">
-                                <CDropdownToggle color="primary">Actions</CDropdownToggle>
-                                <CDropdownMenu>
-                                  {/* {item.account_active ? ( */}
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      updatePaymentRequestStatusFunction(item._id, {
-                                        pending: false,
-                                        approved: true,
-                                        rejected: false,
-                                      })
-                                    }
-                                  >
-                                    Approve
-                                  </CDropdownItem>
-                                  {/* ) : ( */}
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      updatePaymentRequestStatusFunction(item._id, {
-                                        pending: false,
-                                        approved: false,
-                                        rejected: true,
-                                      })
-                                    }
-                                  >
-                                    Reject
-                                  </CDropdownItem>
-                                  {/* )} */}
-                                </CDropdownMenu>
-                              </CDropdown>
-                            </CTableDataCell>
+                            <CDropdown variant="btn-group">
+                              <CDropdownToggle color="primary">Actions</CDropdownToggle>
+                              <CDropdownMenu>
+                                {/* {item.account_active ? ( */}
+                                <CDropdownItem
+                                  onClick={() =>
+                                    updatePaymentRequestStatusFunction(item._id, {
+                                      pending: false,
+                                      approved: true,
+                                      rejected: false,
+                                    })
+                                  }
+                                >
+                                  Approve
+                                </CDropdownItem>
+                                {/* ) : ( */}
+                                <CDropdownItem
+                                  onClick={() =>
+                                    updatePaymentRequestStatusFunction(item._id, {
+                                      pending: false,
+                                      approved: false,
+                                      rejected: true,
+                                    })
+                                  }
+                                >
+                                  Reject
+                                </CDropdownItem>
+                                {/* )} */}
+                              </CDropdownMenu>
+                            </CDropdown>
+                            {/* </CTableDataCell> */}
                           </CTableDataCell>
                         </CTableRow>
                       )

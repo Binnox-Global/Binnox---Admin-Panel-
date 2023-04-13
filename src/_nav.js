@@ -83,6 +83,18 @@ const _nav = [
       },
     ],
   },
+  {
+    component: CNavGroup,
+    name: 'Payment',
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Request List',
+        to: '/payment/request',
+      },
+    ],
+  },
   // {
   //   component: CNavTitle,
   //   name: 'Theme',

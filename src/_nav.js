@@ -90,12 +90,12 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Request List',
+        name: 'Withdrawal Request List',
         to: '/payment/request',
       },
       {
         component: CNavItem,
-        name: 'Request History',
+        name: 'Withdrawal Request History',
         to: '/payment/history',
       },
     ],

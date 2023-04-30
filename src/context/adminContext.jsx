@@ -12,6 +12,8 @@ function AdminProvider({ children }) {
   // const navigate = useNavigate()
   // let apiUrl = 'http://localhost:5000/api'
   let apiUrl = 'https://binnox.herokuapp.com/api'
+
+  const [token, setToken] = React.useState(null)
   const [userList, setUserList] = React.useState({
     loading: true,
     data: [],
@@ -38,7 +40,7 @@ function AdminProvider({ children }) {
     axios
       .get(`${apiUrl}/admin/admin`, {
         headers: {
-          Authorization: cookies?.BinnoxAdmin?.token,
+          Authorization: token,
         },
       })
       .then((res) => {
@@ -59,9 +61,9 @@ function AdminProvider({ children }) {
 
     // console.log(cookies.BinnoxAdmin.token)
     axios
-      .get(`${apiUrl}/admin/customer`, {
+      .get(`${apiUrl}/admin/customer?max_data_return=100`, {
         headers: {
-          Authorization: cookies?.BinnoxAdmin?.token,
+          Authorization: token,
         },
       })
       .then((res) => {
@@ -80,7 +82,7 @@ function AdminProvider({ children }) {
     axios
       .get(`${apiUrl}/admin/business`, {
         headers: {
-          Authorization: cookies?.BinnoxAdmin?.token,
+          Authorization: token,
         },
       })
       .then((res) => {
@@ -98,9 +100,9 @@ function AdminProvider({ children }) {
   async function getOrderRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
     axios
-      .get(`${apiUrl}/admin/orders`, {
+      .get(`${apiUrl}/admin/orders?max_data_return=100`, {
         headers: {
-          Authorization: cookies?.BinnoxAdmin?.token,
+          Authorization: token,
         },
       })
       .then((res) => {
@@ -116,7 +118,7 @@ function AdminProvider({ children }) {
     axios
       .get(`${apiUrl}/admin/payment-request`, {
         headers: {
-          Authorization: cookies?.BinnoxAdmin?.token,
+          Authorization: token,
         },
       })
       .then((res) => {
@@ -134,7 +136,7 @@ function AdminProvider({ children }) {
 
   async function activeAccountFunction(account_type, account_id) {
     // return
-    // console.log(cookies?.BinnoxAdmin?.token)
+    // console.log(token)
     axios
       .put(
         `${apiUrl}/admin/activate?account_id=${account_id}&
@@ -142,7 +144,7 @@ account_type=${account_type}`,
         {},
         {
           headers: {
-            Authorization: cookies?.BinnoxAdmin?.token,
+            Authorization: token,
           },
         },
       )
@@ -190,7 +192,7 @@ account_type=${account_type}`,
         {},
         {
           headers: {
-            Authorization: cookies?.BinnoxAdmin?.token,
+            Authorization: token,
           },
         },
       )
@@ -231,7 +233,7 @@ account_type=${account_type}`,
   }
   async function updateOrderStatusFunction(_id, status) {
     // return
-    // console.log(cookies?.BinnoxAdmin?.token)
+    // console.log(token)
     axios
       .put(
         `${apiUrl}/admin/status?order_id=${_id}&
@@ -239,7 +241,7 @@ status=${status}`,
         {},
         {
           headers: {
-            Authorization: cookies?.BinnoxAdmin?.token,
+            Authorization: token,
           },
         },
       )
@@ -268,14 +270,14 @@ status=${status}`,
   }
   async function updatePaymentRequestStatusFunction(_id, status) {
     // return
-    // console.log(cookies?.BinnoxAdmin?.token)
+    // console.log(token)
     axios
       .put(
         `${apiUrl}/admin/payment-request?request_id=${_id}`,
         { ...status },
         {
           headers: {
-            Authorization: cookies?.BinnoxAdmin?.token,
+            Authorization: token,
           },
         },
       )
@@ -322,6 +324,8 @@ status=${status}`,
     <AdminContext.Provider
       value={{
         apiUrl,
+        token,
+        setToken,
         getUserRecordsFunction,
         getBusinessRecordsFunction,
         getOrderRecordsFunction,

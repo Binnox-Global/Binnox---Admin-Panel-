@@ -25,7 +25,7 @@ const Login = () => {
   const [cookies, setCookie] = useCookies()
   const navigate = useNavigate()
   const [loading, setLoading] = React.useState(false)
-  const { apiUrl } = React.useContext(AdminContext)
+  const { apiUrl, setToken } = React.useContext(AdminContext)
   async function loginUserFunction(e) {
     e.preventDefault()
     // return console.dir(e.target)
@@ -66,6 +66,9 @@ const Login = () => {
         // setLoggedIn(true)
         const userToken = response.data.token
         const userProfile = response.data.profile
+
+        setToken(userToken)
+
         const cookies = {
           profile: userProfile,
           token: userToken,

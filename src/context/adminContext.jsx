@@ -47,7 +47,7 @@ function AdminProvider({ children }) {
         // console.log(res.data)
         setAdminList({
           loading: false,
-          data: res.data.admins,
+          data: res.data.admins.reverse(),
         })
       })
       .catch((error) => {
@@ -70,7 +70,7 @@ function AdminProvider({ children }) {
         // console.log(res.data)
         setUserList({
           loading: false,
-          data: res.data.users,
+          data: res.data.users.reverse(),
         })
       })
       .catch((error) => {
@@ -89,7 +89,7 @@ function AdminProvider({ children }) {
         // console.log(res.data)
         setBusinessList({
           loading: false,
-          data: res.data.business,
+          data: res.data.business.reverse(),
         })
       })
       .catch((error) => {
@@ -107,7 +107,7 @@ function AdminProvider({ children }) {
       })
       .then((res) => {
         // console.log('orders', res.data)
-        setOrderList({ loading: false, data: res.data.orders })
+        setOrderList({ loading: false, data: res.data.orders.reverse() })
       })
       .catch((error) => {
         console.error(error)
@@ -125,8 +125,8 @@ function AdminProvider({ children }) {
         console.log('payment-request', res.data)
         setPaymentRequest({
           loading: false,
-          data: res.data.requests,
-          history: res.data.history,
+          data: res.data.requests.reverse(),
+          history: res.data.history.reverse(),
         })
       })
       .catch((error) => {
@@ -154,19 +154,19 @@ account_type=${account_type}`,
         if (account_type === 'admin') {
           return setAdminList({
             loading: false,
-            data: res.data.update,
+            data: res.data.update.reverse(),
           })
         }
         if (account_type === 'business') {
           return setBusinessList({
             loading: false,
-            data: res.data.update,
+            data: res.data.update.reverse(),
           })
         }
 
         setUserList({
           loading: false,
-          data: res.data.update,
+          data: res.data.update.reverse(),
         })
       })
       .catch((error) => {
@@ -202,19 +202,19 @@ account_type=${account_type}`,
         if (account_type === 'admin') {
           return setAdminList({
             loading: false,
-            data: res.data.update,
+            data: res.data.update.reverse(),
           })
         }
         if (account_type === 'business') {
           return setBusinessList({
             loading: false,
-            data: res.data.update,
+            data: res.data.update.reverse(),
           })
         }
 
         setUserList({
           loading: false,
-          data: res.data.update,
+          data: res.data.update.reverse(),
         })
       })
       .catch((error) => {
@@ -251,7 +251,7 @@ status=${status}`,
 
         setOrderList({
           loading: false,
-          data: res.data.update,
+          data: res.data.update.reverse(),
         })
       })
       .catch((error) => {
@@ -287,8 +287,8 @@ status=${status}`,
 
         setPaymentRequest({
           loading: false,
-          data: res.data.requests,
-          history: res.data.history,
+          data: res.data.requests.reverse(),
+          history: res.data.history.reverse(),
         })
       })
       .catch((error) => {

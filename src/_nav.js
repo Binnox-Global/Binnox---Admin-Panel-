@@ -59,6 +59,16 @@ const _nav = [
         name: 'New Orders',
         to: '/orders/new',
       },
+      {
+        component: CNavItem,
+        name: 'Picked up',
+        to: '/orders/picked-up',
+      },
+      {
+        component: CNavItem,
+        name: 'Delivered',
+        to: '/orders/delivered',
+      },
     ],
   },
   // Authentication

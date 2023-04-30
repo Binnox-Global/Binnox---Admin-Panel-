@@ -6,30 +6,37 @@ import { toast } from 'react-toastify'
 import { AdminContext } from 'src/context/adminContext'
 
 const DefaultLayout = () => {
-  const [cookies, setCookie, removeCookie] = useCookies()
+  const [cookies] = useCookies()
   const navigate = useNavigate()
-  useEffect(() => {
-    if (!cookies.BinnoxAdmin || !cookies.BinnoxAdmin.profile || !cookies.BinnoxAdmin.token) {
-      toast.info('Login expired')
-      navigate('/login')
-    }
-  }, [])
   const {
+    token,
+    setToken,
     getBusinessRecordsFunction,
     getUserRecordsFunction,
     getOrderRecordsFunction,
     getAdminRecordsFunction,
   } = React.useContext(AdminContext)
+  useEffect(() => {
+    if (!cookies.BinnoxAdmin || !cookies.BinnoxAdmin.profile || !cookies.BinnoxAdmin.token) {
+      toast.info('Login expired')
+      navigate('/login')
+    } else {
+      setToken(cookies.BinnoxAdmin.token)
+    }
+  }, [])
   React.useEffect(() => {
+    if (!token) return
     getBusinessRecordsFunction()
     getAdminRecordsFunction()
-  }, [])
+  }, [token])
   React.useEffect(() => {
+    if (!token) return
     getUserRecordsFunction()
-  }, [])
+  }, [token])
   React.useEffect(() => {
+    if (!token) return
     getOrderRecordsFunction()
-  }, [])
+  }, [token])
   return (
     <div>
       <AppSidebar />

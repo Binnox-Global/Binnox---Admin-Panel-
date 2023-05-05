@@ -26,8 +26,8 @@ import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
 
 function Orders() {
-  const { orderList, updateOrderStatusFunction } = React.useContext(AdminContext)
-
+  const { orderList, updateOrderStatusFunction, decodeDate } = React.useContext(AdminContext)
+  console.log(orderList)
   return (
     <CRow>
       <CCol xs>
@@ -82,6 +82,7 @@ function Orders() {
                   <CTableHeaderCell>Statues</CTableHeaderCell>
                   <CTableHeaderCell>Rider</CTableHeaderCell>
                   <CTableHeaderCell>User</CTableHeaderCell>
+                  <CTableHeaderCell>Time</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -165,6 +166,12 @@ function Orders() {
                               <div>{item?.received ? 'Received' : 'Not received'}</div>
                             </CTableDataCell>
                             <CTableDataCell>
+                              <div>{decodeDate(item?.createdAt)[1]}</div>
+                              <div className="small text-medium-emphasis">
+                                Date: {decodeDate(item?.createdAt)[0]}
+                              </div>
+                            </CTableDataCell>
+                            <CTableDataCell>
                               <CDropdown variant="btn-group">
                                 <CDropdownToggle color="primary">Actions</CDropdownToggle>
                                 <CDropdownMenu>
@@ -208,7 +215,7 @@ function Orders() {
 export default Orders
 
 export function OrdersPickedUp() {
-  const { orderList, updateOrderStatusFunction } = React.useContext(AdminContext)
+  const { orderList, updateOrderStatusFunction, decodeDate } = React.useContext(AdminContext)
 
   return (
     <CRow>
@@ -264,6 +271,7 @@ export function OrdersPickedUp() {
                   <CTableHeaderCell>Statues</CTableHeaderCell>
                   <CTableHeaderCell>Rider</CTableHeaderCell>
                   <CTableHeaderCell>User</CTableHeaderCell>
+                  <CTableHeaderCell>Time</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -347,6 +355,12 @@ export function OrdersPickedUp() {
                               <div>{item?.received ? 'Received' : 'Not received'}</div>
                             </CTableDataCell>
                             <CTableDataCell>
+                              <div>{decodeDate(item?.createdAt)[1]}</div>
+                              <div className="small text-medium-emphasis">
+                                Date: {decodeDate(item?.createdAt)[0]}
+                              </div>
+                            </CTableDataCell>
+                            <CTableDataCell>
                               <CDropdown variant="btn-group">
                                 <CDropdownToggle color="primary">Actions</CDropdownToggle>
                                 <CDropdownMenu>
@@ -387,7 +401,7 @@ export function OrdersPickedUp() {
   )
 }
 export function OrdersDelivered() {
-  const { orderList, updateOrderStatusFunction } = React.useContext(AdminContext)
+  const { orderList, updateOrderStatusFunction, decodeDate } = React.useContext(AdminContext)
 
   return (
     <CRow>
@@ -416,6 +430,7 @@ export function OrdersDelivered() {
                   <CTableHeaderCell>Statues</CTableHeaderCell>
                   <CTableHeaderCell>Rider</CTableHeaderCell>
                   <CTableHeaderCell>User</CTableHeaderCell>
+                  <CTableHeaderCell>Time</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -497,6 +512,12 @@ export function OrdersDelivered() {
                             <CTableDataCell>
                               {/* <div className="small text-medium-emphasis">Last login</div> */}
                               <div>{item?.received ? 'Received' : 'Not received'}</div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <div>{decodeDate(item?.createdAt)[1]}</div>
+                              <div className="small text-medium-emphasis">
+                                Date: {decodeDate(item?.createdAt)[0]}
+                              </div>
                             </CTableDataCell>
                             <CTableDataCell>
                               <CDropdown variant="btn-group">

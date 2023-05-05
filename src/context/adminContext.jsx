@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { useCookies } from 'react-cookie'
 import { toast } from 'react-toastify'
 // import { UserContext } from './UserContext'
+import moment from 'moment'
 
 export const AdminContext = createContext()
 
@@ -320,6 +321,14 @@ status=${status}`,
     }
   }
 
+  function decodeDate(date) {
+    // moment()
+    const dateArray = moment(date).format('ddd, MMM Do YYYY T h:mm:ss a').split('T')
+    // console.log(dateArray);
+    const timeOnly = dateArray[1].split('+')
+    // console.log(dateArray);
+    return [dateArray[0], timeOnly[0]]
+  }
   return (
     <AdminContext.Provider
       value={{
@@ -341,6 +350,7 @@ status=${status}`,
         getPaymentRequestFunction,
         paymentRequest,
         updatePaymentRequestStatusFunction,
+        decodeDate,
       }}
     >
       {children}

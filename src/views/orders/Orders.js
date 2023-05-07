@@ -24,6 +24,7 @@ import { cilPeople } from '@coreui/icons'
 import { AdminContext } from 'src/context/adminContext'
 import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
+import { useEffect, useState } from 'react'
 
 function Orders() {
   const { orderList, updateOrderStatusFunction, decodeDate } = React.useContext(AdminContext)
@@ -83,6 +84,7 @@ function Orders() {
                   <CTableHeaderCell>Rider</CTableHeaderCell>
                   <CTableHeaderCell>User</CTableHeaderCell>
                   <CTableHeaderCell>Time</CTableHeaderCell>
+                  <CTableHeaderCell>30 minutes Delay CountDown</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -169,6 +171,11 @@ function Orders() {
                               <div>{decodeDate(item?.createdAt)[1]}</div>
                               <div className="small text-medium-emphasis">
                                 Date: {decodeDate(item?.createdAt)[0]}
+                              </div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <div>
+                                <CountdownTimer createdAt={item?.createdAt} />
                               </div>
                             </CTableDataCell>
                             <CTableDataCell>
@@ -583,6 +590,111 @@ export function LocationDropdown({ location }) {
   )
 }
 
+// export function CountDown({ time }) {
+//   const [timeLeft, setTimeLeft] = React.useState(null)
+//   useEffect(() => {
+//     // const second = 1000,
+//     //   minute = second * 60,
+//     //   hour = minute * 60,
+//     //   day = hour * 24
+
+//     // console.log(time)
+//     // // let gmonth = "jan";
+//     // // let gday = "01";
+//     // // let gyear = "2023";
+//     // // let gtime = "00:00:00";
+//     // // console.log(userInvestment?.endDate);
+//     // let countTill = time,
+//     //   // let countTill = `${gmonth} ${gday} , ${gyear} ${gtime}`,
+//     //   // let newyear = "April 12, 2001 00:00:00",
+//     //   countDown = new Date(countTill).getTime()
+//     // console.log(countDown)
+//     // const intervalId = setInterval(() => {
+//     //   let now = new Date().getTime(),
+//     //     distance = now - countDown
+
+//     //   // console.log(distance)
+//     //   let calculatedDate = {
+//     //     days: Math.floor(distance / day),
+//     //     hours: Math.floor((distance % day) / hour),
+//     //     minutes: Math.floor((distance % hour) / minute),
+//     //     seconds: Math.floor((distance % minute) / second),
+//     //   }
+//     // console.log(calculatedDate)
+
+//     // setInvestmentTime(calculatedDate)
+//     // }, 1000)
+
+//     // return () => {
+//     //   clearInterval(intervalId) //This is important
+//     // }
+
+//     // var d = new Date(time)
+//     // d.setHours(d.getHours() + 5)
+//     // d.setMinutes(d.getMinutes() + 30)
+
+//     // console.log(d)
+
+//     // let dateNow = new Date().getTime()
+//     // let calTime = dateNow + 30 * 60 * 1000
+//     let dt = new Date()
+//     dt = new Date(dt.getTime() + 30 * 60 * 1000)
+
+//     console.log('calTime', dt.toLocaleTimeString())
+//   }, [timeLeft])
+
+//   return <>0</>
+// }
+
+function CountdownTimer({ createdAt }) {
+  const endTime = new Date(createdAt).getTime() + 30 * 60 * 1000 // endTime is 30 minutes after the given time
+  const [remainingTime, setRemainingTime] = useState(0)
+  const [delayTime, setDelayTime] = useState(0)
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const now = new Date().getTime()
+      const distance = endTime - now
+      const remainingMinutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+      let calculatedDelayTimeDistance = now - endTime
+      let calculatedDelayTimeMinutes = Math.floor(
+        (calculatedDelayTimeDistance % (1000 * 60 * 60)) / (1000 * 60),
+      )
+
+      // console.log()
+
+      setDelayTime(calculatedDelayTimeMinutes)
+      setRemainingTime(remainingMinutes)
+    }, 1000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [endTime])
+  // useEffect(() => {
+  //   console.log('remainingTime', remainingTime)
+  //   console.log('delayTime', delayTime)
+  // }, [remainingTime])
+
+  return (
+    <div>
+      {remainingTime <= 0 ? (
+        <div className="text-red" style={{ color: 'red' }}>
+          {delayTime} minutes
+          <div className="small " style={{ color: 'red' }}>
+            Delayed
+          </div>
+        </div>
+      ) : (
+        <div>{remainingTime} minutes left</div>
+      )}
+    </div>
+  )
+}
+
 LocationDropdown.propTypes = {
   location: PropTypes.string,
+}
+CountdownTimer.propTypes = {
+  createdAt: PropTypes.string,
 }

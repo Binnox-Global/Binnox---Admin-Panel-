@@ -25,193 +25,61 @@ import { AdminContext } from 'src/context/adminContext'
 import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
 import { useEffect, useState } from 'react'
+import './Orders.scss'
 
 function Orders() {
-  const { orderList, updateOrderStatusFunction, decodeDate } = React.useContext(AdminContext)
-  console.log(orderList)
+  const { orderList } = React.useContext(AdminContext)
+  const [newOrders, setNewOrders] = useState([])
+
+  useEffect(() => {
+    let newOrdersList = []
+    orderList?.data?.forEach((item) => {
+      if (item.statues === 'Pending' || item.statues === 'Processing') {
+        newOrdersList.push(item)
+      }
+    })
+
+    setNewOrders(newOrdersList)
+  }, [orderList])
+
+  const groupedOrders = newOrders.reduce((result, order) => {
+    // console.log('orderList', newOrders)
+
+    const userId = order.user._id
+    const userOrders = result.find((group) => group[0].user._id === userId)
+
+    if (userOrders) {
+      userOrders.push(order)
+    } else {
+      result.push([order])
+    }
+
+    return result
+  }, [])
+  console.log('groupedOrders', groupedOrders)
+
   return (
     <CRow>
       <CCol xs>
         <CCard className="mb-4">
           <CCardHeader>Orders</CCardHeader>
           <CCardBody>
-            {/* <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio1"
-                autoComplete="off"
-                label="Radio 1"
-                defaultChecked
-              />
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio2"
-                autoComplete="off"
-                label="Radio 2"
-              />
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio3"
-                autoComplete="off"
-                label="Radio 3"
-              />
-            </CButtonGroup> */}
-            <CTable
-              align="middle"
-              className="mb-0 border"
-              hover
-              responsive
-              style={{ overflow: 'visible' }}
-            >
-              <CTableHead color="light">
-                <CTableRow>
-                  <CTableHeaderCell className="text-center">
-                    <CIcon icon={cilPeople} />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell>User</CTableHeaderCell>
-                  <CTableHeaderCell>Product</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">BusinessLocation</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Customer Location</CTableHeaderCell>
-                  <CTableHeaderCell>Count</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Amount</CTableHeaderCell>
-                  <CTableHeaderCell>Statues</CTableHeaderCell>
-                  <CTableHeaderCell>Rider</CTableHeaderCell>
-                  <CTableHeaderCell>User</CTableHeaderCell>
-                  <CTableHeaderCell>Time</CTableHeaderCell>
-                  <CTableHeaderCell>30 minutes Delay CountDown</CTableHeaderCell>
-                  <CTableHeaderCell>Action</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {orderList.loading ? (
-                  <>loading...</>
+            {orderList.loading ? (
+              <>loading...</>
+            ) : (
+              <>
+                {newOrders.length <= 0 ? (
+                  <>No Order Currently</>
                 ) : (
                   <>
-                    {orderList.data.map((item, index) => {
-                      if (item.statues === 'Pending' || item.statues === 'Processing') {
-                        return (
-                          <CTableRow v-for="item in tableItems" key={index}>
-                            <CTableDataCell className="text-center">
-                              <CAvatar
-                                size="md"
-                                // src={item?.user?.user_avatar}
-                                src="https://via.placeholder.com/600x400?text=Image"
-                                status={'success'}
-                              />
-                            </CTableDataCell>
-
-                            <CTableDataCell>
-                              <div>{item?.user?.full_name}</div>
-                              <div className="small text-medium-emphasis">
-                                Email: {item?.user?.email} || Contact: {item?.user?.phone_number}
-                              </div>
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              <div>{item?.product?.name}</div>
-                              <div className="small text-medium-emphasis">
-                                Business: {item?.business?.business_name}
-                              </div>
-                            </CTableDataCell>
-                            <CTableDataCell className="text-center">
-                              {item?.business?.business_location?.lat &&
-                              item?.business?.business_location?.long &&
-                              item?.business?.business_location?.lat !== '' &&
-                              item?.business?.business_location?.long !== '' ? (
-                                <LocationDropdown
-                                  location={`https://www.google.com/maps/search/?api=1&query=${item?.business?.business_location?.lat},${item?.business?.business_location?.long}`}
-                                />
-                              ) : (
-                                'Location not valid'
-                              )}
-                            </CTableDataCell>
-                            <CTableDataCell className="text-center">
-                              {/* <CIcon size="xl" icon={item?.address} title={item?.country?.name} /> */}
-                              {item?.address.split(',')[0] &&
-                              item?.address.split(',')[1] &&
-                              item?.address.split(',')[0] !== '' &&
-                              item?.address.split(',')[1] !== '' ? (
-                                <LocationDropdown
-                                  location={`https://www.google.com/maps/search/?api=1&query=${
-                                    item?.address.split(',')[0]
-                                  },${item?.address.split(',')[1]}`}
-                                />
-                              ) : (
-                                'Location not valid'
-                              )}
-                              {/* {console.log(item?.address.split(''))} */}
-                              <div></div>
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              <div>{item?.item_count}</div>
-                              {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
-                            </CTableDataCell>
-                            <CTableDataCell className="text-center">
-                              {/* <CIcon size="xl" icon={item?.item_amount} /> */}
-                              <div>₦{item?.item_amount}</div>
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              {/* <div className="small text-medium-emphasis">Last login</div> */}
-                              <div>{item?.statues}</div>
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              {/* <div className="small text-medium-emphasis">Last login</div> */}
-                              <div>{item?.delivered ? 'Delivered' : 'Not delivered'}</div>
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              {/* <div className="small text-medium-emphasis">Last login</div> */}
-                              <div>{item?.received ? 'Received' : 'Not received'}</div>
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              <div>{decodeDate(item?.createdAt)[1]}</div>
-                              <div className="small text-medium-emphasis">
-                                Date: {decodeDate(item?.createdAt)[0]}
-                              </div>
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              <div>
-                                <CountdownTimer createdAt={item?.createdAt} />
-                              </div>
-                            </CTableDataCell>
-                            <CTableDataCell>
-                              <CDropdown variant="btn-group">
-                                <CDropdownToggle color="primary">Actions</CDropdownToggle>
-                                <CDropdownMenu>
-                                  <CDropdownItem
-                                    onClick={() => updateOrderStatusFunction(item?._id, 'Pending')}
-                                  >
-                                    Pending
-                                  </CDropdownItem>
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      updateOrderStatusFunction(item?._id, 'Picked up')
-                                    }
-                                  >
-                                    Picked up
-                                  </CDropdownItem>
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      updateOrderStatusFunction(item?._id, 'Delivered')
-                                    }
-                                  >
-                                    Delivered
-                                  </CDropdownItem>
-                                </CDropdownMenu>
-                              </CDropdown>
-                            </CTableDataCell>
-                          </CTableRow>
-                        )
-                      }
+                    {' '}
+                    {groupedOrders.map((orders, i) => {
+                      return <OrderGroupCard key={i} orders={orders} />
                     })}
                   </>
                 )}
-              </CTableBody>
-            </CTable>
+              </>
+            )}
           </CCardBody>
         </CCard>
       </CCol>
@@ -220,6 +88,152 @@ function Orders() {
 }
 
 export default Orders
+
+function OrderGroupCard({ orders }) {
+  const [showDropDown, setShowDropDown] = useState(false)
+  const { updateOrderStatusFunction, decodeDate } = React.useContext(AdminContext)
+  return (
+    <div className="OrderGroupCard">
+      {/* OrderGroupCard */}
+      <div className="head" onClick={() => setShowDropDown(!showDropDown)}>
+        <div className="d-flex gap-3">
+          <CAvatar
+            size="md"
+            // src={item?.user?.user_avatar}
+            src="https://via.placeholder.com/600x400?text=Image"
+            status={'success'}
+          />
+          <div className="user-name">
+            {orders[0].user.full_name}
+            <br />
+            <b>Email:</b> {orders[0]?.user?.email} || <b>Contact:</b>{' '}
+            {orders[0]?.user?.phone_number}
+          </div>
+        </div>
+        <div className="user-name">
+          {' '}
+          {orders[0]?.address.split(',')[0] &&
+          orders[0]?.address.split(',')[1] &&
+          orders[0]?.address.split(',')[0] !== '' &&
+          orders[0]?.address.split(',')[1] !== '' ? (
+            <LocationDropdown
+              location={`https://www.google.com/maps/search/?api=1&query=${
+                orders[0]?.address.split(',')[0]
+              },${orders[0]?.address.split(',')[1]}`}
+            />
+          ) : (
+            'Location not valid'
+          )}
+        </div>
+      </div>
+      <div
+        className="dropdown"
+        style={
+          showDropDown
+            ? { display: 'inline-flex' }
+            : {
+                display: 'none',
+              }
+        }
+      >
+        <CTable
+          align="middle"
+          className="mb-0 border"
+          hover
+          responsive
+          style={{ overflow: 'visible' }}
+        >
+          <CTableHead color="light">
+            <CTableRow>
+              <CTableHeaderCell>Product</CTableHeaderCell>
+              <CTableHeaderCell className="text-center">BusinessLocation</CTableHeaderCell>
+              <CTableHeaderCell>Count</CTableHeaderCell>
+              <CTableHeaderCell className="text-center">Amount</CTableHeaderCell>
+              <CTableHeaderCell>Statues</CTableHeaderCell>
+              <CTableHeaderCell>Rider</CTableHeaderCell>
+              <CTableHeaderCell>Time</CTableHeaderCell>
+              <CTableHeaderCell>30 minutes Delay CountDown</CTableHeaderCell>
+              <CTableHeaderCell>Action</CTableHeaderCell>
+            </CTableRow>
+          </CTableHead>
+          <CTableBody>
+            {orders.map((item, index) => {
+              if (item.statues === 'Pending' || item.statues === 'Processing') {
+                return (
+                  <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell>
+                      <div>{item?.product?.name}</div>
+                      <div className="small text-medium-emphasis">
+                        Business: {item?.business?.business_name}
+                      </div>
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      {item?.business?.business_location?.lat &&
+                      item?.business?.business_location?.long &&
+                      item?.business?.business_location?.lat !== '' &&
+                      item?.business?.business_location?.long !== '' ? (
+                        <LocationDropdown
+                          location={`https://www.google.com/maps/search/?api=1&query=${item?.business?.business_location?.lat},${item?.business?.business_location?.long}`}
+                        />
+                      ) : (
+                        'Location not valid'
+                      )}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <div>{item?.item_count}</div>
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      <div>₦{item?.item_amount}</div>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <div>{item?.statues}</div>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <div>{item?.delivered ? 'Delivered' : 'Not delivered'}</div>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <div>{decodeDate(item?.createdAt)[1]}</div>
+                      <div className="small text-medium-emphasis">
+                        Date: {decodeDate(item?.createdAt)[0]}
+                      </div>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <div>
+                        <CountdownTimer createdAt={item?.createdAt} />
+                      </div>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <CDropdown variant="btn-group">
+                        <CDropdownToggle color="primary">Actions</CDropdownToggle>
+                        <CDropdownMenu>
+                          <CDropdownItem
+                            onClick={() => updateOrderStatusFunction(item?._id, 'Pending')}
+                          >
+                            Pending
+                          </CDropdownItem>
+                          <CDropdownItem
+                            onClick={() => updateOrderStatusFunction(item?._id, 'Picked up')}
+                          >
+                            Picked up
+                          </CDropdownItem>
+                          <CDropdownItem
+                            onClick={() => updateOrderStatusFunction(item?._id, 'Delivered')}
+                          >
+                            Delivered
+                          </CDropdownItem>
+                        </CDropdownMenu>
+                      </CDropdown>
+                    </CTableDataCell>
+                  </CTableRow>
+                )
+              }
+            })}
+          </CTableBody>
+        </CTable>
+      </div>
+    </div>
+  )
+}
 
 export function OrdersPickedUp() {
   const { orderList, updateOrderStatusFunction, decodeDate } = React.useContext(AdminContext)
@@ -697,4 +711,7 @@ LocationDropdown.propTypes = {
 }
 CountdownTimer.propTypes = {
   createdAt: PropTypes.string,
+}
+OrderGroupCard.propTypes = {
+  orders: PropTypes.array,
 }

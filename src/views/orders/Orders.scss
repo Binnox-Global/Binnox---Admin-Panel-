@@ -1,0 +1,20 @@
+.OrderGroupCard{
+  // border: solid;
+  display: flex;
+  flex-direction: column;
+  .head{
+    height: 100px;
+    // border: solid rgb(61, 57, 57) 1px;
+    background-color: #ddd;
+    color: #535353;
+    display: flex;
+    justify-content: space-between;
+    padding:0 30px ;
+    align-items: center;
+    margin: 10px 0;
+    cursor: pointer;
+  }
+  .dropdown{
+    // display: none;
+  }
+}

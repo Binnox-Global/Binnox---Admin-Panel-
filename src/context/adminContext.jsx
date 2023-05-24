@@ -11,8 +11,8 @@ export const AdminContext = createContext()
 function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  // let apiUrl = 'http://localhost:5000/api'
-  let apiUrl = 'https://binnox.herokuapp.com/api'
+  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'https://binnox.herokuapp.com/api'
 
   const [token, setToken] = React.useState(null)
   const [userList, setUserList] = React.useState({
@@ -31,11 +31,49 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+
   const [paymentRequest, setPaymentRequest] = React.useState({
     loading: true,
     data: [],
     history: [],
   })
+  const [discountList, setDisCountList] = React.useState({
+    loading: true,
+    data: {},
+  })
+
+  function getDiscountCodeFunction() {
+    // axios Get request
+    const options = {
+      url: `${apiUrl}/admin/discount`,
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: cookies?.BinnoxAdmin?.token,
+      },
+    }
+    // setLoading(false)
+    // return console.log(data)
+
+    axios(options)
+      .then((response) => {
+        // console.log(response.data)
+        setDisCountList({ loading: false, data: response.data })
+        // setLoading(false)
+      })
+      .catch((error) => {
+        // setLoading(false)
+        // console.log(error)
+        if (error.response.status || error.response.status === 400) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          return toast.error(error.response.data.message)
+        }
+        toast.error(error.message)
+      })
+  }
 
   async function getAdminRecordsFunction() {
     axios
@@ -306,7 +344,75 @@ status=${status}`,
         console.error(error)
       })
   }
+  function updateDiscountStateFunction(id, active) {
+    // axios PUT request
+    // return console.log(id, active)
+    const options = {
+      url: `${apiUrl}/admin/discount?discount_id=${id}&active=${active}`,
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: cookies?.BinnoxAdmin?.token,
+      },
+    }
+    // setLoading(false)
+    // return console.log(data)
 
+    axios(options)
+      .then((response) => {
+        console.log(response.data)
+        setDisCountList({ loading: false, data: response.data.discounts })
+        // setLoading(false)
+
+        // toast.success('Code Created Successfully')
+      })
+      .catch((error) => {
+        // setLoading(false)
+        // console.log(error)
+        if (error.response.status || error.response.status === 400) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          return toast.error(error.response.data.message)
+        }
+        toast.error(error.message)
+      })
+  }
+
+  function deleteDiscountCodeFunction(discount) {
+    // let enteredCode = window.prompt('Enter discount code')
+    // console.log(discount)
+    if (window.confirm(`Are you sure you wan to delete ${discount.code}`)) {
+      // axios DELETE request
+      const options = {
+        url: `${apiUrl}/admin/discount?discount_id=${discount._id}`,
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+          Authorization: cookies?.BinnoxAdmin?.token,
+        },
+      }
+
+      axios(options)
+        .then((response) => {
+          console.log(response.data)
+          setDisCountList({ loading: false, data: response.data.discounts })
+
+          toast.success('Code Deleted Successfully')
+        })
+        .catch((error) => {
+          if (error.response.status || error.response.status === 400) {
+            return toast.error(error.response.data.message)
+          }
+          if (error.response.status || error.response.status === 404) {
+            return toast.error(error.response.data.message)
+          }
+          toast.error(error.message)
+        })
+    }
+  }
   function logoutFunction() {
     if (window.confirm('You will be logged out of your account !!!')) {
       // localStorage.removeItem("telecomMerchant");
@@ -351,6 +457,10 @@ status=${status}`,
         paymentRequest,
         updatePaymentRequestStatusFunction,
         decodeDate,
+        getDiscountCodeFunction,
+        discountList,
+        updateDiscountStateFunction,
+        deleteDiscountCodeFunction,
       }}
     >
       {children}

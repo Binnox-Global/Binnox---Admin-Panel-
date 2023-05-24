@@ -110,6 +110,23 @@ const _nav = [
       },
     ],
   },
+  {
+    component: CNavGroup,
+    name: 'Discount',
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Create discount',
+        to: '/discount/create',
+      },
+      {
+        component: CNavItem,
+        name: 'Discount  List',
+        to: '/discount/list',
+      },
+    ],
+  },
   // {
   //   component: CNavTitle,
   //   name: 'Theme',

@@ -2,6 +2,8 @@ import React from 'react'
 import Orders from './views/orders/Orders'
 import { OrdersDelivered, OrdersPickedUp } from './views/orders/Orders'
 import PaymentRequest from './views/records/PaymentRequest'
+import CreateDiscountCodePage from './views/discount/CreateDiscountCodePage'
+import discounts from './views/discount/discounts'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -116,6 +118,8 @@ const routes = [
   { path: '/auth/create-admin', name: 'UserRecords', element: Register },
   { path: '/payment/request', name: 'UserRecords', element: PaymentRequest },
   { path: '/payment/history', name: 'UserRecords', element: PaymentRequestHistory },
+  { path: '/discount/create', name: 'UserRecords', element: CreateDiscountCodePage },
+  { path: '/discount/list', name: 'UserRecords', element: discounts },
 ]
 
 export default routes

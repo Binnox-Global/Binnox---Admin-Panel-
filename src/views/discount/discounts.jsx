@@ -144,9 +144,9 @@ export function DeActiveDiscountCodeList() {
     deleteDiscountCodeFunction,
   } = React.useContext(AdminContext)
   // console.log(discountList)
-  React.useEffect(() => {
-    getDiscountCodeFunction()
-  }, [])
+  // React.useEffect(() => {
+  //   // getDiscountCodeFunction()
+  // }, [])
   return (
     <CRow>
       <CCol xs>

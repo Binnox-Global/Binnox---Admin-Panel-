@@ -31,6 +31,10 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [cartList, setCartList] = React.useState({
+    loading: true,
+    data: [],
+  })
 
   const [paymentRequest, setPaymentRequest] = React.useState({
     loading: true,
@@ -136,6 +140,23 @@ function AdminProvider({ children }) {
       })
   }
 
+  async function getCartRecordsFunction() {
+    //  console.log(cookies.BinnoxAdmin.token)
+    axios
+      .get(`${apiUrl}/cart/admin`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log('Carts', res.data.carts.reverse())
+
+        setCartList({ loading: false, data: res.data.carts.reverse() })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
   async function getOrderRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
     axios
@@ -461,6 +482,8 @@ status=${status}`,
         discountList,
         updateDiscountStateFunction,
         deleteDiscountCodeFunction,
+        getCartRecordsFunction,
+        cartList,
       }}
     >
       {children}

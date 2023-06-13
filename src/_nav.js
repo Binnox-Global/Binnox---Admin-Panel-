@@ -56,6 +56,11 @@ const _nav = [
     items: [
       {
         component: CNavItem,
+        name: 'Carts',
+        to: '/carts',
+      },
+      {
+        component: CNavItem,
         name: 'New Orders',
         to: '/orders/new',
       },

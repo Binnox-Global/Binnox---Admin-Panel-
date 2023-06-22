@@ -12,7 +12,8 @@ function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
   // let apiUrl = 'http://localhost:5000/api'
-  let apiUrl = 'https://binnox.herokuapp.com/api'
+  // let apiUrl = 'https://binnox.herokuapp.com/api'
+  let apiUrl = 'https://binnox-backend.vercel.app/api'
 
   const [token, setToken] = React.useState(null)
   const [userList, setUserList] = React.useState({

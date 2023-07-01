@@ -50,6 +50,10 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [rewords, setRewords] = React.useState({
+    loading: true,
+    data: {},
+  })
 
   function getDiscountCodeFunction() {
     // axios Get request
@@ -96,6 +100,24 @@ function AdminProvider({ children }) {
         setAmbassadorList({
           loading: false,
           data: res.data.ambassadors.reverse(),
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+  async function getRewordsFunction() {
+    axios
+      .get(`${apiUrl}/user/rewords`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.reword)
+        setRewords({
+          loading: false,
+          data: res.data.reword,
         })
       })
       .catch((error) => {
@@ -513,6 +535,9 @@ status=${status}`,
         ambassadorList,
         setAmbassadorList,
         getAmbassadorRecordsFunction,
+        getRewordsFunction,
+        rewords,
+        setRewords,
       }}
     >
       {children}

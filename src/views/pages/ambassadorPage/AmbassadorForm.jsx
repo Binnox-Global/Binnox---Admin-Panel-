@@ -15,12 +15,12 @@ import { useCookies } from 'react-cookie'
 import { AdminContext } from 'src/context/adminContext'
 import { toast } from 'react-toastify'
 
-const Register = () => {
+function AmbassadorForm() {
   const [cookies] = useCookies()
   const [loading, setLoading] = React.useState(false)
-  const { apiUrl, getAdminRecordsFunction, setModalComponentVisible } =
+  const { apiUrl, getAmbassadorRecordsFunction, setModalComponentVisible } =
     React.useContext(AdminContext)
-  async function registerAdminFunction(e) {
+  async function registerAmbassadorFunction(e) {
     e.preventDefault()
     // return console.dir(e.target)
 
@@ -47,10 +47,13 @@ const Register = () => {
       phone_number: formElement[1].value,
       email: formElement[2].value,
       password: formElement[3].value,
+      referral: formElement[5].value,
     }
+
+    // return console.log(data)
     // axios POST request
     const options = {
-      url: `${apiUrl}/admin/register`,
+      url: `${apiUrl}/admin/ambassador`,
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -67,8 +70,8 @@ const Register = () => {
         console.log(response.data)
         setLoading(false)
 
-        toast.success('Admin created successfully')
-        getAdminRecordsFunction()
+        toast.success('Ambassador created successfully')
+        getAmbassadorRecordsFunction()
         setModalComponentVisible(false)
       })
       .catch((error) => {
@@ -83,17 +86,14 @@ const Register = () => {
         toast.error(error.message)
       })
   }
+
   return (
     <>
-      {/* // <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-    // <CContainer> */}
-      {/* <CRow className="justify-content-center">
-          <CCol md={9} lg={7} xl={6}> */}
       <CCard className="mx-4">
         <CCardBody className="p-4">
-          <CForm onSubmit={(e) => registerAdminFunction(e)}>
+          <CForm onSubmit={(e) => registerAmbassadorFunction(e)}>
             <h1>Register</h1>
-            <p className="text-medium-emphasis">Create admin account</p>
+            <p className="text-medium-emphasis">Create Ambassador</p>
             <CInputGroup className="mb-3">
               <CInputGroupText>
                 <CIcon icon={cilUser} />
@@ -126,6 +126,12 @@ const Register = () => {
                 autoComplete="new-password"
               />
             </CInputGroup>
+            <CInputGroup className="mb-4">
+              <CInputGroupText>
+                <CIcon icon={cilLockLocked} />
+              </CInputGroupText>
+              <CFormInput type="text" placeholder="Referral" />
+            </CInputGroup>
             <div className="d-grid">
               <CButton color="success" className="px-4" type="submit" disabled={loading}>
                 {loading ? 'Loading...' : 'Create Account'}
@@ -135,12 +141,8 @@ const Register = () => {
           </CForm>
         </CCardBody>
       </CCard>
-      {/* </CCol>
-        </CRow> */}
-      {/* // </CContainer>
-    // </div> */}
     </>
   )
 }
 
-export default Register
+export default AmbassadorForm

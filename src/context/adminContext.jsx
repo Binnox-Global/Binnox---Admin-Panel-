@@ -14,7 +14,7 @@ function AdminProvider({ children }) {
   // let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
   let apiUrl = 'https://binnox-backend.vercel.app/api'
-
+  const [modalComponentVisible, setModalComponentVisible] = React.useState(false)
   const [token, setToken] = React.useState(null)
   const [userList, setUserList] = React.useState({
     loading: true,
@@ -43,6 +43,14 @@ function AdminProvider({ children }) {
     history: [],
   })
   const [discountList, setDisCountList] = React.useState({
+    loading: true,
+    data: {},
+  })
+  const [ambassadorList, setAmbassadorList] = React.useState({
+    loading: true,
+    data: [],
+  })
+  const [rewords, setRewords] = React.useState({
     loading: true,
     data: {},
   })
@@ -77,6 +85,43 @@ function AdminProvider({ children }) {
           return toast.error(error.response.data.message)
         }
         toast.error(error.message)
+      })
+  }
+
+  async function getAmbassadorRecordsFunction() {
+    axios
+      .get(`${apiUrl}/admin/ambassador`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        // console.log(res.data)
+        setAmbassadorList({
+          loading: false,
+          data: res.data.ambassadors.reverse(),
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+  async function getRewordsFunction() {
+    axios
+      .get(`${apiUrl}/user/rewords`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.reword)
+        setRewords({
+          loading: false,
+          data: res.data.reword,
+        })
+      })
+      .catch((error) => {
+        console.error(error)
       })
   }
 
@@ -485,6 +530,14 @@ status=${status}`,
         deleteDiscountCodeFunction,
         getCartRecordsFunction,
         cartList,
+        modalComponentVisible,
+        setModalComponentVisible,
+        ambassadorList,
+        setAmbassadorList,
+        getAmbassadorRecordsFunction,
+        getRewordsFunction,
+        rewords,
+        setRewords,
       }}
     >
       {children}

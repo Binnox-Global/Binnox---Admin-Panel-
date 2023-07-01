@@ -16,6 +16,8 @@ const DefaultLayout = () => {
     getOrderRecordsFunction,
     getAdminRecordsFunction,
     getCartRecordsFunction,
+    getAmbassadorRecordsFunction,
+    getRewordsFunction,
   } = React.useContext(AdminContext)
   useEffect(() => {
     if (!cookies.BinnoxAdmin || !cookies.BinnoxAdmin.profile || !cookies.BinnoxAdmin.token) {
@@ -42,6 +44,8 @@ const DefaultLayout = () => {
   React.useEffect(() => {
     if (!token) return
     getCartRecordsFunction()
+    getAmbassadorRecordsFunction()
+    getRewordsFunction()
   }, [token])
   return (
     <div>

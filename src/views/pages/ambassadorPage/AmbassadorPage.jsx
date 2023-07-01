@@ -1,5 +1,4 @@
-import React from 'react'
-
+import React, { useContext, useEffect } from 'react'
 import {
   CAvatar,
   CButtonGroup,
@@ -22,56 +21,26 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilPeople } from '@coreui/icons'
-
 import { AdminContext } from 'src/context/adminContext'
+import AmbassadorForm from './AmbassadorForm'
 import ModalComponent from 'src/components/ModalComponent/ModalComponent'
-import Register from '../pages/register/Register'
 
-function AdminRecords() {
-  const { adminList, activeAccountFunction } = React.useContext(AdminContext)
-
+function AmbassadorPage() {
+  const { ambassadorList, getAmbassadorRecordsFunction } = useContext(AdminContext)
+  useEffect(() => {
+    getAmbassadorRecordsFunction()
+  }, [])
   return (
     <CRow>
       <CCol xs>
         <CCard className="mb-4">
           <CCardHeader>
             <div className="d-flex justify-content-between">
-              Admins
-              <ModalComponent title={'Create Admin'} component={<Register />} />
+              Ambassadors
+              <ModalComponent title={'Create Ambassador'} component={<AmbassadorForm />} />
             </div>
           </CCardHeader>
           <CCardBody>
-            {/* <CButtonGroup
-              role="group"
-              aria-label="Basic checkbox toggle button group"
-              className="my-2"
-            >
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio1"
-                autoComplete="off"
-                label="Radio 1"
-                defaultChecked
-              />
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio2"
-                autoComplete="off"
-                label="Radio 2"
-              />
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio3"
-                autoComplete="off"
-                label="Radio 3"
-              />
-            </CButtonGroup> */}
             <CTable align="middle" className="mb-0 border" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
@@ -82,15 +51,19 @@ function AdminRecords() {
                   <CTableHeaderCell>Email</CTableHeaderCell>
                   <CTableHeaderCell>Contact</CTableHeaderCell>
                   <CTableHeaderCell>Activity</CTableHeaderCell>
+                  <CTableHeaderCell>Ref Code</CTableHeaderCell>
+                  <CTableHeaderCell>Ref User</CTableHeaderCell>
+                  <CTableHeaderCell>Ref Ambassador</CTableHeaderCell>
+                  <CTableHeaderCell>Reword</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {adminList.loading ? (
+                {ambassadorList.loading ? (
                   <>loading...</>
                 ) : (
                   <>
-                    {adminList.data.map((item, index) => {
+                    {ambassadorList.data.map((item, index) => {
                       return (
                         <CTableRow v-for="item in tableItems" key={index}>
                           <CTableDataCell className="text-center">
@@ -140,6 +113,21 @@ function AdminRecords() {
                             <div>{item?.account_active ? 'Active' : 'Deactivated'}</div>
                           </CTableDataCell>
                           <CTableDataCell>
+                            <div>{item?.referralCode}</div>
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            <div>{item?.userReferralsList?.length}</div>
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            <div>{item?.ambassadorReferralsList?.length}</div>
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            <div>{item?.rewordPoints}</div>
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            <button>Action</button>
+                          </CTableDataCell>
+                          {/* <CTableDataCell>
                             <CTableDataCell>
                               <CDropdown variant="btn-group">
                                 <CDropdownToggle color="primary">Actions</CDropdownToggle>
@@ -164,7 +152,7 @@ function AdminRecords() {
                                 </CDropdownMenu>
                               </CDropdown>
                             </CTableDataCell>
-                          </CTableDataCell>
+                          </CTableDataCell> */}
                         </CTableRow>
                       )
                     })}
@@ -179,4 +167,4 @@ function AdminRecords() {
   )
 }
 
-export default AdminRecords
+export default AmbassadorPage

@@ -5,6 +5,8 @@ import PaymentRequest from './views/records/PaymentRequest'
 import CreateDiscountCodePage from './views/discount/CreateDiscountCodePage'
 import discounts from './views/discount/discounts'
 import CartsRecord from './views/orders/Carts'
+import AmbassadorPage from './views/pages/ambassadorPage/AmbassadorPage'
+import RewordPage from './views/pages/rewordPage/RewordPage'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -116,12 +118,13 @@ const routes = [
   { path: '/orders/new', name: 'UserRecords', element: Orders },
   { path: '/orders/delivered', name: 'UserRecords', element: OrdersDelivered },
   { path: '/orders/picked-up', name: 'UserRecords', element: OrdersPickedUp },
-  { path: '/auth/create-admin', name: 'UserRecords', element: Register },
+  // { path: '/auth/create-admin', name: 'UserRecords', element: Register },
   { path: '/payment/request', name: 'UserRecords', element: PaymentRequest },
   { path: '/payment/history', name: 'UserRecords', element: PaymentRequestHistory },
-  { path: '/discount/create', name: 'UserRecords', element: CreateDiscountCodePage },
+  { path: '/rewords', name: 'UserRecords', element: RewordPage },
   { path: '/discount/list', name: 'UserRecords', element: discounts },
   { path: '/Carts', name: 'UserRecords', element: CartsRecord },
+  { path: '/ambassador', name: 'Ambassador', element: AmbassadorPage },
 ]
 
 export default routes

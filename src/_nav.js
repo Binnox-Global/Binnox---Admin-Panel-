@@ -13,6 +13,7 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+  cilMoney,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -46,6 +47,27 @@ const _nav = [
         component: CNavItem,
         name: 'Business',
         to: '/records/businesses',
+      },
+      {
+        component: CNavItem,
+        name: 'Ambassadors',
+        to: '/ambassador',
+      },
+      {
+        component: CNavItem,
+        name: 'Admin List',
+        to: '/records/admins',
+      },
+
+      {
+        component: CNavItem,
+        name: 'Discounts',
+        to: '/discount/list',
+      },
+      {
+        component: CNavItem,
+        name: 'Rewords',
+        to: '/rewords',
       },
     ],
   },
@@ -81,27 +103,17 @@ const _nav = [
   //   component: CNavTitle,
   //   name: 'Authentication',
   // },
-  {
-    component: CNavGroup,
-    name: 'Authentication',
-    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Create Admin',
-        to: '/auth/create-admin',
-      },
-      {
-        component: CNavItem,
-        name: 'Admin List',
-        to: '/records/admins',
-      },
-    ],
-  },
+  // {
+  //   component: CNavGroup,
+  //   name: 'Authentication',
+  //   icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+  //   items: [
+
+  // },
   {
     component: CNavGroup,
     name: 'Payment',
-    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilMoney} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
@@ -115,23 +127,14 @@ const _nav = [
       },
     ],
   },
-  {
-    component: CNavGroup,
-    name: 'Discount',
-    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Create discount',
-        to: '/discount/create',
-      },
-      {
-        component: CNavItem,
-        name: 'Discount  List',
-        to: '/discount/list',
-      },
-    ],
-  },
+  // {
+  //   component: CNavGroup,
+  //   name: 'Discount',
+  //   icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+  //   items: [
+
+  //   ],
+  // },
   // {
   //   component: CNavTitle,
   //   name: 'Theme',

@@ -22,7 +22,8 @@ import { toast } from 'react-toastify'
 function CreateDiscountCodePage() {
   const [cookies] = useCookies()
   const [loading, setLoading] = React.useState(false)
-  const { apiUrl } = React.useContext(AdminContext)
+  const { apiUrl, getDiscountCodeFunction, setModalComponentVisible } =
+    React.useContext(AdminContext)
   const [discountCodeForm, setDiscountCodeForm] = React.useState({
     code: '',
     discount: '',
@@ -74,6 +75,8 @@ function CreateDiscountCodePage() {
         setLoading(false)
 
         toast.success('Code Created Successfully')
+        getDiscountCodeFunction()
+        setModalComponentVisible(false)
       })
       .catch((error) => {
         setLoading(false)

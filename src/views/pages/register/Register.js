@@ -18,7 +18,8 @@ import { toast } from 'react-toastify'
 const Register = () => {
   const [cookies] = useCookies()
   const [loading, setLoading] = React.useState(false)
-  const { apiUrl } = React.useContext(AdminContext)
+  const { apiUrl, getAdminRecordsFunction, setModalComponentVisible } =
+    React.useContext(AdminContext)
   async function registerAdminFunction(e) {
     e.preventDefault()
     // return console.dir(e.target)
@@ -66,7 +67,9 @@ const Register = () => {
         console.log(response.data)
         setLoading(false)
 
-        toast.success('Welcome Back Admin')
+        toast.success('Admin created successfully')
+        getAdminRecordsFunction()
+        setModalComponentVisible(false)
       })
       .catch((error) => {
         setLoading(false)

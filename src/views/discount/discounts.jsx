@@ -19,6 +19,8 @@ import {
   CFormSwitch,
   CTableRow,
 } from '@coreui/react'
+import ModalComponent from 'src/components/ModalComponent/ModalComponent'
+import CreateDiscountCodePage from './CreateDiscountCodePage'
 
 function Discounts() {
   const {
@@ -38,7 +40,15 @@ function Discounts() {
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Active Discount Code List</CCardHeader>
+            <CCardHeader>
+              <div className="d-flex justify-content-between">
+                Active Discount Code List
+                <ModalComponent
+                  title={'Create Discount Code'}
+                  component={<CreateDiscountCodePage />}
+                />
+              </div>
+            </CCardHeader>
             <CCardBody>
               <CTable
                 align="middle"

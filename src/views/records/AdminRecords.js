@@ -24,6 +24,8 @@ import CIcon from '@coreui/icons-react'
 import { cilPeople } from '@coreui/icons'
 
 import { AdminContext } from 'src/context/adminContext'
+import ModalComponent from 'src/components/ModalComponent/ModalComponent'
+import Register from '../pages/register/Register'
 
 function AdminRecords() {
   const { adminList, activeAccountFunction } = React.useContext(AdminContext)
@@ -32,7 +34,12 @@ function AdminRecords() {
     <CRow>
       <CCol xs>
         <CCard className="mb-4">
-          <CCardHeader>Admins</CCardHeader>
+          <CCardHeader>
+            <div className="d-flex justify-content-between">
+              Admins
+              <ModalComponent title={'Create Admin'} component={<Register />} />
+            </div>
+          </CCardHeader>
           <CCardBody>
             {/* <CButtonGroup
               role="group"

@@ -3,12 +3,12 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { AdminContext } from 'src/context/adminContext'
 
-function ModalComponent({ component, title, btnText }) {
+function ModalComponent({ component, title }) {
   const { modalComponentVisible, setModalComponentVisible } = React.useContext(AdminContext)
   return (
     <>
       <CButton className="btn-sm" onClick={() => setModalComponentVisible(true)}>
-        {btnText}
+        {title}
       </CButton>
       <CModal
         fullscreen="xxl"

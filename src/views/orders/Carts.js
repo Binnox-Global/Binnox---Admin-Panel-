@@ -31,10 +31,10 @@ function CartsRecord() {
     getCartRecordsFunction()
   }, [])
 
-  useEffect(() => {
-    console.log(cartList)
-    console.log('groupedCarts', groupedCarts)
-  }, [cartList])
+  // useEffect(() => {
+  //   console.log(cartList)
+  //   console.log('groupedCarts', groupedCarts)
+  // }, [cartList])
 
   const groupedCarts = cartList?.data?.reduce((result, cart) => {
     // console.log('orderList', newOrders)
@@ -77,7 +77,20 @@ export default CartsRecord
 
 function CartGroupCard({ carts }) {
   const [showDropDown, setShowDropDown] = useState(false)
+  const [sumTotal, setSumTotal] = useState(0)
   const { decodeDate } = React.useContext(AdminContext)
+
+  useEffect(() => {
+    setSumTotal(0)
+    carts?.forEach((item) => {
+      setSumTotal((prev) => prev + item.total_amount)
+    })
+  }, [carts])
+
+  function formatNumber(number) {
+    const formattedNumber = number.toLocaleString()
+    return formattedNumber
+  }
   return (
     <div className="OrderGroupCard">
       {/* OrderGroupCard */}
@@ -96,7 +109,7 @@ function CartGroupCard({ carts }) {
           </div>
         </div>
         <div className="user-name">
-          <b>Total:</b> ₦ {carts[0].total_amount}
+          <b>Total:</b> ₦ {formatNumber(sumTotal)}
         </div>
       </div>
       <div
@@ -156,7 +169,7 @@ function CartGroupCard({ carts }) {
                     <div>{item?.item_count}</div>
                   </CTableDataCell>
                   <CTableDataCell className="text-center">
-                    <div>₦ {item?.product?.prices & 0}</div>
+                    <div>₦ {formatNumber(item?.product?.prices) ?? 0}</div>
                   </CTableDataCell>
                   <CTableDataCell>
                     <div>{item?.product?.available_count}</div>

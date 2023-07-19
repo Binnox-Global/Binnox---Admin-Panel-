@@ -114,7 +114,7 @@ function AdminProvider({ children }) {
         },
       })
       .then((res) => {
-        console.log(res.data.reword)
+        // console.log(res.data.reword)
         setRewords({
           loading: false,
           data: res.data.reword,
@@ -187,17 +187,17 @@ function AdminProvider({ children }) {
   }
 
   async function getCartRecordsFunction() {
-    //  console.log(cookies.BinnoxAdmin.token)
     axios
       .get(`${apiUrl}/cart/admin`, {
         headers: {
-          Authorization: token,
+          Authorization: cookies.BinnoxAdmin.token,
         },
       })
       .then((res) => {
-        console.log('Carts', res.data.carts.reverse())
+        // console.log('Carts', res.data.carts.reverse())
 
         setCartList({ loading: false, data: res.data.carts.reverse() })
+        // setCartList({ loading: false, data: res.data.carts })
       })
       .catch((error) => {
         console.error(error)

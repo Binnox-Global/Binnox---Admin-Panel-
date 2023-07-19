@@ -41,7 +41,7 @@ function RewordPage() {
             {' '}
             <CCardHeader>
               <div className="d-flex justify-content-between">
-                Rewords
+                Rewards
                 <ModalComponent title={'Update Rewords'} component={<RewordsForm />} />
               </div>
             </CCardHeader>

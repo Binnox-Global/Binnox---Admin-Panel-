@@ -121,7 +121,7 @@ const routes = [
   // { path: '/auth/create-admin', name: 'UserRecords', element: Register },
   { path: '/payment/request', name: 'UserRecords', element: PaymentRequest },
   { path: '/payment/history', name: 'UserRecords', element: PaymentRequestHistory },
-  { path: '/rewords', name: 'UserRecords', element: RewordPage },
+  { path: '/rewards', name: 'UserRecords', element: RewordPage },
   { path: '/discount/list', name: 'UserRecords', element: discounts },
   { path: '/Carts', name: 'UserRecords', element: CartsRecord },
   { path: '/ambassador', name: 'Ambassador', element: AmbassadorPage },

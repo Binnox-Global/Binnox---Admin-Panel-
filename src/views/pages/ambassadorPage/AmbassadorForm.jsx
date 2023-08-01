@@ -26,34 +26,37 @@ function AmbassadorForm() {
 
     const formElement = e.target
 
+    let dName
+
     if (formElement[0].value === '') {
-      return toast.info('Full name is Required')
+      // return toast.info('Full name is Required')
+      dName = 'Ambassador'
+    } else {
+      dName = formElement[0].value
     }
     if (formElement[1].value === '') {
-      return toast.info('Phone is Required')
-    }
-    if (formElement[2].value === '') {
       return toast.info('Email is Required')
     }
+    // if (formElement[2].value === '') {
+    //   return toast.info('Email is Required')
+    // }
 
-    if (formElement[3].value !== formElement[4].value) {
-      return toast.info('Password not equal to reset password')
-    }
+    // if (formElement[3].value !== formElement[4].value) {
+    //   return toast.info('Password not equal to reset password')
+    // }
 
     setLoading(true)
     // setLoading(true)
     const data = {
-      full_name: formElement[0].value,
-      phone_number: formElement[1].value,
-      email: formElement[2].value,
-      password: formElement[3].value,
-      referral: formElement[5].value,
+      name: dName,
+      to: formElement[1].value,
     }
 
     // return console.log(data)
     // axios POST request
     const options = {
-      url: `${apiUrl}/admin/ambassador`,
+      // url: `${apiUrl}/admin/ambassador`,
+      url: `${apiUrl}/sendMail/invite-ambassador`,
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -67,10 +70,10 @@ function AmbassadorForm() {
 
     axios(options)
       .then((response) => {
-        console.log(response.data)
+        // console.log(response.data)
         setLoading(false)
 
-        toast.success('Ambassador created successfully')
+        toast.success('Ambassador Invited successfully')
         getAmbassadorRecordsFunction()
         setModalComponentVisible(false)
       })
@@ -92,25 +95,25 @@ function AmbassadorForm() {
       <CCard className="mx-4">
         <CCardBody className="p-4">
           <CForm onSubmit={(e) => registerAmbassadorFunction(e)}>
-            <h1>Register</h1>
-            <p className="text-medium-emphasis">Create Ambassador</p>
+            <h1>Invitation</h1>
+            <p className="text-medium-emphasis">Invite Ambassador</p>
             <CInputGroup className="mb-3">
               <CInputGroupText>
                 <CIcon icon={cilUser} />
               </CInputGroupText>
               <CFormInput placeholder="Full name" autoComplete="username" />
             </CInputGroup>
-            <CInputGroup className="mb-3">
+            {/* <CInputGroup className="mb-3">
               <CInputGroupText>
                 <CIcon icon={cilUser} />
               </CInputGroupText>
               <CFormInput placeholder="Phone Number" autoComplete="number" />
-            </CInputGroup>
+            </CInputGroup> */}
             <CInputGroup className="mb-3">
               <CInputGroupText>@</CInputGroupText>
               <CFormInput placeholder="Email" autoComplete="email" />
             </CInputGroup>
-            <CInputGroup className="mb-3">
+            {/* <CInputGroup className="mb-3">
               <CInputGroupText>
                 <CIcon icon={cilLockLocked} />
               </CInputGroupText>
@@ -131,10 +134,10 @@ function AmbassadorForm() {
                 <CIcon icon={cilLockLocked} />
               </CInputGroupText>
               <CFormInput type="text" placeholder="Referral" />
-            </CInputGroup>
+            </CInputGroup> */}
             <div className="d-grid">
               <CButton color="success" className="px-4" type="submit" disabled={loading}>
-                {loading ? 'Loading...' : 'Create Account'}
+                {loading ? 'Loading...' : 'Invite Ambassador'}
               </CButton>
               {/* <CButton color="success"></CButton> */}
             </div>

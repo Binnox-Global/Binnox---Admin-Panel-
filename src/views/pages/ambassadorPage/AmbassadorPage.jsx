@@ -37,7 +37,7 @@ function AmbassadorPage() {
           <CCardHeader>
             <div className="d-flex justify-content-between">
               Ambassadors
-              <ModalComponent title={'Create Ambassador'} component={<AmbassadorForm />} />
+              <ModalComponent title={'Invite Ambassador'} component={<AmbassadorForm />} />
             </div>
           </CCardHeader>
           <CCardBody>

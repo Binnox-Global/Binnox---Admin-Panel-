@@ -44,10 +44,12 @@ const Register = () => {
     // setLoading(true)
     const data = {
       full_name: formElement[0].value,
-      phone_number: formElement[1].value,
+      phone_number: Number(formElement[1].value),
       email: formElement[2].value,
       password: formElement[3].value,
     }
+
+    // return console.log(data)
     // axios POST request
     const options = {
       url: `${apiUrl}/admin/register`,

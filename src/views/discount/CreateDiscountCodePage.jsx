@@ -11,6 +11,7 @@ import {
   CCol,
   CRow,
   CFormSwitch,
+  CFormSelect,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilNoteAdd, cilUser } from '@coreui/icons'
@@ -30,7 +31,16 @@ function CreateDiscountCodePage() {
     active: true,
     max_valid_count: '',
     description: '',
+    type: '',
   })
+
+  // Sample options for the select element
+  const options = [
+    { value: '', label: 'Discount Type ...' },
+    { value: 'percent', label: 'Percent' },
+    { value: 'amount', label: 'Amount' },
+    // Add more options as needed
+  ]
 
   async function createDiscountCodeFunction(e) {
     e.preventDefault()
@@ -48,6 +58,9 @@ function CreateDiscountCodePage() {
 
     if (discountCodeForm.description === '') {
       return toast.info('Description is Required')
+    }
+    if (discountCodeForm.type === '') {
+      return toast.info('Discount Type is Required')
     }
 
     setLoading(true)
@@ -92,6 +105,7 @@ function CreateDiscountCodePage() {
   }
 
   const handelChanges = (e) => {
+    // console.log(e.target.value)
     setDiscountCodeForm((prev) => {
       return {
         ...prev,
@@ -149,6 +163,16 @@ function CreateDiscountCodePage() {
                   name="max_valid_count"
                 />
               </CInputGroup>
+              <div className="mb-3">
+                {/* <label htmlFor="my-select"></label> */}
+                <CFormSelect custom id="my-select" name={'type'} onChange={(e) => handelChanges(e)}>
+                  {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </CFormSelect>
+              </div>
               <CInputGroup className="mb-2">
                 <CInputGroupText>
                   <CIcon icon={cilNoteAdd} />

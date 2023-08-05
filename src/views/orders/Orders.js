@@ -161,10 +161,11 @@ function OrderGroupCard({ orders }) {
               if (item?.statues === 'Pending' || item?.statues === 'Processing') {
                 return (
                   <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell>
+                    <CTableDataCell style={{ minWidth: '160px' }}>
                       <div>{item?.product?.name}</div>
                       <div className="small text-medium-emphasis">
-                        Business: {item?.business?.business_name}
+                        <b>Business</b>: {item?.business?.business_name} <br /> <b>Contact</b>:{' '}
+                        {item?.business?.business_number}
                       </div>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
@@ -191,10 +192,10 @@ function OrderGroupCard({ orders }) {
                     <CTableDataCell>
                       <div>{item?.delivered ? 'Delivered' : 'Not delivered'}</div>
                     </CTableDataCell>
-                    <CTableDataCell>
+                    <CTableDataCell style={{ minWidth: '156px' }}>
                       <div>{decodeDate(item?.createdAt)[1]}</div>
                       <div className="small text-medium-emphasis">
-                        Date: {decodeDate(item?.createdAt)[0]}
+                        {decodeDate(item?.createdAt)[0]}
                       </div>
                     </CTableDataCell>
                     <CTableDataCell>

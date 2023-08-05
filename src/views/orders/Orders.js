@@ -34,7 +34,7 @@ function Orders() {
   useEffect(() => {
     let newOrdersList = []
     orderList?.data?.forEach((item) => {
-      if (item.statues === 'Pending' || item.statues === 'Processing') {
+      if (item?.statues === 'Pending' || item?.statues === 'Processing') {
         newOrdersList.push(item)
       }
     })
@@ -42,11 +42,11 @@ function Orders() {
     setNewOrders(newOrdersList)
   }, [orderList])
 
-  const groupedOrders = newOrders.reduce((result, order) => {
+  const groupedOrders = newOrders?.reduce((result, order) => {
     // console.log('orderList', newOrders)
 
-    const userId = order.user._id
-    const userOrders = result.find((group) => group[0].user._id === userId)
+    const userId = order?.user?._id
+    const userOrders = result?.find((group) => group[0].user?._id === userId)
 
     if (userOrders) {
       userOrders.push(order)
@@ -73,7 +73,7 @@ function Orders() {
                 ) : (
                   <>
                     {' '}
-                    {groupedOrders.map((orders, i) => {
+                    {groupedOrders?.map((orders, i) => {
                       return <OrderGroupCard key={i} orders={orders} />
                     })}
                   </>
@@ -104,7 +104,7 @@ function OrderGroupCard({ orders }) {
             status={'success'}
           />
           <div className="user-name">
-            {orders[0].user.full_name}
+            {orders[0]?.user?.full_name}
             <br />
             <b>Email:</b> {orders[0]?.user?.email} || <b>Contact:</b>{' '}
             {orders[0]?.user?.phone_number}
@@ -112,14 +112,14 @@ function OrderGroupCard({ orders }) {
         </div>
         <div className="user-name">
           {' '}
-          {orders[0]?.address.split(',')[0] &&
-          orders[0]?.address.split(',')[1] &&
-          orders[0]?.address.split(',')[0] !== '' &&
-          orders[0]?.address.split(',')[1] !== '' ? (
+          {orders[0]?.address?.split(',')[0] &&
+          orders[0]?.address?.split(',')[1] &&
+          orders[0]?.address?.split(',')[0] !== '' &&
+          orders[0]?.address?.split(',')[1] !== '' ? (
             <LocationDropdown
               location={`https://www.google.com/maps/search/?api=1&query=${
-                orders[0]?.address.split(',')[0]
-              },${orders[0]?.address.split(',')[1]}`}
+                orders[0]?.address?.split(',')[0]
+              },${orders[0]?.address?.split(',')[1]}`}
             />
           ) : (
             'Location not valid'
@@ -157,8 +157,8 @@ function OrderGroupCard({ orders }) {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {orders.map((item, index) => {
-              if (item.statues === 'Pending' || item.statues === 'Processing') {
+            {orders?.map((item, index) => {
+              if (item?.statues === 'Pending' || item?.statues === 'Processing') {
                 return (
                   <CTableRow v-for="item in tableItems" key={index}>
                     <CTableDataCell>

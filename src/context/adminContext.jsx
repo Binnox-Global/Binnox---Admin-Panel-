@@ -11,9 +11,9 @@ export const AdminContext = createContext()
 function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  // let apiUrl = 'http://localhost:5000/api'
+  let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
-  let apiUrl = 'https://binnox-backend.vercel.app/api'
+  // let apiUrl = 'https://binnox-backend.vercel.app/api'
   const [modalComponentVisible, setModalComponentVisible] = React.useState(false)
   const [token, setToken] = React.useState(null)
   const [userList, setUserList] = React.useState({
@@ -26,7 +26,8 @@ function AdminProvider({ children }) {
   })
   const [businessList, setBusinessList] = React.useState({
     loading: true,
-    data: [],
+    active: [],
+    others: [],
   })
   const [orderList, setOrderList] = React.useState({
     loading: true,
@@ -176,9 +177,22 @@ function AdminProvider({ children }) {
       })
       .then((res) => {
         // console.log(res.data)
+        // filter the business results
+
+        let active = []
+        let others = []
+        res.data.business.reverse().forEach((business) => {
+          if (business?.business_active && business.business_verified && business.business_online) {
+            active.push(business)
+          } else {
+            others.push(business)
+          }
+        })
+
         setBusinessList({
           loading: false,
-          data: res.data.business.reverse(),
+          active,
+          others,
         })
       })
       .catch((error) => {

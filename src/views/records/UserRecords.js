@@ -24,15 +24,27 @@ import CIcon from '@coreui/icons-react'
 import { cilPeople } from '@coreui/icons'
 
 import { AdminContext } from 'src/context/adminContext'
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import moment from 'moment'
 
-function UserRecords() {
+function UserRecords({ show_max }) {
   const { userList, activeAccountFunction } = React.useContext(AdminContext)
 
   return (
     <CRow>
       <CCol xs>
         <CCard className="mb-4">
-          <CCardHeader>Users</CCardHeader>
+          <CCardHeader className="d-flex">
+            Users{' '}
+            <div className="ms-auto">
+              {show_max ? (
+                <>
+                  <Link to={'/records/users'}>Open More</Link>
+                </>
+              ) : null}
+            </div>
+          </CCardHeader>
           <CCardBody>
             {/* <CButtonGroup
               role="group"
@@ -81,6 +93,8 @@ function UserRecords() {
                   <CTableHeaderCell>Email</CTableHeaderCell>
                   <CTableHeaderCell>Contact</CTableHeaderCell>
                   <CTableHeaderCell>Activity</CTableHeaderCell>
+                  <CTableHeaderCell style={{ minWidth: '140px' }}>Ref By</CTableHeaderCell>
+                  <CTableHeaderCell style={{ minWidth: '140px' }}>Registered At</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -90,6 +104,9 @@ function UserRecords() {
                 ) : (
                   <>
                     {userList.data.map((item, index) => {
+                      if (show_max != null && index > show_max) {
+                        return
+                      }
                       return (
                         <CTableRow v-for="item in tableItems" key={index}>
                           <CTableDataCell className="text-center">
@@ -139,6 +156,14 @@ function UserRecords() {
                             <div>{item?.account_active ? 'Active' : 'Deactivated'}</div>
                           </CTableDataCell>
                           <CTableDataCell>
+                            {/* <div>{moment(item?.createdAt).format('ddd, MMM, yyy')}</div> */}
+                            <div>{item?.ambassadorReferral?.full_name || '--'}</div>
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {/* <div>{moment(item?.createdAt).format('ddd, MMM, yyy')}</div> */}
+                            <div>{moment(item?.createdAt).format('ddd, MMM Do YYYY h:mm a')}</div>
+                          </CTableDataCell>
+                          <CTableDataCell>
                             <CTableDataCell>
                               <CDropdown variant="btn-group">
                                 <CDropdownToggle color="primary">Actions</CDropdownToggle>
@@ -176,6 +201,10 @@ function UserRecords() {
       </CCol>
     </CRow>
   )
+}
+
+UserRecords.propTypes = {
+  show_max: PropTypes.number,
 }
 
 export default UserRecords

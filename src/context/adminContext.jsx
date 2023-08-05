@@ -11,9 +11,9 @@ export const AdminContext = createContext()
 function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
-  // let apiUrl = 'https://binnox-backend.vercel.app/api'
+  let apiUrl = 'https://binnox-backend.vercel.app/api'
   const [modalComponentVisible, setModalComponentVisible] = React.useState(false)
   const [token, setToken] = React.useState(null)
   const [userList, setUserList] = React.useState({

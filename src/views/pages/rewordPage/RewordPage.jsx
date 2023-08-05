@@ -22,7 +22,7 @@ function RewordPage() {
       )
       .then((res) => {
         setRewords({ loading: false, data: res.data.rewordDocument })
-        toast.success('Rewords Document Created Successfully')
+        toast.success('Rewards Document Created Successfully')
       })
       .catch((error) => {
         if (error.response.status === 400) {
@@ -41,7 +41,7 @@ function RewordPage() {
             {' '}
             <CCardHeader>
               <div className="d-flex justify-content-between">
-                Rewords
+                Rewards
                 <ModalComponent title={'Update Rewords'} component={<RewordsForm />} />
               </div>
             </CCardHeader>
@@ -52,7 +52,7 @@ function RewordPage() {
                 <>
                   {rewords?.data === null ? (
                     <div className="text-center">
-                      <h2>No Reword Document Created</h2>
+                      <h2>No Reward Document Created</h2>
                       <button
                         className="btn btn-primary btn-sm mt-2"
                         onClick={() => createRewordDocumentFunction()}
@@ -63,23 +63,23 @@ function RewordPage() {
                   ) : (
                     <div className="row">
                       <div className="col-md-6 my-2">
-                        <b>User Referral User Reword</b> <br />
+                        <b>User Referral User Reward</b> <br />
                         {rewords?.data?.user_refer_user_reword} point
                       </div>
                       <div className="col-md-6 my-2">
-                        <b>Ambassador Referral User Reword</b> <br />
+                        <b>Ambassador Referral User Reward</b> <br />
                         {rewords?.data?.ambassador_refer_user_reword} point
                       </div>
                       <div className="col-md-6 my-2">
-                        <b>Ambassador Referral Ambassador Reword</b> <br />
+                        <b>Ambassador Referral Ambassador Reward</b> <br />
                         {rewords?.data?.ambassador_refer_ambassador_reword} point
                       </div>
                       <div className="col-md-6 my-2">
-                        <b>Ambassador Referral Order Reword</b> <br />
+                        <b>Ambassador Referral Order Reward</b> <br />
                         {rewords?.data?.ambassador_down_line_order_reword}%
                       </div>
                       <div className="col-md-6 my-2">
-                        <b>User Order Reword</b> <br />
+                        <b>User Order Reward</b> <br />
                         {rewords?.data?.user_order_reword}%
                       </div>
                     </div>
@@ -102,7 +102,7 @@ function RewordPage() {
               ) : (
                 <>
                   {rewords?.data === null ? (
-                    <>No Reword Document Created</>
+                    <>No Reward Document Created</>
                   ) : (
                     <>
                       {rewords?.data?.reword_history.length === 0 ? (
@@ -114,33 +114,33 @@ function RewordPage() {
                             <div key={i} className="card p-2 my-1">
                               {item?.user_refer_user_reword ? (
                                 <div className="d-flex gap-2">
-                                  <b>User Referral User Reword</b> {item?.user_refer_user_reword}
+                                  <b>User Referral User Reward</b> {item?.user_refer_user_reword}
                                 </div>
                               ) : null}
                               {item?.ambassador_refer_user_reword ? (
                                 <div className="d-flex gap-2">
-                                  <b>Ambassador Referral User Reword</b>{' '}
+                                  <b>Ambassador Referral User Reward</b>{' '}
                                   {item?.ambassador_refer_user_reword}
                                 </div>
                               ) : null}
                               {item?.ambassador_refer_ambassador_reword ? (
                                 <div className="d-flex gap-2">
                                   {' '}
-                                  <b>Ambassador Referral Ambassador Reword</b>{' '}
+                                  <b>Ambassador Referral Ambassador Reward</b>{' '}
                                   {item?.ambassador_refer_ambassador_reword}
                                 </div>
                               ) : null}
                               {item?.ambassador_down_line_order_reword ? (
                                 <div className="d-flex gap-2">
                                   {' '}
-                                  <b>Ambassador Referral Order Reword</b>{' '}
+                                  <b>Ambassador Referral Order Reward</b>{' '}
                                   {item?.ambassador_down_line_order_reword}
                                 </div>
                               ) : null}
                               {item?.user_order_reword ? (
                                 <div className="d-flex gap-2">
                                   {' '}
-                                  <b>User Order Reword</b> {item?.user_order_reword}
+                                  <b>User Order Reward</b> {item?.user_order_reword}
                                 </div>
                               ) : null}
                               <div className="d-flex gap-2 my-1">

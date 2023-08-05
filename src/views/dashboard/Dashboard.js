@@ -46,7 +46,13 @@ const Dashboard = () => {
               }
               icon={<CIcon icon={cilLibraryBuilding} height={24} />}
               title=" Business"
-              value={businessList?.loading ? 'Loading...' : businessList?.data?.length}
+              value={
+                businessList?.loading
+                  ? 'Loading...'
+                  : `${businessList?.active?.length + businessList?.others?.length} / ${
+                      businessList?.active?.length
+                    } (Active)`
+              }
             />
           </CCol>
           <CCol sm="3">

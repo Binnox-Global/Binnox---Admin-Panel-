@@ -56,7 +56,7 @@ function Orders() {
 
     return result
   }, [])
-  console.log('groupedOrders', groupedOrders)
+  // console.log('groupedOrders', groupedOrders)
 
   return (
     <CRow>
@@ -89,9 +89,206 @@ function Orders() {
 
 export default Orders
 
-function OrderGroupCard({ orders }) {
+export function NewOrdersTransfer() {
+  const { orderTransferList, updateOrderTransferStatusFunction } = React.useContext(AdminContext)
+  const [newOrders, setNewOrders] = useState([])
+
+  useEffect(() => {
+    let newOrdersList = []
+    orderTransferList?.data?.forEach((item) => {
+      if (!item?.transfer_approve && !item.transfer_rejected) {
+        // console.log(item)
+        newOrdersList.push(item)
+      }
+    })
+    // console.log('orderTransferList', orderTransferList)
+    setNewOrders(newOrdersList)
+  }, [orderTransferList])
+
+  const groupedOrders = newOrders?.reduce((result, order) => {
+    // console.log('orderList', newOrders)
+
+    const userId = order?.user?._id
+    const userOrders = result?.find((group) => group[0].user?._id === userId)
+
+    if (userOrders) {
+      userOrders.push(order)
+    } else {
+      result.push([order])
+    }
+
+    return result
+  }, [])
+  // console.log('groupedOrders', groupedOrders)
+
+  return (
+    <CRow>
+      <CCol xs>
+        <CCard className="mb-4">
+          <CCardHeader>New Orders Transfer</CCardHeader>
+          <CCardBody>
+            {orderTransferList.loading ? (
+              <>loading...</>
+            ) : (
+              <>
+                {newOrders.length <= 0 ? (
+                  <>No Order Transfer Currently</>
+                ) : (
+                  <>
+                    {' '}
+                    {groupedOrders?.map((orders, i) => {
+                      return <OrderGroupCard key={i} orders={orders} transfer={true} />
+                    })}
+                  </>
+                )}
+              </>
+            )}
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
+  )
+}
+export function ApprovedOrdersTransfer() {
+  const { orderTransferList, updateOrderTransferStatusFunction } = React.useContext(AdminContext)
+  const [newOrders, setNewOrders] = useState([])
+
+  useEffect(() => {
+    let newOrdersList = []
+    orderTransferList?.data?.forEach((item) => {
+      if (item?.transfer_approve && !item.transfer_rejected) {
+        newOrdersList.push(item)
+      }
+    })
+    // console.log(orderTransferList)
+    setNewOrders(newOrdersList)
+  }, [orderTransferList])
+
+  const groupedOrders = newOrders?.reduce((result, order) => {
+    // console.log('orderList', newOrders)
+
+    const userId = order?.user?._id
+    const userOrders = result?.find((group) => group[0].user?._id === userId)
+
+    if (userOrders) {
+      userOrders.push(order)
+    } else {
+      result.push([order])
+    }
+
+    return result
+  }, [])
+  // console.log('groupedOrders', groupedOrders)
+
+  return (
+    <CRow>
+      <CCol xs>
+        <CCard className="mb-4">
+          <CCardHeader>Approved Orders Transfer</CCardHeader>
+          <CCardBody>
+            {orderTransferList.loading ? (
+              <>loading...</>
+            ) : (
+              <>
+                {newOrders.length <= 0 ? (
+                  <>No Approved Order Transfer Currently</>
+                ) : (
+                  <>
+                    {' '}
+                    {groupedOrders?.map((orders, i) => {
+                      return <OrderGroupCard key={i} orders={orders} transfer={true} />
+                    })}
+                  </>
+                )}
+              </>
+            )}
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
+  )
+}
+export function RejectedOrdersTransfer() {
+  const { orderTransferList, updateOrderTransferStatusFunction } = React.useContext(AdminContext)
+  const [newOrders, setNewOrders] = useState([])
+
+  useEffect(() => {
+    let newOrdersList = []
+    orderTransferList?.data?.forEach((item) => {
+      if (!item?.transfer_approve && item.transfer_rejected) {
+        newOrdersList.push(item)
+      }
+    })
+    // console.log(orderTransferList)
+    setNewOrders(newOrdersList)
+  }, [orderTransferList])
+
+  const groupedOrders = newOrders?.reduce((result, order) => {
+    // console.log('orderList', newOrders)
+
+    const userId = order?.user?._id
+    const userOrders = result?.find((group) => group[0].user?._id === userId)
+
+    if (userOrders) {
+      userOrders.push(order)
+    } else {
+      result.push([order])
+    }
+
+    return result
+  }, [])
+  // console.log('groupedOrders', groupedOrders)
+
+  return (
+    <CRow>
+      <CCol xs>
+        <CCard className="mb-4">
+          <CCardHeader>Rejected Orders Transfer</CCardHeader>
+          <CCardBody>
+            {orderTransferList.loading ? (
+              <>loading...</>
+            ) : (
+              <>
+                {newOrders.length <= 0 ? (
+                  <>No Rejected Order Transfer Currently</>
+                ) : (
+                  <>
+                    {' '}
+                    {groupedOrders?.map((orders, i) => {
+                      return <OrderGroupCard key={i} orders={orders} transfer={true} />
+                    })}
+                  </>
+                )}
+              </>
+            )}
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
+  )
+}
+
+function OrderGroupCard({ orders, transfer }) {
   const [showDropDown, setShowDropDown] = useState(false)
-  const { updateOrderStatusFunction, decodeDate } = React.useContext(AdminContext)
+  const { updateOrderStatusFunction, updateOrderTransferStatusFunction, decodeDate } =
+    React.useContext(AdminContext)
+
+  function receiveOrderArray(status) {
+    //  check the item in the order array to know if it is accepted or rejected
+    if (orders[0]?.transfer_approve || orders[0].transfer_rejected) {
+      if (orders[0]?.transfer_approve) {
+        return toast.error('This Order has been Accepted')
+      } else if (orders[0].transfer_rejected) {
+        return toast.error('This Order has been Rejected')
+      }
+    }
+    let ids = []
+    orders.forEach((order) => {
+      ids.push(order._id)
+    })
+    console.log(ids, status)
+    updateOrderTransferStatusFunction(ids, status)
+  }
   return (
     <div className="OrderGroupCard">
       {/* OrderGroupCard */}
@@ -110,21 +307,35 @@ function OrderGroupCard({ orders }) {
             {orders[0]?.user?.phone_number}
           </div>
         </div>
-        <div className="user-name">
-          {' '}
-          {orders[0]?.address?.split(',')[0] &&
-          orders[0]?.address?.split(',')[1] &&
-          orders[0]?.address?.split(',')[0] !== '' &&
-          orders[0]?.address?.split(',')[1] !== '' ? (
-            <LocationDropdown
-              location={`https://www.google.com/maps/search/?api=1&query=${
-                orders[0]?.address?.split(',')[0]
-              },${orders[0]?.address?.split(',')[1]}`}
-            />
-          ) : (
-            'Location not valid'
-          )}
-        </div>
+
+        {transfer === false || !transfer ? (
+          <div className="user-name">
+            {' '}
+            {orders[0]?.address?.split(',')[0] &&
+            orders[0]?.address?.split(',')[1] &&
+            orders[0]?.address?.split(',')[0] !== '' &&
+            orders[0]?.address?.split(',')[1] !== '' ? (
+              <LocationDropdown
+                location={`https://www.google.com/maps/search/?api=1&query=${
+                  orders[0]?.address?.split(',')[0]
+                },${orders[0]?.address?.split(',')[1]}`}
+              />
+            ) : (
+              'Location not valid'
+            )}
+          </div>
+        ) : (
+          <div>
+            {' '}
+            <CDropdown variant="btn-group">
+              <CDropdownToggle color="primary">Actions</CDropdownToggle>
+              <CDropdownMenu>
+                <CDropdownItem onClick={() => receiveOrderArray('approve')}>Approve</CDropdownItem>
+                <CDropdownItem onClick={() => receiveOrderArray('reject')}>Reject</CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
+          </div>
+        )}
       </div>
       <div
         className="dropdown"
@@ -715,4 +926,5 @@ CountdownTimer.propTypes = {
 }
 OrderGroupCard.propTypes = {
   orders: PropTypes.array,
+  transfer: PropTypes.bool,
 }

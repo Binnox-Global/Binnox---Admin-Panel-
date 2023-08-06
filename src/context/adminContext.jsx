@@ -33,6 +33,10 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [orderTransferList, setOrderTransferList] = React.useState({
+    loading: true,
+    data: [],
+  })
   const [cartList, setCartList] = React.useState({
     loading: true,
     data: [],
@@ -233,6 +237,22 @@ function AdminProvider({ children }) {
         console.error(error)
       })
   }
+  async function getOrderTransferRecordsFunction() {
+    //  console.log(cookies.BinnoxAdmin.token)
+    axios
+      .get(`${apiUrl}/admin/orders/transfer?max_data_return=100`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        // console.log('orders Request', res.data.orders)
+        setOrderTransferList({ loading: false, data: res.data.orders.reverse() })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
   async function getPaymentRequestFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
     axios
@@ -388,6 +408,47 @@ status=${status}`,
         console.error(error)
       })
   }
+
+  async function updateOrderTransferStatusFunction(ids, status) {
+    // return
+    // console.log(token)
+    axios
+      .put(
+        `${apiUrl}/admin/status/transfer`,
+        {
+          transfer_id_array: ids,
+          status,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      )
+      .then((res) => {
+        // console.log('omoooooooooo', res.data)
+        toast.success('Successfully')
+        getOrderRecordsFunction()
+        setOrderTransferList({
+          loading: false,
+          data: res.data.update.reverse(),
+        })
+      })
+      .catch((error) => {
+        if (error.response.status || error.response.status === 400) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 401) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          return toast.error(error.response.data.message)
+        }
+        // toast.success('Successfully')
+        console.error(error)
+      })
+  }
+
   async function updatePaymentRequestStatusFunction(_id, status) {
     // return
     // console.log(token)
@@ -525,12 +586,15 @@ status=${status}`,
         getUserRecordsFunction,
         getBusinessRecordsFunction,
         getOrderRecordsFunction,
+        getOrderTransferRecordsFunction,
         getAdminRecordsFunction,
         activeAccountFunction,
         updateOrderStatusFunction,
+        updateOrderTransferStatusFunction,
         userList,
         businessList,
         orderList,
+        orderTransferList,
         adminList,
         verifyAccountFunction,
         logoutFunction,

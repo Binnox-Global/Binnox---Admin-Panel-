@@ -83,6 +83,11 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: 'Order Transfer',
+        to: '/orders/transfer',
+      },
+      {
+        component: CNavItem,
         name: 'New Orders',
         to: '/orders/new',
       },

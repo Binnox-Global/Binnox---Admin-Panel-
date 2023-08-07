@@ -150,7 +150,12 @@ function OrderGroupCard({ orders }) {
               <CTableHeaderCell>Count</CTableHeaderCell>
               <CTableHeaderCell className="text-center">Amount</CTableHeaderCell>
               <CTableHeaderCell>Statues</CTableHeaderCell>
-              <CTableHeaderCell>Rider</CTableHeaderCell>
+              <CTableHeaderCell style={{ minWidth: '150px', textAlign: 'center' }}>
+                Delivery Fee
+              </CTableHeaderCell>
+              <CTableHeaderCell style={{ minWidth: '150px', textAlign: 'center' }}>
+                Service Fee
+              </CTableHeaderCell>
               <CTableHeaderCell>Time</CTableHeaderCell>
               <CTableHeaderCell>30 minutes Delay CountDown</CTableHeaderCell>
               <CTableHeaderCell>Action</CTableHeaderCell>
@@ -189,9 +194,15 @@ function OrderGroupCard({ orders }) {
                     <CTableDataCell>
                       <div>{item?.statues}</div>
                     </CTableDataCell>
-                    <CTableDataCell>
-                      <div>{item?.delivered ? 'Delivered' : 'Not delivered'}</div>
+                    <CTableDataCell className="text-center">
+                      <div>₦{item?.delivery_fee || '--'}</div>
                     </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      <div>₦{item?.service_fee || '--'}</div>
+                    </CTableDataCell>
+                    {/* <CTableDataCell>
+                      <div>{item?.delivered ? 'Delivered' : 'Not delivered'}</div>
+                    </CTableDataCell> */}
                     <CTableDataCell style={{ minWidth: '156px' }}>
                       <div>{decodeDate(item?.createdAt)[1]}</div>
                       <div className="small text-medium-emphasis">
@@ -450,9 +461,15 @@ export function OrdersDelivered() {
                   <CTableHeaderCell>Count</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Amount</CTableHeaderCell>
                   <CTableHeaderCell>Statues</CTableHeaderCell>
-                  <CTableHeaderCell>Rider</CTableHeaderCell>
+                  {/* <CTableHeaderCell>Rider</CTableHeaderCell> */}
                   <CTableHeaderCell>User</CTableHeaderCell>
-                  <CTableHeaderCell>Time</CTableHeaderCell>
+                  <CTableHeaderCell style={{ minWidth: '100px', textAlign: 'center' }}>
+                    delivery_fee
+                  </CTableHeaderCell>
+                  <CTableHeaderCell style={{ minWidth: '100px', textAlign: 'center' }}>
+                    service_fee
+                  </CTableHeaderCell>
+                  <CTableHeaderCell style={{ minWidth: '150px' }}>Time</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -531,14 +548,20 @@ export function OrdersDelivered() {
                               {/* <div className="small text-medium-emphasis">Last login</div> */}
                               <div>{item?.delivered ? 'Delivered' : 'Not delivered'}</div>
                             </CTableDataCell>
-                            <CTableDataCell>
-                              {/* <div className="small text-medium-emphasis">Last login</div> */}
+                            {/* <CTableDataCell>
+                              {/* <div className="small text-medium-emphasis">Last login</div> * /}
                               <div>{item?.received ? 'Received' : 'Not received'}</div>
+                            </CTableDataCell> */}
+                            <CTableDataCell className="text-center">
+                              <div>₦{item?.delivery_fee || '--'}</div>
+                            </CTableDataCell>
+                            <CTableDataCell className="text-center">
+                              <div>₦{item?.service_fee || '--'}</div>
                             </CTableDataCell>
                             <CTableDataCell>
                               <div>{decodeDate(item?.createdAt)[1]}</div>
                               <div className="small text-medium-emphasis">
-                                Date: {decodeDate(item?.createdAt)[0]}
+                                {decodeDate(item?.createdAt)[0]}
                               </div>
                             </CTableDataCell>
                             <CTableDataCell>

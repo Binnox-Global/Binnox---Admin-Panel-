@@ -14,6 +14,7 @@ const DefaultLayout = () => {
     getBusinessRecordsFunction,
     getUserRecordsFunction,
     getOrderRecordsFunction,
+    getOrderTransferRecordsFunction,
     getAdminRecordsFunction,
     getCartRecordsFunction,
     getAmbassadorRecordsFunction,
@@ -39,6 +40,7 @@ const DefaultLayout = () => {
   React.useEffect(() => {
     if (!token) return
     getOrderRecordsFunction()
+    getOrderTransferRecordsFunction()
   }, [token])
 
   React.useEffect(() => {

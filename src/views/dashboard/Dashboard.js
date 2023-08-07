@@ -6,7 +6,7 @@ import { cilArrowRight, cilUser, cilLibraryBuilding, cilFastfood } from '@coreui
 
 import { AdminContext } from 'src/context/adminContext'
 import { Link } from 'react-router-dom'
-import Orders from '../orders/Orders'
+import Orders, { NewOrdersTransfer } from '../orders/Orders'
 import { ActiveBusinessRecords } from '../records/BusinessRecords'
 import UserRecords from '../records/UserRecords'
 
@@ -91,6 +91,7 @@ const Dashboard = () => {
       </CContainer>
 
       <Orders />
+      <NewOrdersTransfer />
       <ActiveBusinessRecords show_max={5} />
       <UserRecords show_max={5} />
     </>

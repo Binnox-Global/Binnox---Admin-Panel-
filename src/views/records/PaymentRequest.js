@@ -24,12 +24,13 @@ import CIcon from '@coreui/icons-react'
 import { cilPeople } from '@coreui/icons'
 
 import { AdminContext } from 'src/context/adminContext'
+import moment from 'moment'
 
 function PaymentRequest() {
-  const { paymentRequest, updatePaymentRequestStatusFunction, getPaymentRequestFunction } =
+  const { token, paymentRequest, updatePaymentRequestStatusFunction, getPaymentRequestFunction } =
     React.useContext(AdminContext)
   React.useEffect(() => {
-    getPaymentRequestFunction()
+    if (token) getPaymentRequestFunction()
   }, [])
   return (
     <CRow>
@@ -53,6 +54,9 @@ function PaymentRequest() {
                   <CTableHeaderCell>Amount</CTableHeaderCell>
                   {/* <CTableHeaderCell>Contact</CTableHeaderCell> */}
                   <CTableHeaderCell>Activity</CTableHeaderCell>
+                  <CTableHeaderCell>Bank Name</CTableHeaderCell>
+                  <CTableHeaderCell>Account Number</CTableHeaderCell>
+                  <CTableHeaderCell>Account Name</CTableHeaderCell>
                   <CTableHeaderCell>Date</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
@@ -81,7 +85,7 @@ function PaymentRequest() {
                             <div>{item?.business?.business_name}</div>
                           </CTableDataCell>
                           <CTableDataCell>
-                            <div>₦{item?.amount} </div>
+                            <div>₦{item?.amount.toLocaleString()} </div>
                           </CTableDataCell>
                           {/* <CTableDataCell>
                             <div>
@@ -101,7 +105,18 @@ function PaymentRequest() {
                             <div>{item?.pending ? 'Pending' : null}</div>
                             <div>{item?.rejected ? 'Rejected' : null}</div>
                           </CTableDataCell>
-                          <CTableDataCell>{item?.createdAt.split('T')[0]}</CTableDataCell>
+                          <CTableDataCell>
+                            {item?.business?.saved_bank_account[0]?.bank_name}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {item?.business?.saved_bank_account[0]?.account_number}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {item?.business?.saved_bank_account[0]?.account_name}
+                          </CTableDataCell>
+                          <CTableDataCell style={{ maxWidth: '100px' }}>
+                            {moment(item?.createdAt).format('ddd, MMM Do YYYY h:mm a')}
+                          </CTableDataCell>
                           <CTableDataCell>
                             <CDropdown variant="btn-group">
                               <CDropdownToggle color="primary">Actions</CDropdownToggle>

@@ -70,7 +70,7 @@ function PaymentRequestHistory() {
                             <div>{item?.business?.business_name}</div>
                           </CTableDataCell>
                           <CTableDataCell>
-                            <div>₦{item?.amount} </div>
+                            <div>₦{item?.amount.toLocaleString()} </div>
                           </CTableDataCell>
                           <CTableDataCell>
                             <div>{item?.approved ? 'Approved' : null}</div>

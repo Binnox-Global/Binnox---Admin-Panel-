@@ -400,7 +400,7 @@ function OrderGroupCard({ orders, transfer }) {
                       <div>{item?.item_count}</div>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
-                      <div>₦{item?.item_amount}</div>
+                      <div>₦{item?.item_amount.toLocaleString()}</div>
                     </CTableDataCell>
                     <CTableDataCell>
                       <div>{item?.statues}</div>
@@ -584,7 +584,7 @@ export function OrdersPickedUp() {
                             </CTableDataCell>
                             <CTableDataCell className="text-center">
                               {/* <CIcon size="xl" icon={item?.item_amount} /> */}
-                              <div>₦{item?.item_amount}</div>
+                              <div>₦{item?.item_amount.toLocaleString()}</div>
                             </CTableDataCell>
                             <CTableDataCell>
                               {/* <div className="small text-medium-emphasis">Last login</div> */}
@@ -749,7 +749,7 @@ export function OrdersDelivered() {
                             </CTableDataCell>
                             <CTableDataCell className="text-center">
                               {/* <CIcon size="xl" icon={item?.item_amount} /> */}
-                              <div>₦{item?.item_amount}</div>
+                              <div>₦{item?.item_amount.toLocaleString()}</div>
                             </CTableDataCell>
                             <CTableDataCell>
                               {/* <div className="small text-medium-emphasis">Last login</div> */}

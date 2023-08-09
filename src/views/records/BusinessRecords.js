@@ -229,7 +229,7 @@ export function ActiveBusinessRecords({ show_max }) {
                             <div>
                               ₦
                               {item?.wallet?.balance !== null && item?.wallet?.balance !== undefined
-                                ? item?.wallet?.balance
+                                ? item?.wallet?.balance.toLocaleString()
                                 : '--'}
                             </div>
                           </CTableDataCell>
@@ -420,7 +420,7 @@ export function OtherBusinessRecords() {
                             <div>
                               ₦
                               {item?.wallet?.balance !== null && item?.wallet?.balance !== undefined
-                                ? item?.wallet?.balance
+                                ? item?.wallet?.balance.toLocaleString()
                                 : '--'}
                             </div>
                           </CTableDataCell>

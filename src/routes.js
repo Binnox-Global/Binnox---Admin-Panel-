@@ -8,6 +8,7 @@ import CartsRecord from './views/orders/Carts'
 import AmbassadorPage from './views/pages/ambassadorPage/AmbassadorPage'
 import RewordPage from './views/pages/rewordPage/RewordPage'
 import OrderTransfer from './views/orderTransfer/OrderTransfer'
+import AdminRecordPage from './views/pages/adminRecordPage/AdminRecordPage'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -123,7 +124,8 @@ const routes = [
   // { path: '/auth/create-admin', name: 'UserRecords', element: Register },
   { path: '/payment/request', name: 'UserRecords', element: PaymentRequest },
   { path: '/payment/history', name: 'UserRecords', element: PaymentRequestHistory },
-  { path: '/rewords', name: 'UserRecords', element: RewordPage },
+  { path: '/rewards', name: 'UserRecords', element: RewordPage },
+  { path: '/admin-records', name: 'UserRecords', element: AdminRecordPage },
   { path: '/discount/list', name: 'UserRecords', element: discounts },
   { path: '/Carts', name: 'UserRecords', element: CartsRecord },
   { path: '/ambassador', name: 'Ambassador', element: AmbassadorPage },

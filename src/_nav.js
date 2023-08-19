@@ -66,8 +66,8 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Rewords',
-        to: '/rewords',
+        name: 'Rewards',
+        to: '/rewards',
       },
     ],
   },
@@ -120,6 +120,11 @@ const _nav = [
     name: 'Payment',
     icon: <CIcon icon={cilMoney} customClassName="nav-icon" />,
     items: [
+      {
+        component: CNavItem,
+        name: 'Admin Records',
+        to: '/admin-records',
+      },
       {
         component: CNavItem,
         name: 'Withdrawal Request List',

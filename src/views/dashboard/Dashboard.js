@@ -2,7 +2,7 @@ import React from 'react'
 
 import { CCol, CContainer, CLink, CRow, CWidgetStatsF } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilArrowRight, cilUser, cilLibraryBuilding, cilFastfood } from '@coreui/icons'
+import { cilArrowRight, cilUser, cilLibraryBuilding, cilFastfood, cilNotes } from '@coreui/icons'
 
 import { AdminContext } from 'src/context/adminContext'
 import { Link } from 'react-router-dom'
@@ -11,13 +11,14 @@ import { ActiveBusinessRecords } from '../records/BusinessRecords'
 import UserRecords from '../records/UserRecords'
 
 const Dashboard = () => {
-  const { userList, adminList, businessList, orderList } = React.useContext(AdminContext)
+  const { userList, adminList, businessList, orderList, adminRecords } =
+    React.useContext(AdminContext)
 
   return (
     <>
       <CContainer>
         <CRow>
-          <CCol sm="3">
+          <CCol sm="2">
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -33,7 +34,7 @@ const Dashboard = () => {
               value={adminList?.loading ? 'Loading...' : adminList?.data?.length}
             />
           </CCol>
-          <CCol sm="3">
+          <CCol sm="2">
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -55,7 +56,7 @@ const Dashboard = () => {
               }
             />
           </CCol>
-          <CCol sm="3">
+          <CCol sm="2">
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -67,11 +68,11 @@ const Dashboard = () => {
                 </Link>
               }
               icon={<CIcon icon={cilUser} height={24} />}
-              title="Customs"
+              title="Customer"
               value={userList?.loading ? 'Loading...' : userList?.data?.length}
             />
           </CCol>
-          <CCol sm="3">
+          <CCol sm="2">
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -84,7 +85,47 @@ const Dashboard = () => {
               }
               icon={<CIcon icon={cilFastfood} height={24} />}
               title="Orders"
-              value={orderList?.loading ? 'Loading...' : orderList?.data?.length}
+              value={adminRecords?.loading ? 'Loading...' : orderList?.data?.length}
+            />
+          </CCol>
+          <CCol sm="2">
+            {' '}
+            <CWidgetStatsF
+              className="mb-3"
+              color="warning"
+              footer={
+                <Link to={'/admin-records'}>
+                  View more
+                  <CIcon icon={cilArrowRight} className="float-end" width={16} />
+                </Link>
+              }
+              icon={<CIcon icon={cilNotes} height={24} />}
+              title="Total"
+              value={
+                adminRecords?.loading
+                  ? 'Loading...'
+                  : ` ₦${adminRecords.totalTransactions.toLocaleString()}`
+              }
+            />
+          </CCol>
+          <CCol sm="2">
+            {' '}
+            <CWidgetStatsF
+              className="mb-3"
+              color="warning"
+              footer={
+                <Link to={'/admin-records'}>
+                  View more
+                  <CIcon icon={cilArrowRight} className="float-end" width={16} />
+                </Link>
+              }
+              icon={<CIcon icon={cilNotes} height={24} />}
+              title="10 %"
+              value={
+                orderList?.loading
+                  ? 'Loading...'
+                  : ` ₦${adminRecords.transactions10percent.toLocaleString()}`
+              }
             />
           </CCol>
         </CRow>

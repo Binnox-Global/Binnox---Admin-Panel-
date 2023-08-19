@@ -11,10 +11,11 @@ export const AdminContext = createContext()
 function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  // let apiUrl = 'http://localhost:5000/api'
+  let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
-  let apiUrl = 'https://binnox-backend.vercel.app/api'
+  // let apiUrl = 'https://binnox-backend.vercel.app/api'
   const [modalComponentVisible, setModalComponentVisible] = React.useState(false)
+  const [refreshLoading, setRefreshLoading] = React.useState(false)
   const [token, setToken] = React.useState(null)
   const [userList, setUserList] = React.useState({
     loading: true,
@@ -30,6 +31,10 @@ function AdminProvider({ children }) {
     others: [],
   })
   const [orderList, setOrderList] = React.useState({
+    loading: true,
+    data: [],
+  })
+  const [orderGroupList, setOrderGroupList] = React.useState({
     loading: true,
     data: [],
   })
@@ -232,6 +237,22 @@ function AdminProvider({ children }) {
       .then((res) => {
         // console.log('orders', res.data)
         setOrderList({ loading: false, data: res.data.orders.reverse() })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+  async function getOrderGroupRecordsFunction() {
+    //  console.log(cookies.BinnoxAdmin.token)
+    axios
+      .get(`${apiUrl}/admin/orders/group?max_data_return=100`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        // console.log('getOrderGroupRecordsFunction', res.data)
+        setOrderGroupList({ loading: false, data: res.data.orders.reverse() })
       })
       .catch((error) => {
         console.error(error)
@@ -577,6 +598,35 @@ status=${status}`,
     // console.log(dateArray);
     return [dateArray[0], timeOnly[0]]
   }
+
+  async function refreshDashboardFunction() {
+    setRefreshLoading(true)
+
+    const promises = []
+
+    // Assuming these are your async functions
+    // promises.push(asyncFunction1());
+    // promises.push(asyncFunction2());
+    // promises.push(asyncFunction3());
+    promises.push(await getOrderGroupRecordsFunction())
+    promises.push(await getUserRecordsFunction())
+    promises.push(await getBusinessRecordsFunction())
+    promises.push(await getOrderRecordsFunction())
+    promises.push(await getOrderTransferRecordsFunction())
+    promises.push(await getAdminRecordsFunction())
+    promises.push(await getPaymentRequestFunction())
+    promises.push(await getCartRecordsFunction())
+    promises.push(await getAmbassadorRecordsFunction())
+    promises.push(await getRewordsFunction())
+
+    // Wait for all promises to resolve
+    const results = await Promise.all(promises)
+
+    // console.log('results', results)
+
+    // Update state after all promises have resolved
+    // setState(/* updated state */);
+  }
   return (
     <AdminContext.Provider
       value={{
@@ -616,6 +666,9 @@ status=${status}`,
         getRewordsFunction,
         rewords,
         setRewords,
+        refreshDashboardFunction,
+        getOrderGroupRecordsFunction,
+        orderGroupList,
       }}
     >
       {children}

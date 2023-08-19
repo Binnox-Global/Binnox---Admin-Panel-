@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { createContext } from 'react'
+import React, { createContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useCookies } from 'react-cookie'
 import { toast } from 'react-toastify'
@@ -11,9 +11,9 @@ export const AdminContext = createContext()
 function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
-  // let apiUrl = 'https://binnox-backend.vercel.app/api'
+  let apiUrl = 'https://binnox-backend.vercel.app/api'
   const [modalComponentVisible, setModalComponentVisible] = React.useState(false)
   const [refreshLoading, setRefreshLoading] = React.useState(false)
   const [token, setToken] = React.useState(null)
@@ -41,6 +41,14 @@ function AdminProvider({ children }) {
   const [orderTransferList, setOrderTransferList] = React.useState({
     loading: true,
     data: [],
+  })
+  const [adminRecords, setAdminRecords] = React.useState({
+    loading: true,
+    totalTransactions: 0,
+    transactions10percent: 0,
+    totalDeliveryFee: 0,
+    totalServiceFee: 0,
+    groundTotal: 0,
   })
   const [cartList, setCartList] = React.useState({
     loading: true,
@@ -97,6 +105,60 @@ function AdminProvider({ children }) {
         toast.error(error.message)
       })
   }
+
+  useEffect(() => {
+    setAdminRecords({
+      loading: true,
+      totalTransactions: 0,
+      transactions10percent: 0,
+      totalDeliveryFee: 0,
+      totalServiceFee: 0,
+      groundTotal: 0,
+    })
+    if (orderList.loading) return
+    // console.log('orderList', orderList.data)
+
+    let totalTransactions = 0
+    let transactions10percent = 0
+    let totalDeliveryFee = 0
+    let totalServiceFee = 0
+    let groundTotal = 0
+
+    orderList.data.forEach((order) => {
+      totalTransactions += order.item_amount
+
+      if (order.delivery_fee) {
+        totalDeliveryFee += order.delivery_fee
+      } else {
+        totalDeliveryFee += 600
+      }
+      if (order.service_fee) {
+        totalServiceFee += order.service_fee
+      } else {
+        totalServiceFee += 200
+      }
+    })
+
+    groundTotal = totalTransactions + totalDeliveryFee + totalServiceFee
+
+    transactions10percent = totalTransactions * 0.1
+
+    console.log({
+      totalTransactions,
+      transactions10percent,
+      totalDeliveryFee,
+      totalServiceFee,
+      groundTotal,
+    })
+    setAdminRecords({
+      loading: false,
+      totalTransactions,
+      transactions10percent,
+      totalDeliveryFee,
+      totalServiceFee,
+      groundTotal,
+    })
+  }, [orderList])
 
   async function getAmbassadorRecordsFunction() {
     axios
@@ -210,6 +272,10 @@ function AdminProvider({ children }) {
   }
 
   async function getCartRecordsFunction() {
+    setCartList({
+      loading: true,
+      data: [],
+    })
     axios
       .get(`${apiUrl}/cart/admin`, {
         headers: {
@@ -228,6 +294,10 @@ function AdminProvider({ children }) {
   }
   async function getOrderRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
+    setOrderList({
+      loading: true,
+      data: [],
+    })
     axios
       .get(`${apiUrl}/admin/orders?max_data_return=100`, {
         headers: {
@@ -244,6 +314,10 @@ function AdminProvider({ children }) {
   }
   async function getOrderGroupRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
+    setOrderGroupList({
+      loading: true,
+      data: [],
+    })
     axios
       .get(`${apiUrl}/admin/orders/group?max_data_return=100`, {
         headers: {
@@ -260,6 +334,10 @@ function AdminProvider({ children }) {
   }
   async function getOrderTransferRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
+    setOrderTransferList({
+      loading: true,
+      data: [],
+    })
     axios
       .get(`${apiUrl}/admin/orders/transfer?max_data_return=100`, {
         headers: {
@@ -276,6 +354,10 @@ function AdminProvider({ children }) {
   }
   async function getPaymentRequestFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
+    setPaymentRequest({
+      loading: true,
+      data: [],
+    })
     axios
       .get(`${apiUrl}/admin/payment-request`, {
         headers: {
@@ -283,7 +365,7 @@ function AdminProvider({ children }) {
         },
       })
       .then((res) => {
-        console.log('payment-request', res.data)
+        // console.log('payment-request', res.data)
         setPaymentRequest({
           loading: false,
           data: res.data.requests.reverse(),
@@ -669,6 +751,8 @@ status=${status}`,
         refreshDashboardFunction,
         getOrderGroupRecordsFunction,
         orderGroupList,
+        adminRecords,
+        setAdminRecords,
       }}
     >
       {children}

@@ -13,6 +13,7 @@ const DefaultLayout = () => {
     setToken,
     getBusinessRecordsFunction,
     getUserRecordsFunction,
+    getOrderGroupRecordsFunction,
     getOrderRecordsFunction,
     getOrderTransferRecordsFunction,
     getAdminRecordsFunction,
@@ -48,6 +49,7 @@ const DefaultLayout = () => {
     getCartRecordsFunction()
     getAmbassadorRecordsFunction()
     getRewordsFunction()
+    getOrderGroupRecordsFunction()
   }, [token])
   return (
     <div>

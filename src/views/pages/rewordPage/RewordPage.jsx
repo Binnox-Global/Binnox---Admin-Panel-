@@ -95,7 +95,7 @@ function RewordPage() {
         <CCol xs>
           <CCard className="mb-4">
             {' '}
-            <CCardHeader>Rewords History</CCardHeader>
+            <CCardHeader>Rewards History</CCardHeader>
             <CCardBody>
               {rewords.loading ? (
                 <>Loading...</>

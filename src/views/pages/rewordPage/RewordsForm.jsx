@@ -65,7 +65,7 @@ function RewordsForm() {
       .then((response) => {
         setLoading(false)
 
-        toast.success('Reword Updated Successfully')
+        toast.success('Reward Updated Successfully')
         // getAmbassadorRecordsFunction()
         setRewords({ loading: false, data: response.data.updateReword })
         setModalComponentVisible(false)
@@ -97,7 +97,7 @@ function RewordsForm() {
         <CForm onSubmit={(e) => updateRewordFunction(e)}>
           <div className="row">
             <div className="col-md-6 my-2">
-              <b className="d-block mb-2">User Referral User Reword</b>
+              <b className="d-block mb-2">User Referral User Reward</b>
               <CInputGroup className="mb-3">
                 <CInputGroupText>
                   <CIcon icon={cilUser} />
@@ -110,7 +110,7 @@ function RewordsForm() {
               </CInputGroup>
             </div>
             <div className="col-md-6 my-2">
-              <b className="d-block mb-2">Ambassador Referral User Reword</b>
+              <b className="d-block mb-2">Ambassador Referral User Reward</b>
               <CInputGroup className="mb-3">
                 <CInputGroupText>
                   <CIcon icon={cilUser} />
@@ -123,7 +123,7 @@ function RewordsForm() {
               </CInputGroup>
             </div>
             <div className="col-md-6 my-2">
-              <b className="d-block mb-2">Ambassador Referral Ambassador Reword</b>
+              <b className="d-block mb-2">Ambassador Referral Ambassador Reward</b>
               <CInputGroup className="mb-3">
                 <CInputGroupText>
                   <CIcon icon={cilUser} />
@@ -136,7 +136,7 @@ function RewordsForm() {
               </CInputGroup>
             </div>
             <div className="col-md-6 my-2">
-              <b className="d-block mb-2">Ambassador Referral Order Reword</b>
+              <b className="d-block mb-2">Ambassador Referral Order Reward</b>
               <CInputGroup className="mb-3">
                 <CInputGroupText>
                   <CIcon icon={cilUser} />
@@ -149,7 +149,7 @@ function RewordsForm() {
               </CInputGroup>
             </div>
             <div className="col-md-6 my-2">
-              <b className="d-block mb-2">User Order Reword</b>
+              <b className="d-block mb-2">User Order Reward</b>
               <CInputGroup className="mb-3">
                 <CInputGroupText>
                   <CIcon icon={cilUser} />
@@ -162,7 +162,7 @@ function RewordsForm() {
               </CInputGroup>
             </div>
             <CButton color="success" className="px-4" type="submit" disabled={loading}>
-              {loading ? 'Loading...' : 'Update Reword'}
+              {loading ? 'Loading...' : 'Update Reward'}
             </CButton>
           </div>
         </CForm>

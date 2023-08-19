@@ -207,7 +207,7 @@ export function ActiveBusinessRecords({ show_max }) {
                               '--'
                             )}
                           </CTableDataCell> */}
-                          {/* <BusinessLocation
+                          {/* <GetLocation
                             longitude={item?.business_location?.long}
                             latitude={item?.business_location?.lat}
                           /> */}
@@ -216,7 +216,7 @@ export function ActiveBusinessRecords({ show_max }) {
                             item?.business_location?.long &&
                             item?.business_location?.lat !== '' &&
                             item?.business_location?.long !== '' ? (
-                              <BusinessLocation
+                              <GetLocation
                                 longitude={item?.business_location?.long}
                                 latitude={item?.business_location?.lat}
                               />
@@ -408,7 +408,7 @@ export function OtherBusinessRecords() {
                             item?.business_location?.long &&
                             item?.business_location?.lat !== '' &&
                             item?.business_location?.long !== '' ? (
-                              <BusinessLocation
+                              <GetLocation
                                 longitude={item?.business_location?.long}
                                 latitude={item?.business_location?.lat}
                               />
@@ -489,7 +489,7 @@ export function OtherBusinessRecords() {
   )
 }
 
-function BusinessLocation({ latitude, longitude }) {
+export function GetLocation({ latitude, longitude }) {
   const [addressLoading, setAddressLoading] = useState(true)
   const [address, setAddress] = useState({})
   useEffect(() => {
@@ -529,12 +529,12 @@ function BusinessLocation({ latitude, longitude }) {
     <CTableDataCell className="text-center">
       {/* {address !== '' ? address : '--'} */}
       {/* Address */}
-      {addressLoading ? 'Loading...' : address?.suburb}
+      {addressLoading ? 'Loading...' : address?.suburb || address.road}
     </CTableDataCell>
   )
 }
 
-BusinessLocation.propTypes = {
+GetLocation.propTypes = {
   latitude: PropTypes.number,
 
   longitude: PropTypes.number,

@@ -54,7 +54,7 @@ function AmbassadorPage() {
                   <CTableHeaderCell>Ref Code</CTableHeaderCell>
                   <CTableHeaderCell>Ref User</CTableHeaderCell>
                   <CTableHeaderCell>Ref Ambassador</CTableHeaderCell>
-                  <CTableHeaderCell>Reword</CTableHeaderCell>
+                  <CTableHeaderCell>Reward</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>

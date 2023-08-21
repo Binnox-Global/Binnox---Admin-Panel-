@@ -98,6 +98,7 @@ export function ActiveBusinessRecords({ show_max }) {
                   <CTableHeaderCell>Location</CTableHeaderCell>
                   <CTableHeaderCell>Address</CTableHeaderCell>
                   <CTableHeaderCell>Wallet</CTableHeaderCell>
+                  <CTableHeaderCell>Product</CTableHeaderCell>
                   <CTableHeaderCell>Status</CTableHeaderCell>
                   <CTableHeaderCell>Verified</CTableHeaderCell>
                   <CTableHeaderCell style={{ minWidth: '140px' }}>Registered At</CTableHeaderCell>
@@ -233,6 +234,10 @@ export function ActiveBusinessRecords({ show_max }) {
                                 : '--'}
                             </div>
                           </CTableDataCell>
+
+                          <CTableDataCell className="text-center">
+                            <div>{item?.business_products?.length}</div>
+                          </CTableDataCell>
                           <CTableDataCell className="text-center">
                             <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>
                           </CTableDataCell>
@@ -329,6 +334,7 @@ export function OtherBusinessRecords() {
                   <CTableHeaderCell>Location</CTableHeaderCell>
                   <CTableHeaderCell>Address</CTableHeaderCell>
                   <CTableHeaderCell>Wallet</CTableHeaderCell>
+                  <CTableHeaderCell>Product</CTableHeaderCell>
                   <CTableHeaderCell>Status</CTableHeaderCell>
                   <CTableHeaderCell>Verified</CTableHeaderCell>
                   <CTableHeaderCell style={{ minWidth: '130px' }}>Registered At</CTableHeaderCell>
@@ -423,6 +429,9 @@ export function OtherBusinessRecords() {
                                 ? item?.wallet?.balance.toLocaleString()
                                 : '--'}
                             </div>
+                          </CTableDataCell>
+                          <CTableDataCell className="text-center">
+                            <div>{item?.business_products?.length}</div>
                           </CTableDataCell>
                           <CTableDataCell className="text-center">
                             <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>

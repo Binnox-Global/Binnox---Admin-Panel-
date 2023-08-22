@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { CCol, CContainer, CLink, CRow, CWidgetStatsF } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
@@ -14,11 +14,15 @@ const Dashboard = () => {
   const { userList, adminList, businessList, orderList, adminRecords } =
     React.useContext(AdminContext)
 
+  useEffect(() => {
+    console.log('businessList', businessList)
+  }, [])
+
   return (
     <>
       <CContainer>
-        <CRow>
-          <CCol sm="2">
+        <CRow className="row-cols-md-2 row-cols-lg-3">
+          <CCol>
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -34,7 +38,7 @@ const Dashboard = () => {
               value={adminList?.loading ? 'Loading...' : adminList?.data?.length}
             />
           </CCol>
-          <CCol sm="2">
+          <CCol>
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -56,7 +60,7 @@ const Dashboard = () => {
               }
             />
           </CCol>
-          <CCol sm="2">
+          <CCol>
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -72,7 +76,7 @@ const Dashboard = () => {
               value={userList?.loading ? 'Loading...' : userList?.data?.length}
             />
           </CCol>
-          <CCol sm="2">
+          <CCol>
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -88,7 +92,7 @@ const Dashboard = () => {
               value={adminRecords?.loading ? 'Loading...' : orderList?.data?.length}
             />
           </CCol>
-          <CCol sm="2">
+          <CCol>
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -104,11 +108,11 @@ const Dashboard = () => {
               value={
                 adminRecords?.loading
                   ? 'Loading...'
-                  : ` ₦${adminRecords.totalTransactions.toLocaleString()}`
+                  : ` ₦${adminRecords.totalTransactions?.toLocaleString()}`
               }
             />
           </CCol>
-          <CCol sm="2">
+          <CCol>
             {' '}
             <CWidgetStatsF
               className="mb-3"
@@ -124,7 +128,7 @@ const Dashboard = () => {
               value={
                 orderList?.loading
                   ? 'Loading...'
-                  : ` ₦${adminRecords.transactions10percent.toLocaleString()}`
+                  : ` ₦${adminRecords.transactions5percent?.toLocaleString()}`
               }
             />
           </CCol>

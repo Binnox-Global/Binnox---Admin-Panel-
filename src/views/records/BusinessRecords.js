@@ -42,6 +42,27 @@ export function ActiveBusinessRecords({ show_max }) {
   const { businessList, activeAccountFunction, verifyAccountFunction } =
     React.useContext(AdminContext)
 
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filteredData, setFilteredData] = useState([])
+
+  const filterBusinessList = () => {
+    const lowerCaseQuery = searchQuery.toLowerCase()
+    const newFilteredData = businessList?.active?.filter((item) => {
+      const fullName = item.business_name.toLowerCase()
+      const email = item.business_email.toLowerCase()
+      const phoneNumber = `0${item.business_number?.toString()}`
+      return (
+        fullName.includes(lowerCaseQuery) ||
+        email.includes(lowerCaseQuery) ||
+        phoneNumber.includes(lowerCaseQuery)
+      )
+    })
+    setFilteredData(newFilteredData)
+  }
+  useEffect(() => {
+    filterBusinessList() // Call the filtering function
+  }, [searchQuery])
+
   return (
     <CRow>
       <CCol xs>
@@ -57,33 +78,15 @@ export function ActiveBusinessRecords({ show_max }) {
             </div>
           </CCardHeader>
           <CCardBody>
-            {/* <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio1"
-                autoComplete="off"
-                label="Radio 1"
-                defaultChecked
-              />
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio2"
-                autoComplete="off"
-                label="Radio 2"
-              />
-              <CFormCheck
-                type="radio"
-                button={{ color: 'primary', variant: 'outline' }}
-                name="btnradio"
-                id="btnradio3"
-                autoComplete="off"
-                label="Radio 3"
-              />
-            </CButtonGroup> */}
+            <input
+              type="text"
+              placeholder="Search by name, email, or number"
+              value={searchQuery}
+              className="form-control w-100 w-sm-100 w-md-50 w-lg-33 mb-3"
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+              }}
+            />
             <CTable align="middle" className="mb-0 border" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
@@ -110,57 +113,66 @@ export function ActiveBusinessRecords({ show_max }) {
                   <>loading...</>
                 ) : (
                   <>
-                    {businessList?.active?.map((item, index) => {
-                      return (
-                        <CTableRow v-for="item in tableItems" key={index}>
-                          <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <CAvatar
-                              size="md"
-                              src={
-                                item?.business_cover_image
-                                  ? item?.business_cover_image
-                                  : 'https://via.placeholder.com/600x400?text=Image'
-                              }
-                              status={item?.business_online ? 'success' : 'danger'}
-                            />
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>{item?.business_name}</div>
-                            <div className="small text-medium-emphasis">
-                              Type: {item?.business_type}
-                            </div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>
-                              {item?.business_email}{' '}
-                              {item?.business_email_verified ? (
-                                <>
-                                  {' '}
-                                  <div className="small text-medium-emphasis">Verified: True</div>
-                                </>
-                              ) : (
-                                <div className="small text-medium-emphasis">Verified: False</div>
-                              )}{' '}
-                            </div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>
-                              {item?.business_number}
-                              {item?.number_verified ? (
-                                <>
-                                  {' '}
-                                  <div className="small text-medium-emphasis">Verified: True</div>
-                                </>
-                              ) : (
-                                <div className="small text-medium-emphasis">Verified: False</div>
-                              )}{' '}
-                              {/* </div> */}
-                            </div>
+                    {searchQuery
+                      ? filteredData.map((item, index) => {
+                          return (
+                            <CTableRow v-for="item in tableItems" key={index}>
+                              <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <CAvatar
+                                  size="md"
+                                  src={
+                                    item?.business_cover_image
+                                      ? item?.business_cover_image
+                                      : 'https://via.placeholder.com/600x400?text=Image'
+                                  }
+                                  status={item?.business_online ? 'success' : 'danger'}
+                                />
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>{item?.business_name}</div>
+                                <div className="small text-medium-emphasis">
+                                  Type: {item?.business_type}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  {item?.business_email}{' '}
+                                  {item?.business_email_verified ? (
+                                    <>
+                                      {' '}
+                                      <div className="small text-medium-emphasis">
+                                        Verified: True
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="small text-medium-emphasis">
+                                      Verified: False
+                                    </div>
+                                  )}{' '}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  {item?.business_number}
+                                  {item?.number_verified ? (
+                                    <>
+                                      {' '}
+                                      <div className="small text-medium-emphasis">
+                                        Verified: True
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="small text-medium-emphasis">
+                                      Verified: False
+                                    </div>
+                                  )}{' '}
+                                  {/* </div> */}
+                                </div>
 
-                            {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
-                          </CTableDataCell>
-                          {/* <CTableDataCell>
+                                {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
+                              </CTableDataCell>
+                              {/* <CTableDataCell>
                             <div>
                               <b> CAC Dcc:</b>{' '}
                               {item?.business_verification_document?.cac_registration_doc
@@ -180,19 +192,19 @@ export function ActiveBusinessRecords({ show_max }) {
                                 : 'Not submitted'}
                             </div>
                           </CTableDataCell> */}
-                          <CTableDataCell className="text-center">
-                            {item?.business_location?.lat &&
-                            item?.business_location?.long &&
-                            item?.business_location?.lat !== '' &&
-                            item?.business_location?.long !== '' ? (
-                              <LocationDropdown
-                                location={`https://www.google.com/maps/search/?api=1&query=${item?.business_location?.lat},${item?.business_location?.long}`}
-                              />
-                            ) : (
-                              '--'
-                            )}
-                          </CTableDataCell>
-                          {/* <CTableDataCell className="text-center">
+                              <CTableDataCell className="text-center">
+                                {item?.business_location?.lat &&
+                                item?.business_location?.long &&
+                                item?.business_location?.lat !== '' &&
+                                item?.business_location?.long !== '' ? (
+                                  <LocationDropdown
+                                    location={`https://www.google.com/maps/search/?api=1&query=${item?.business_location?.lat},${item?.business_location?.long}`}
+                                  />
+                                ) : (
+                                  '--'
+                                )}
+                              </CTableDataCell>
+                              {/* <CTableDataCell className="text-center">
                             {item?.business_location?.lat &&
                             item?.business_location?.long &&
                             item?.business_location?.lat !== '' &&
@@ -208,90 +220,286 @@ export function ActiveBusinessRecords({ show_max }) {
                               '--'
                             )}
                           </CTableDataCell> */}
-                          {/* <GetLocation
+                              {/* <GetLocation
                             longitude={item?.business_location?.long}
                             latitude={item?.business_location?.lat}
                           /> */}
-                          <>
+                              <>
+                                {item?.business_location?.lat &&
+                                item?.business_location?.long &&
+                                item?.business_location?.lat !== '' &&
+                                item?.business_location?.long !== '' ? (
+                                  <GetLocation
+                                    longitude={item?.business_location?.long}
+                                    latitude={item?.business_location?.lat}
+                                  />
+                                ) : (
+                                  <CTableDataCell className="text-center">--</CTableDataCell>
+                                )}
+                              </>
+
+                              <CTableDataCell className="">
+                                <div>
+                                  ₦
+                                  {item?.wallet?.balance !== null &&
+                                  item?.wallet?.balance !== undefined
+                                    ? item?.wallet?.balance.toLocaleString()
+                                    : '--'}
+                                </div>
+                              </CTableDataCell>
+
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_products?.length}</div>
+                              </CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>
+                              </CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_verified ? 'Verified' : '--'}</div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                {/* <div>{moment(item?.createdAt).format('ddd, MMM, yyy')}</div> */}
+                                <div>
+                                  {moment(item?.createdAt).format('ddd, MMM Do YYYY h:mm a')}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <CDropdown variant="btn-group">
+                                  <CDropdownToggle color="primary">Actions</CDropdownToggle>
+                                  <CDropdownMenu>
+                                    {item.business_active ? (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          activeAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        DeActivate {item.account_type}
+                                      </CDropdownItem>
+                                    ) : (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          activeAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        Activate {item.account_type}
+                                      </CDropdownItem>
+                                    )}
+                                    {item.business_verified && item.account_type === 'business' ? (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          verifyAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        DeVerify {item.account_type}
+                                      </CDropdownItem>
+                                    ) : (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          verifyAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        Verify {item.account_type}
+                                      </CDropdownItem>
+                                    )}
+                                  </CDropdownMenu>
+                                </CDropdown>
+                              </CTableDataCell>
+                            </CTableRow>
+                          )
+                        })
+                      : businessList?.active.map((item, index) => {
+                          return (
+                            <CTableRow v-for="item in tableItems" key={index}>
+                              <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <CAvatar
+                                  size="md"
+                                  src={
+                                    item?.business_cover_image
+                                      ? item?.business_cover_image
+                                      : 'https://via.placeholder.com/600x400?text=Image'
+                                  }
+                                  status={item?.business_online ? 'success' : 'danger'}
+                                />
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>{item?.business_name}</div>
+                                <div className="small text-medium-emphasis">
+                                  Type: {item?.business_type}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  {item?.business_email}{' '}
+                                  {item?.business_email_verified ? (
+                                    <>
+                                      {' '}
+                                      <div className="small text-medium-emphasis">
+                                        Verified: True
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="small text-medium-emphasis">
+                                      Verified: False
+                                    </div>
+                                  )}{' '}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  {item?.business_number}
+                                  {item?.number_verified ? (
+                                    <>
+                                      {' '}
+                                      <div className="small text-medium-emphasis">
+                                        Verified: True
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="small text-medium-emphasis">
+                                      Verified: False
+                                    </div>
+                                  )}{' '}
+                                  {/* </div> */}
+                                </div>
+
+                                {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
+                              </CTableDataCell>
+                              {/* <CTableDataCell>
+                            <div>
+                              <b> CAC Dcc:</b>{' '}
+                              {item?.business_verification_document?.cac_registration_doc
+                                ? 'submitted'
+                                : 'Not submitted'}
+                            </div>
+                            <div>
+                              <b> CAC No:</b>{' '}
+                              {item?.business_verification_document?.cac_registration_number
+                                ? item?.business_verification_document?.cac_registration_number
+                                : 'Not submitted'}
+                            </div>
+                            <div>
+                              <b>Utility Bill:</b>{' '}
+                              {item?.business_verification_document?.utility_bill
+                                ? 'submitted'
+                                : 'Not submitted'}
+                            </div>
+                          </CTableDataCell> */}
+                              <CTableDataCell className="text-center">
+                                {item?.business_location?.lat &&
+                                item?.business_location?.long &&
+                                item?.business_location?.lat !== '' &&
+                                item?.business_location?.long !== '' ? (
+                                  <LocationDropdown
+                                    location={`https://www.google.com/maps/search/?api=1&query=${item?.business_location?.lat},${item?.business_location?.long}`}
+                                  />
+                                ) : (
+                                  '--'
+                                )}
+                              </CTableDataCell>
+                              {/* <CTableDataCell className="text-center">
                             {item?.business_location?.lat &&
                             item?.business_location?.long &&
                             item?.business_location?.lat !== '' &&
                             item?.business_location?.long !== '' ? (
-                              <GetLocation
-                                longitude={item?.business_location?.long}
-                                latitude={item?.business_location?.lat}
-                              />
+                              <>
+                                {' '}
+                                {getLocationAddress(
+                                  item?.business_location?.lat,
+                                  item?.business_location?.long,
+                                )}
+                              </>
                             ) : (
-                              <CTableDataCell className="text-center">--</CTableDataCell>
+                              '--'
                             )}
-                          </>
-
-                          <CTableDataCell className="">
-                            <div>
-                              ₦
-                              {item?.wallet?.balance !== null && item?.wallet?.balance !== undefined
-                                ? item?.wallet?.balance.toLocaleString()
-                                : '--'}
-                            </div>
-                          </CTableDataCell>
-
-                          <CTableDataCell className="text-center">
-                            <div>{item?.business_products?.length}</div>
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <div>{item?.business_verified ? 'Verified' : '--'}</div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            {/* <div>{moment(item?.createdAt).format('ddd, MMM, yyy')}</div> */}
-                            <div>{moment(item?.createdAt).format('ddd, MMM Do YYYY h:mm a')}</div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <CDropdown variant="btn-group">
-                              <CDropdownToggle color="primary">Actions</CDropdownToggle>
-                              <CDropdownMenu>
-                                {item.business_active ? (
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      activeAccountFunction(item.account_type, item._id)
-                                    }
-                                  >
-                                    DeActivate {item.account_type}
-                                  </CDropdownItem>
+                          </CTableDataCell> */}
+                              {/* <GetLocation
+                            longitude={item?.business_location?.long}
+                            latitude={item?.business_location?.lat}
+                          /> */}
+                              <>
+                                {item?.business_location?.lat &&
+                                item?.business_location?.long &&
+                                item?.business_location?.lat !== '' &&
+                                item?.business_location?.long !== '' ? (
+                                  <GetLocation
+                                    longitude={item?.business_location?.long}
+                                    latitude={item?.business_location?.lat}
+                                  />
                                 ) : (
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      activeAccountFunction(item.account_type, item._id)
-                                    }
-                                  >
-                                    Activate {item.account_type}
-                                  </CDropdownItem>
+                                  <CTableDataCell className="text-center">--</CTableDataCell>
                                 )}
-                                {item.business_verified && item.account_type === 'business' ? (
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      verifyAccountFunction(item.account_type, item._id)
-                                    }
-                                  >
-                                    DeVerify {item.account_type}
-                                  </CDropdownItem>
-                                ) : (
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      verifyAccountFunction(item.account_type, item._id)
-                                    }
-                                  >
-                                    Verify {item.account_type}
-                                  </CDropdownItem>
-                                )}
-                              </CDropdownMenu>
-                            </CDropdown>
-                          </CTableDataCell>
-                        </CTableRow>
-                      )
-                    })}
+                              </>
+
+                              <CTableDataCell className="">
+                                <div>
+                                  ₦
+                                  {item?.wallet?.balance !== null &&
+                                  item?.wallet?.balance !== undefined
+                                    ? item?.wallet?.balance.toLocaleString()
+                                    : '--'}
+                                </div>
+                              </CTableDataCell>
+
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_products?.length}</div>
+                              </CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>
+                              </CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_verified ? 'Verified' : '--'}</div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                {/* <div>{moment(item?.createdAt).format('ddd, MMM, yyy')}</div> */}
+                                <div>
+                                  {moment(item?.createdAt).format('ddd, MMM Do YYYY h:mm a')}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <CDropdown variant="btn-group">
+                                  <CDropdownToggle color="primary">Actions</CDropdownToggle>
+                                  <CDropdownMenu>
+                                    {item.business_active ? (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          activeAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        DeActivate {item.account_type}
+                                      </CDropdownItem>
+                                    ) : (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          activeAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        Activate {item.account_type}
+                                      </CDropdownItem>
+                                    )}
+                                    {item.business_verified && item.account_type === 'business' ? (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          verifyAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        DeVerify {item.account_type}
+                                      </CDropdownItem>
+                                    ) : (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          verifyAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        Verify {item.account_type}
+                                      </CDropdownItem>
+                                    )}
+                                  </CDropdownMenu>
+                                </CDropdown>
+                              </CTableDataCell>
+                            </CTableRow>
+                          )
+                        })}
                   </>
                 )}
               </CTableBody>
@@ -313,13 +521,41 @@ ActiveBusinessRecords.propTypes = {
 export function OtherBusinessRecords() {
   const { businessList, activeAccountFunction, verifyAccountFunction } =
     React.useContext(AdminContext)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filteredData, setFilteredData] = useState([])
 
+  const filterBusinessList = () => {
+    const lowerCaseQuery = searchQuery.toLowerCase()
+    const newFilteredData = businessList?.others?.filter((item) => {
+      const fullName = item.business_name.toLowerCase()
+      const email = item.business_email.toLowerCase()
+      const phoneNumber = `0${item.business_number?.toString()}`
+      return (
+        fullName.includes(lowerCaseQuery) ||
+        email.includes(lowerCaseQuery) ||
+        phoneNumber.includes(lowerCaseQuery)
+      )
+    })
+    setFilteredData(newFilteredData)
+  }
+  useEffect(() => {
+    filterBusinessList() // Call the filtering function
+  }, [searchQuery])
   return (
     <CRow>
       <CCol xs>
         <CCard className="mb-4">
           <CCardHeader className="d-flex">Other Businesses </CCardHeader>
           <CCardBody>
+            <input
+              type="text"
+              placeholder="Search by name, email, or number"
+              value={searchQuery}
+              className="form-control w-100 w-sm-100 w-md-50 w-lg-33 mb-3"
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+              }}
+            />
             <CTable align="middle" className="mb-0 border" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
@@ -346,147 +582,393 @@ export function OtherBusinessRecords() {
                   <>loading...</>
                 ) : (
                   <>
-                    {businessList?.others?.map((item, index) => {
-                      return (
-                        <CTableRow v-for="item in tableItems" key={index}>
-                          <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <CAvatar
-                              size="md"
-                              src={
-                                item?.business_cover_image
-                                  ? item?.business_cover_image
-                                  : 'https://via.placeholder.com/600x400?text=Image'
-                              }
-                              status={item?.business_online ? 'success' : 'danger'}
-                            />
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>{item?.business_name}</div>
-                            <div className="small text-medium-emphasis">
-                              Type: {item?.business_type}
-                            </div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>
-                              {item?.business_email}{' '}
-                              {item?.business_email_verified ? (
-                                <>
-                                  {' '}
-                                  <div className="small text-medium-emphasis">Verified: True</div>
-                                </>
-                              ) : (
-                                <div className="small text-medium-emphasis">Verified: False</div>
-                              )}{' '}
-                            </div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>
-                              {item?.business_number}
-                              {item?.number_verified ? (
-                                <>
-                                  {' '}
-                                  <div className="small text-medium-emphasis">Verified: True</div>
-                                </>
-                              ) : (
-                                <div className="small text-medium-emphasis">Verified: False</div>
-                              )}{' '}
-                              {/* </div> */}
-                            </div>
+                    {searchQuery
+                      ? filteredData.map((item, index) => {
+                          return (
+                            <CTableRow v-for="item in tableItems" key={index}>
+                              <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <CAvatar
+                                  size="md"
+                                  src={
+                                    item?.business_cover_image
+                                      ? item?.business_cover_image
+                                      : 'https://via.placeholder.com/600x400?text=Image'
+                                  }
+                                  status={item?.business_online ? 'success' : 'danger'}
+                                />
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>{item?.business_name}</div>
+                                <div className="small text-medium-emphasis">
+                                  Type: {item?.business_type}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  {item?.business_email}{' '}
+                                  {item?.business_email_verified ? (
+                                    <>
+                                      {' '}
+                                      <div className="small text-medium-emphasis">
+                                        Verified: True
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="small text-medium-emphasis">
+                                      Verified: False
+                                    </div>
+                                  )}{' '}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  {item?.business_number}
+                                  {item?.number_verified ? (
+                                    <>
+                                      {' '}
+                                      <div className="small text-medium-emphasis">
+                                        Verified: True
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="small text-medium-emphasis">
+                                      Verified: False
+                                    </div>
+                                  )}{' '}
+                                  {/* </div> */}
+                                </div>
 
-                            {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
-                          </CTableDataCell>
-
-                          <CTableDataCell className="text-center">
+                                {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
+                              </CTableDataCell>
+                              {/* <CTableDataCell>
+                            <div>
+                              <b> CAC Dcc:</b>{' '}
+                              {item?.business_verification_document?.cac_registration_doc
+                                ? 'submitted'
+                                : 'Not submitted'}
+                            </div>
+                            <div>
+                              <b> CAC No:</b>{' '}
+                              {item?.business_verification_document?.cac_registration_number
+                                ? item?.business_verification_document?.cac_registration_number
+                                : 'Not submitted'}
+                            </div>
+                            <div>
+                              <b>Utility Bill:</b>{' '}
+                              {item?.business_verification_document?.utility_bill
+                                ? 'submitted'
+                                : 'Not submitted'}
+                            </div>
+                          </CTableDataCell> */}
+                              <CTableDataCell className="text-center">
+                                {item?.business_location?.lat &&
+                                item?.business_location?.long &&
+                                item?.business_location?.lat !== '' &&
+                                item?.business_location?.long !== '' ? (
+                                  <LocationDropdown
+                                    location={`https://www.google.com/maps/search/?api=1&query=${item?.business_location?.lat},${item?.business_location?.long}`}
+                                  />
+                                ) : (
+                                  '--'
+                                )}
+                              </CTableDataCell>
+                              {/* <CTableDataCell className="text-center">
                             {item?.business_location?.lat &&
                             item?.business_location?.long &&
                             item?.business_location?.lat !== '' &&
                             item?.business_location?.long !== '' ? (
-                              <LocationDropdown
-                                location={`https://www.google.com/maps/search/?api=1&query=${item?.business_location?.lat},${item?.business_location?.long}`}
-                              />
+                              <>
+                                {' '}
+                                {getLocationAddress(
+                                  item?.business_location?.lat,
+                                  item?.business_location?.long,
+                                )}
+                              </>
                             ) : (
                               '--'
                             )}
-                          </CTableDataCell>
-                          <>
+                          </CTableDataCell> */}
+                              {/* <GetLocation
+                            longitude={item?.business_location?.long}
+                            latitude={item?.business_location?.lat}
+                          /> */}
+                              <>
+                                {item?.business_location?.lat &&
+                                item?.business_location?.long &&
+                                item?.business_location?.lat !== '' &&
+                                item?.business_location?.long !== '' ? (
+                                  <GetLocation
+                                    longitude={item?.business_location?.long}
+                                    latitude={item?.business_location?.lat}
+                                  />
+                                ) : (
+                                  <CTableDataCell className="text-center">--</CTableDataCell>
+                                )}
+                              </>
+
+                              <CTableDataCell className="">
+                                <div>
+                                  ₦
+                                  {item?.wallet?.balance !== null &&
+                                  item?.wallet?.balance !== undefined
+                                    ? item?.wallet?.balance.toLocaleString()
+                                    : '--'}
+                                </div>
+                              </CTableDataCell>
+
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_products?.length}</div>
+                              </CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>
+                              </CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_verified ? 'Verified' : '--'}</div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                {/* <div>{moment(item?.createdAt).format('ddd, MMM, yyy')}</div> */}
+                                <div>
+                                  {moment(item?.createdAt).format('ddd, MMM Do YYYY h:mm a')}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <CDropdown variant="btn-group">
+                                  <CDropdownToggle color="primary">Actions</CDropdownToggle>
+                                  <CDropdownMenu>
+                                    {item.business_active ? (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          activeAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        DeActivate {item.account_type}
+                                      </CDropdownItem>
+                                    ) : (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          activeAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        Activate {item.account_type}
+                                      </CDropdownItem>
+                                    )}
+                                    {item.business_verified && item.account_type === 'business' ? (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          verifyAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        DeVerify {item.account_type}
+                                      </CDropdownItem>
+                                    ) : (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          verifyAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        Verify {item.account_type}
+                                      </CDropdownItem>
+                                    )}
+                                  </CDropdownMenu>
+                                </CDropdown>
+                              </CTableDataCell>
+                            </CTableRow>
+                          )
+                        })
+                      : businessList?.others.map((item, index) => {
+                          return (
+                            <CTableRow v-for="item in tableItems" key={index}>
+                              <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <CAvatar
+                                  size="md"
+                                  src={
+                                    item?.business_cover_image
+                                      ? item?.business_cover_image
+                                      : 'https://via.placeholder.com/600x400?text=Image'
+                                  }
+                                  status={item?.business_online ? 'success' : 'danger'}
+                                />
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>{item?.business_name}</div>
+                                <div className="small text-medium-emphasis">
+                                  Type: {item?.business_type}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  {item?.business_email}{' '}
+                                  {item?.business_email_verified ? (
+                                    <>
+                                      {' '}
+                                      <div className="small text-medium-emphasis">
+                                        Verified: True
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="small text-medium-emphasis">
+                                      Verified: False
+                                    </div>
+                                  )}{' '}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  {item?.business_number}
+                                  {item?.number_verified ? (
+                                    <>
+                                      {' '}
+                                      <div className="small text-medium-emphasis">
+                                        Verified: True
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="small text-medium-emphasis">
+                                      Verified: False
+                                    </div>
+                                  )}{' '}
+                                  {/* </div> */}
+                                </div>
+
+                                {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
+                              </CTableDataCell>
+                              {/* <CTableDataCell>
+                            <div>
+                              <b> CAC Dcc:</b>{' '}
+                              {item?.business_verification_document?.cac_registration_doc
+                                ? 'submitted'
+                                : 'Not submitted'}
+                            </div>
+                            <div>
+                              <b> CAC No:</b>{' '}
+                              {item?.business_verification_document?.cac_registration_number
+                                ? item?.business_verification_document?.cac_registration_number
+                                : 'Not submitted'}
+                            </div>
+                            <div>
+                              <b>Utility Bill:</b>{' '}
+                              {item?.business_verification_document?.utility_bill
+                                ? 'submitted'
+                                : 'Not submitted'}
+                            </div>
+                          </CTableDataCell> */}
+                              <CTableDataCell className="text-center">
+                                {item?.business_location?.lat &&
+                                item?.business_location?.long &&
+                                item?.business_location?.lat !== '' &&
+                                item?.business_location?.long !== '' ? (
+                                  <LocationDropdown
+                                    location={`https://www.google.com/maps/search/?api=1&query=${item?.business_location?.lat},${item?.business_location?.long}`}
+                                  />
+                                ) : (
+                                  '--'
+                                )}
+                              </CTableDataCell>
+                              {/* <CTableDataCell className="text-center">
                             {item?.business_location?.lat &&
                             item?.business_location?.long &&
                             item?.business_location?.lat !== '' &&
                             item?.business_location?.long !== '' ? (
-                              <GetLocation
-                                longitude={item?.business_location?.long}
-                                latitude={item?.business_location?.lat}
-                              />
+                              <>
+                                {' '}
+                                {getLocationAddress(
+                                  item?.business_location?.lat,
+                                  item?.business_location?.long,
+                                )}
+                              </>
                             ) : (
-                              <CTableDataCell className="text-center">--</CTableDataCell>
+                              '--'
                             )}
-                          </>
-                          <CTableDataCell className="">
-                            <div>
-                              ₦
-                              {item?.wallet?.balance !== null && item?.wallet?.balance !== undefined
-                                ? item?.wallet?.balance.toLocaleString()
-                                : '--'}
-                            </div>
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <div>{item?.business_products?.length}</div>
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>
-                          </CTableDataCell>
-                          <CTableDataCell className="text-center">
-                            <div>{item?.business_verified ? 'Verified' : '--'}</div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            {/* <div>{moment(item?.createdAt).format('ddd, MMM, yyy')}</div> */}
-                            <div>{moment(item?.createdAt).format('ddd, MMM Do YYYY h:mm a')}</div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <CDropdown variant="btn-group">
-                              <CDropdownToggle color="primary">Actions</CDropdownToggle>
-                              <CDropdownMenu>
-                                {item.business_active ? (
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      activeAccountFunction(item.account_type, item._id)
-                                    }
-                                  >
-                                    DeActivate {item.account_type}
-                                  </CDropdownItem>
+                          </CTableDataCell> */}
+                              {/* <GetLocation
+                            longitude={item?.business_location?.long}
+                            latitude={item?.business_location?.lat}
+                          /> */}
+                              <>
+                                {item?.business_location?.lat &&
+                                item?.business_location?.long &&
+                                item?.business_location?.lat !== '' &&
+                                item?.business_location?.long !== '' ? (
+                                  <GetLocation
+                                    longitude={item?.business_location?.long}
+                                    latitude={item?.business_location?.lat}
+                                  />
                                 ) : (
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      activeAccountFunction(item.account_type, item._id)
-                                    }
-                                  >
-                                    Activate {item.account_type}
-                                  </CDropdownItem>
+                                  <CTableDataCell className="text-center">--</CTableDataCell>
                                 )}
-                                {item.business_verified && item.account_type === 'business' ? (
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      verifyAccountFunction(item.account_type, item._id)
-                                    }
-                                  >
-                                    DeVerify {item.account_type}
-                                  </CDropdownItem>
-                                ) : (
-                                  <CDropdownItem
-                                    onClick={() =>
-                                      verifyAccountFunction(item.account_type, item._id)
-                                    }
-                                  >
-                                    Verify {item.account_type}
-                                  </CDropdownItem>
-                                )}
-                              </CDropdownMenu>
-                            </CDropdown>
-                          </CTableDataCell>
-                        </CTableRow>
-                      )
-                    })}
+                              </>
+
+                              <CTableDataCell className="">
+                                <div>
+                                  ₦
+                                  {item?.wallet?.balance !== null &&
+                                  item?.wallet?.balance !== undefined
+                                    ? item?.wallet?.balance.toLocaleString()
+                                    : '--'}
+                                </div>
+                              </CTableDataCell>
+
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_products?.length}</div>
+                              </CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_active ? 'Active' : 'Deactivated'}</div>
+                              </CTableDataCell>
+                              <CTableDataCell className="text-center">
+                                <div>{item?.business_verified ? 'Verified' : '--'}</div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                {/* <div>{moment(item?.createdAt).format('ddd, MMM, yyy')}</div> */}
+                                <div>
+                                  {moment(item?.createdAt).format('ddd, MMM Do YYYY h:mm a')}
+                                </div>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <CDropdown variant="btn-group">
+                                  <CDropdownToggle color="primary">Actions</CDropdownToggle>
+                                  <CDropdownMenu>
+                                    {item.business_active ? (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          activeAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        DeActivate {item.account_type}
+                                      </CDropdownItem>
+                                    ) : (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          activeAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        Activate {item.account_type}
+                                      </CDropdownItem>
+                                    )}
+                                    {item.business_verified && item.account_type === 'business' ? (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          verifyAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        DeVerify {item.account_type}
+                                      </CDropdownItem>
+                                    ) : (
+                                      <CDropdownItem
+                                        onClick={() =>
+                                          verifyAccountFunction(item.account_type, item._id)
+                                        }
+                                      >
+                                        Verify {item.account_type}
+                                      </CDropdownItem>
+                                    )}
+                                  </CDropdownMenu>
+                                </CDropdown>
+                              </CTableDataCell>
+                            </CTableRow>
+                          )
+                        })}
                   </>
                 )}
               </CTableBody>

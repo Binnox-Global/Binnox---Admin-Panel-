@@ -74,19 +74,34 @@ export function ActiveBusinessRecords({ show_max }) {
                 <>
                   <Link to={'/records/businesses'}>Open More</Link>
                 </>
-              ) : null}
+              ) : (
+                <div className="ms-auto badge bg-primary d-block py-2">
+                  {searchQuery !== '' ? <>{filteredData.length} / </> : null}
+                  {businessList.active.length}
+                </div>
+              )}
             </div>
           </CCardHeader>
           <CCardBody>
-            <input
-              type="text"
-              placeholder="Search by name, email, or number"
-              value={searchQuery}
-              className="form-control w-100 w-sm-100 w-md-50 w-lg-33 mb-3"
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-              }}
-            />
+            <div className="d-flex justify-content-center align-items-center gap-2">
+              <input
+                type="text"
+                placeholder="Search by name, email, or number"
+                value={searchQuery}
+                className="form-control w-100 w-sm-100 w-md-50 w-lg-33 mb-3"
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                }}
+              />
+              {searchQuery !== '' ? (
+                <button
+                  className="btn btn-sm btn-primary mb-3 px-3"
+                  onClick={() => setSearchQuery('')}
+                >
+                  x
+                </button>
+              ) : null}
+            </div>
             <CTable align="middle" className="mb-0 border" hover responsive>
               <CTableHead color="light">
                 <CTableRow>
@@ -545,7 +560,13 @@ export function OtherBusinessRecords() {
     <CRow>
       <CCol xs>
         <CCard className="mb-4">
-          <CCardHeader className="d-flex">Other Businesses </CCardHeader>
+          <CCardHeader className="d-flex">
+            Other Businesses{' '}
+            <div className="ms-auto badge bg-primary d-block py-2">
+              {searchQuery !== '' ? <>{filteredData.length} / </> : null}
+              {businessList.others.length}
+            </div>
+          </CCardHeader>
           <CCardBody>
             <input
               type="text"
@@ -568,7 +589,7 @@ export function OtherBusinessRecords() {
                   <CTableHeaderCell>Contact</CTableHeaderCell>
                   {/* <CTableHeaderCell>Verification Docs</CTableHeaderCell> */}
                   <CTableHeaderCell>Location</CTableHeaderCell>
-                  <CTableHeaderCell>Address</CTableHeaderCell>
+                  {/* <CTableHeaderCell>Address</CTableHeaderCell> */}
                   <CTableHeaderCell>Wallet</CTableHeaderCell>
                   <CTableHeaderCell>Product</CTableHeaderCell>
                   <CTableHeaderCell>Status</CTableHeaderCell>
@@ -641,26 +662,6 @@ export function OtherBusinessRecords() {
 
                                 {/* <CProgress thin color={item?.usage?.color} value={item?.usage?.value} /> */}
                               </CTableDataCell>
-                              {/* <CTableDataCell>
-                            <div>
-                              <b> CAC Dcc:</b>{' '}
-                              {item?.business_verification_document?.cac_registration_doc
-                                ? 'submitted'
-                                : 'Not submitted'}
-                            </div>
-                            <div>
-                              <b> CAC No:</b>{' '}
-                              {item?.business_verification_document?.cac_registration_number
-                                ? item?.business_verification_document?.cac_registration_number
-                                : 'Not submitted'}
-                            </div>
-                            <div>
-                              <b>Utility Bill:</b>{' '}
-                              {item?.business_verification_document?.utility_bill
-                                ? 'submitted'
-                                : 'Not submitted'}
-                            </div>
-                          </CTableDataCell> */}
                               <CTableDataCell className="text-center">
                                 {item?.business_location?.lat &&
                                 item?.business_location?.long &&
@@ -673,39 +674,20 @@ export function OtherBusinessRecords() {
                                   '--'
                                 )}
                               </CTableDataCell>
+
                               {/* <CTableDataCell className="text-center">
-                            {item?.business_location?.lat &&
-                            item?.business_location?.long &&
-                            item?.business_location?.lat !== '' &&
-                            item?.business_location?.long !== '' ? (
-                              <>
-                                {' '}
-                                {getLocationAddress(
-                                  item?.business_location?.lat,
-                                  item?.business_location?.long,
-                                )}
-                              </>
-                            ) : (
-                              '--'
-                            )}
-                          </CTableDataCell> */}
-                              {/* <GetLocation
-                            longitude={item?.business_location?.long}
-                            latitude={item?.business_location?.lat}
-                          /> */}
-                              <>
-                                {item?.business_location?.lat &&
+                                {/* {item?.business_location?.lat &&
                                 item?.business_location?.long &&
                                 item?.business_location?.lat !== '' &&
                                 item?.business_location?.long !== '' ? (
                                   <GetLocation
                                     longitude={item?.business_location?.long}
                                     latitude={item?.business_location?.lat}
-                                  />
-                                ) : (
-                                  <CTableDataCell className="text-center">--</CTableDataCell>
-                                )}
-                              </>
+                                  /> 
+                                ) : (* /}
+                                <>--</>
+                                {/* // )} * /}
+                              </CTableDataCell> */}
 
                               <CTableDataCell className="">
                                 <div>
@@ -886,7 +868,7 @@ export function OtherBusinessRecords() {
                             longitude={item?.business_location?.long}
                             latitude={item?.business_location?.lat}
                           /> */}
-                              <>
+                              {/* <>
                                 {item?.business_location?.lat &&
                                 item?.business_location?.long &&
                                 item?.business_location?.lat !== '' &&
@@ -898,7 +880,7 @@ export function OtherBusinessRecords() {
                                 ) : (
                                   <CTableDataCell className="text-center">--</CTableDataCell>
                                 )}
-                              </>
+                              </> */}
 
                               <CTableDataCell className="">
                                 <div>

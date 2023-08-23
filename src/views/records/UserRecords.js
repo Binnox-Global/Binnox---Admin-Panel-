@@ -62,19 +62,34 @@ function UserRecords({ show_max }) {
                 <>
                   <Link to={'/records/users'}>Open More</Link>
                 </>
-              ) : null}
+              ) : (
+                <div className="ms-auto badge bg-primary d-block py-2">
+                  {searchQuery !== '' ? <>{filteredData.length} / </> : null}
+                  {userList.data.length}
+                </div>
+              )}
             </div>
           </CCardHeader>
           <CCardBody>
-            <input
-              type="text"
-              placeholder="Search by name, email, or number"
-              value={searchQuery}
-              className="form-control w-100 w-sm-100 w-md-50 w-lg-33 mb-3"
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-              }}
-            />
+            <div className="d-flex justify-content-center align-items-center gap-2">
+              <input
+                type="text"
+                placeholder="Search by name, email, or number"
+                value={searchQuery}
+                className="form-control w-100 w-sm-100 w-md-50 w-lg-33 mb-3"
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                }}
+              />
+              {searchQuery !== '' ? (
+                <button
+                  className="btn btn-sm btn-primary mb-3 px-3"
+                  onClick={() => setSearchQuery('')}
+                >
+                  x
+                </button>
+              ) : null}
+            </div>
             <CTable
               align="middle"
               className="mb-0 border"

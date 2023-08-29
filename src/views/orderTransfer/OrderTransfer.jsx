@@ -1,12 +1,20 @@
 import React from 'react'
-import { ApprovedOrdersTransfer, NewOrdersTransfer, RejectedOrdersTransfer } from '../orders/Orders'
+import {
+  ApprovedOrdersGroupTransfer,
+  ApprovedOrdersTransfer,
+  NewOrdersGroupTransfer,
+  NewOrdersTransfer,
+  RejectedOrdersGroupTransfer,
+  RejectedOrdersTransfer,
+} from '../orders/Orders'
 
 function OrderTransfer() {
   return (
     <div>
-      <NewOrdersTransfer />
-      <ApprovedOrdersTransfer />
-      <RejectedOrdersTransfer />
+      {/* <NewOrdersTransfer /> */}
+      <NewOrdersGroupTransfer />
+      <ApprovedOrdersGroupTransfer />
+      <RejectedOrdersGroupTransfer />
     </div>
   )
 }

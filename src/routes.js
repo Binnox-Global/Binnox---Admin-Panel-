@@ -8,6 +8,8 @@ import CartsRecord from './views/orders/Carts'
 import AmbassadorPage from './views/pages/ambassadorPage/AmbassadorPage'
 import RewordPage from './views/pages/rewordPage/RewordPage'
 import OrderTransfer from './views/orderTransfer/OrderTransfer'
+import AdminRecordPage from './views/pages/adminRecordPage/AdminRecordPage'
+import ArchiveRecords from './views/records/ArchiveRecords'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -116,6 +118,7 @@ const routes = [
   { path: '/records/users', name: 'UserRecords', element: UserRecords },
   { path: '/records/businesses', name: 'UserRecords', element: BusinessRecords },
   { path: '/records/admins', name: 'UserRecords', element: AdminRecords },
+  { path: '/records/archive', name: 'UserRecords', element: ArchiveRecords },
   { path: '/orders/new', name: 'UserRecords', element: Orders },
   { path: '/orders/delivered', name: 'UserRecords', element: OrdersDelivered },
   { path: '/orders/picked-up', name: 'UserRecords', element: OrdersPickedUp },

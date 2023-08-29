@@ -69,6 +69,11 @@ const _nav = [
         name: 'Rewords',
         to: '/rewords',
       },
+      {
+        component: CNavItem,
+        name: 'Archive',
+        to: '/records/archive',
+      },
     ],
   },
   {

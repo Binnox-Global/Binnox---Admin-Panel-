@@ -42,13 +42,21 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [orderGroupTransferList, setOrderGroupTransferList] = React.useState({
+    loading: true,
+    data: [],
+  })
   const [adminRecords, setAdminRecords] = React.useState({
     loading: true,
     totalTransactions: 0,
-    transactions10percent: 0,
+    transactions5percent: 0,
     totalDeliveryFee: 0,
     totalServiceFee: 0,
     groundTotal: 0,
+    calculatedTransactions: 0,
+    delivery10Percent: 0,
+    calculatedDeliveryFee: 0,
+    calculatedProfit: 0,
   })
   const [cartList, setCartList] = React.useState({
     loading: true,
@@ -106,57 +114,96 @@ function AdminProvider({ children }) {
       })
   }
 
+  function calculatePercentage(number, percent) {
+    if (typeof number !== 'number' || typeof percent !== 'number') {
+      throw new Error('Both arguments must be numbers')
+    }
+
+    const calculatedValue = (number * percent) / 100
+    return calculatedValue
+  }
+
   useEffect(() => {
     setAdminRecords({
       loading: true,
       totalTransactions: 0,
-      transactions10percent: 0,
+      transactions5percent: 0,
       totalDeliveryFee: 0,
       totalServiceFee: 0,
       groundTotal: 0,
+      calculatedTransactions: 0,
+      delivery10Percent: 0,
+      calculatedDeliveryFee: 0,
+      calculatedProfit: 0,
     })
     if (orderList.loading) return
     // console.log('orderList', orderList.data)
 
     let totalTransactions = 0
-    let transactions10percent = 0
+    let transactions5percent = 0
+    let calculatedTransactions = 0
     let totalDeliveryFee = 0
+    let delivery10Percent = 0
+    let calculatedDeliveryFee = 0
     let totalServiceFee = 0
     let groundTotal = 0
+    let calculatedProfit = 0
 
     orderList.data.forEach((order) => {
+      // get totalTransactions from summing up transactions fees
       totalTransactions += order.item_amount
 
       if (order.delivery_fee) {
+        // get totalDeliveryFee from summing up delivery fees
         totalDeliveryFee += order.delivery_fee
       } else {
         totalDeliveryFee += 600
       }
       if (order.service_fee) {
+        // get totalServiceFee from summing up service fees
         totalServiceFee += order.service_fee
       } else {
         totalServiceFee += 200
       }
     })
 
-    groundTotal = totalTransactions + totalDeliveryFee + totalServiceFee
+    // 10% of delivery
+    delivery10Percent = calculatePercentage(totalDeliveryFee, 10)
+    // remove 10% from totalDeliveryFee
+    calculatedDeliveryFee = totalDeliveryFee - delivery10Percent
 
-    transactions10percent = totalTransactions * 0.1
+    // 5% of transaction
+    transactions5percent = calculatePercentage(totalTransactions, 5)
+    // remove 5% from totalTransactions
+    calculatedTransactions = totalTransactions - transactions5percent
 
+    //
+    // calculatedProfit is service fee (5% from user) +  transaction fee (5% from business) + delivery fee (10% from delivery)
+    calculatedProfit = transactions5percent + delivery10Percent + totalServiceFee
+
+    // groundTotal = totalTransactions + totalDeliveryFee + totalServiceFee
     console.log({
       totalTransactions,
-      transactions10percent,
+      transactions5percent,
+      calculatedTransactions,
       totalDeliveryFee,
       totalServiceFee,
       groundTotal,
+      calculatedDeliveryFee,
+      delivery10Percent,
+      calculatedProfit,
     })
     setAdminRecords({
       loading: false,
       totalTransactions,
-      transactions10percent,
+      transactions5percent,
       totalDeliveryFee,
       totalServiceFee,
       groundTotal,
+      calculatedTransactions,
+      delivery10Percent,
+      calculatedDeliveryFee,
+      calculatedProfit,
     })
   }, [orderList])
 
@@ -346,7 +393,34 @@ function AdminProvider({ children }) {
       })
       .then((res) => {
         // console.log('orders Request', res.data.orders)
-        setOrderTransferList({ loading: false, data: res.data.orders.reverse() })
+        setOrderTransferList({
+          loading: false,
+          data: res.data.orders.reverse(),
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  async function getOrderGroupTransferRecordsFunction() {
+    //  console.log(cookies.BinnoxAdmin.token)
+    setOrderGroupTransferList({
+      loading: true,
+      data: [],
+    })
+    axios
+      .get(`${apiUrl}/admin/orders/transfer/group?max_data_return=100`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        // console.log('orders Request', res.data.orders)
+        setOrderGroupTransferList({
+          loading: false,
+          data: res.data.orders.reverse(),
+        })
       })
       .catch((error) => {
         console.error(error)
@@ -551,6 +625,44 @@ status=${status}`,
         console.error(error)
       })
   }
+  async function updateOrderGroupTransferStatusFunction(id, status) {
+    // return
+    // console.log(token)
+    axios
+      .put(
+        `${apiUrl}/admin/status/transfer/group`,
+        {
+          group_transfer_id: id,
+          status,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      )
+      .then((res) => {
+        toast.success('Successfully')
+        // getOrderRecordsFunction()
+        setOrderGroupTransferList({
+          loading: false,
+          data: res.data.update.reverse(),
+        })
+      })
+      .catch((error) => {
+        if (error.response.status || error.response.status === 400) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 401) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          return toast.error(error.response.data.message)
+        }
+        // toast.success('Successfully')
+        console.error(error)
+      })
+  }
 
   async function updatePaymentRequestStatusFunction(_id, status) {
     // return
@@ -700,6 +812,7 @@ status=${status}`,
     promises.push(await getCartRecordsFunction())
     promises.push(await getAmbassadorRecordsFunction())
     promises.push(await getRewordsFunction())
+    promises.push(await getOrderGroupTransferRecordsFunction())
 
     // Wait for all promises to resolve
     const results = await Promise.all(promises)
@@ -719,6 +832,7 @@ status=${status}`,
         getBusinessRecordsFunction,
         getOrderRecordsFunction,
         getOrderTransferRecordsFunction,
+        getOrderGroupTransferRecordsFunction,
         getAdminRecordsFunction,
         activeAccountFunction,
         updateOrderStatusFunction,
@@ -753,6 +867,9 @@ status=${status}`,
         orderGroupList,
         adminRecords,
         setAdminRecords,
+        orderGroupTransferList,
+        setOrderGroupTransferList,
+        updateOrderGroupTransferStatusFunction,
       }}
     >
       {children}

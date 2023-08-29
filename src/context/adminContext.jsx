@@ -586,6 +586,43 @@ status=${status}`,
       })
   }
 
+  async function updateOrderGroupStatusFunction(_id, status) {
+    // return
+    // console.log(token)
+    axios
+      .put(
+        `${apiUrl}/admin/status/group?order_id=${_id}&
+status=${status}`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      )
+      .then((res) => {
+        // console.log(res.data)
+        toast.success('Successfully')
+
+        setOrderGroupList({
+          loading: false,
+          data: res.data.update.reverse(),
+        })
+      })
+      .catch((error) => {
+        if (error.response.status || error.response.status === 400) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 401) {
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          return toast.error(error.response.data.message)
+        }
+        // toast.success('Successfully')
+        console.error(error)
+      })
+  }
   async function updateOrderTransferStatusFunction(ids, status) {
     // return
     // console.log(token)
@@ -870,6 +907,7 @@ status=${status}`,
         orderGroupTransferList,
         setOrderGroupTransferList,
         updateOrderGroupTransferStatusFunction,
+        updateOrderGroupStatusFunction,
       }}
     >
       {children}

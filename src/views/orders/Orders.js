@@ -655,13 +655,14 @@ function OrderGroupCard({ orders, transfer }) {
 }
 
 function OrderGroupCardComponent({ order, transfer }) {
-  const { updateOrderGroupTransferStatusFunction } = useContext(AdminContext)
+  const { updateOrderGroupTransferStatusFunction, updateOrderGroupStatusFunction } =
+    useContext(AdminContext)
   const [showDropDown, setShowDropDown] = useState(false)
   useEffect(() => {
     // console.log('OrderGroupCardComponent', order)
   }, [order])
-  function receiveOrderArray() {}
-  function updateOrderGroupStatusFunction(status) {
+  // function updateGroupOrderStatusFunction() {}
+  function updateOrderTransferGroupStatusFunction(status) {
     if (order?.transfer_approve || order.transfer_rejected) {
       if (order?.transfer_approve) {
         return toast.error('This Order has been Accepted')
@@ -724,10 +725,10 @@ function OrderGroupCardComponent({ order, transfer }) {
             <CDropdown variant="btn-group">
               <CDropdownToggle color="primary">Actions</CDropdownToggle>
               <CDropdownMenu>
-                <CDropdownItem onClick={() => updateOrderGroupStatusFunction('approve')}>
+                <CDropdownItem onClick={() => updateOrderTransferGroupStatusFunction('approve')}>
                   Approve
                 </CDropdownItem>
-                <CDropdownItem onClick={() => updateOrderGroupStatusFunction('reject')}>
+                <CDropdownItem onClick={() => updateOrderTransferGroupStatusFunction('reject')}>
                   Reject
                 </CDropdownItem>
               </CDropdownMenu>
@@ -839,13 +840,19 @@ function OrderGroupCardComponent({ order, transfer }) {
               <CDropdown variant="btn-group" className="ms-auto">
                 <CDropdownToggle color="primary">Actions</CDropdownToggle>
                 <CDropdownMenu>
-                  <CDropdownItem onClick={() => updateOrderStatusFunction(order?._id, 'Pending')}>
+                  <CDropdownItem
+                    onClick={() => updateOrderGroupStatusFunction(order?._id, 'Pending')}
+                  >
                     Pending
                   </CDropdownItem>
-                  <CDropdownItem onClick={() => updateOrderStatusFunction(order?._id, 'Picked up')}>
+                  <CDropdownItem
+                    onClick={() => updateOrderGroupStatusFunction(order?._id, 'Picked up')}
+                  >
                     Picked up
                   </CDropdownItem>
-                  <CDropdownItem onClick={() => updateOrderStatusFunction(order?._id, 'Delivered')}>
+                  <CDropdownItem
+                    onClick={() => updateOrderGroupStatusFunction(order?._id, 'Delivered')}
+                  >
                     Delivered
                   </CDropdownItem>
                 </CDropdownMenu>

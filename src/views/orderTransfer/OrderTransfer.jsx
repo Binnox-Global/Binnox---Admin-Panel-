@@ -11,7 +11,7 @@ import {
 function OrderTransfer() {
   return (
     <div>
-      {/* <NewOrdersTransfer /> */}
+      <NewOrdersTransfer />
       <NewOrdersGroupTransfer />
       <ApprovedOrdersGroupTransfer />
       <RejectedOrdersGroupTransfer />

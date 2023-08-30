@@ -11,9 +11,9 @@ export const AdminContext = createContext()
 function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
-  // let apiUrl = 'https://binnox-backend.vercel.app/api'
+  let apiUrl = 'https://binnox-backend.vercel.app/api'
   const [modalComponentVisible, setModalComponentVisible] = React.useState(false)
   const [refreshLoading, setRefreshLoading] = React.useState(false)
   const [token, setToken] = React.useState(null)
@@ -47,6 +47,7 @@ function AdminProvider({ children }) {
     data: {
       new: [],
       accepted: [],
+      rejected: [],
     },
   })
   const [adminRecords, setAdminRecords] = React.useState({
@@ -410,7 +411,11 @@ function AdminProvider({ children }) {
     //  console.log(cookies.BinnoxAdmin.token)
     setOrderGroupTransferList({
       loading: true,
-      data: [],
+      data: {
+        new: [],
+        accepted: [],
+        rejected: [],
+      },
     })
     axios
       .get(`${apiUrl}/admin/orders/transfer/group?max_data_return=100`, {
@@ -423,25 +428,33 @@ function AdminProvider({ children }) {
 
         let newOrdersList = []
         let acceptedOrdersList = []
+        let rejectedOrdersList = []
         res?.data?.orders?.reverse()?.forEach((item) => {
           if (!item?.transfer_approve && !item.transfer_rejected) {
             // console.log(item)
             newOrdersList.push(item)
           } else {
-            acceptedOrdersList.push(item)
+            if (item?.transfer_approve && !item.transfer_rejected) {
+              // console.log('AA', item)
+              acceptedOrdersList.push(item)
+            } else {
+              // console.log('BB', item)
+              rejectedOrdersList.push(item)
+            }
           }
         })
         // console.log('orderTransferList', orderTransferList)
         // setOrderGroupTransferList({
         //   loading: false,
-        //   data: {
-        //     new: newOrdersList,
-        //     accepted: acceptedOrdersList,
-        //   },
+        //   data: res.data.orders.reverse(),
         // })
         setOrderGroupTransferList({
           loading: false,
-          data: res.data.orders.reverse(),
+          data: {
+            new: newOrdersList,
+            accepted: acceptedOrdersList,
+            rejected: rejectedOrdersList,
+          },
         })
       })
       .catch((error) => {

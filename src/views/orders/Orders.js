@@ -235,21 +235,16 @@ export function NewOrdersGroupTransfer() {
   const [newOrders, setNewOrders] = useState([])
 
   useEffect(() => {
-    let newOrdersList = []
-    orderGroupTransferList?.data?.forEach((item) => {
-      if (!item?.transfer_approve && !item.transfer_rejected) {
-        // console.log('item', item)
-        newOrdersList.push(item)
-      }
-    })
+    // let newOrdersList = []
+    // console.log(orderGroupTransferList?.data)
     // console.log('orderGroupTransferList', orderGroupTransferList)
-    setNewOrders(newOrdersList)
+    setNewOrders(orderGroupTransferList?.data?.new)
   }, [orderGroupTransferList])
 
   return (
     <>
       {' '}
-      {newOrders.length !== 0 && (
+      {newOrders?.length !== 0 && (
         // {/* {false && ( */}
         <CRow>
           <CCol xs>
@@ -260,7 +255,7 @@ export function NewOrdersGroupTransfer() {
                   <>loading...</>
                 ) : (
                   <>
-                    {newOrders.length <= 0 ? (
+                    {newOrders?.length <= 0 ? (
                       <>No Order Transfer Currently</>
                     ) : (
                       <>
@@ -287,14 +282,14 @@ export function ApprovedOrdersGroupTransfer() {
   const [newOrders, setNewOrders] = useState([])
 
   useEffect(() => {
-    let newOrdersList = []
-    orderGroupTransferList?.data?.forEach((item) => {
-      if (item?.transfer_approve && !item.transfer_rejected) {
-        newOrdersList.push(item)
-      }
-    })
-    // console.log(orderGroupTransferList)
-    setNewOrders(newOrdersList)
+    // let newOrdersList = []
+    // orderGroupTransferList?.data?.forEach((item) => {
+    //   if (item?.transfer_approve && !item.transfer_rejected) {
+    //     newOrdersList.push(item)
+    //   }
+    // })
+    // // console.log(orderGroupTransferList)
+    setNewOrders(orderGroupTransferList?.data?.accepted)
   }, [orderGroupTransferList])
 
   const groupedOrders = newOrders?.reduce((result, order) => {
@@ -348,30 +343,23 @@ export function RejectedOrdersGroupTransfer() {
   const [newOrders, setNewOrders] = useState([])
 
   React.useEffect(() => {
-    let newOrdersList = []
-    orderGroupTransferList?.data?.forEach((item) => {
-      if (!item?.transfer_approve && item.transfer_rejected) {
-        newOrdersList.push(item)
-      }
-    })
-    // console.log(orderGroupTransferList)
-    setNewOrders(newOrdersList)
+    setNewOrders(orderGroupTransferList?.data?.rejected)
   }, [orderGroupTransferList])
 
-  const groupedOrders = newOrders?.reduce((result, order) => {
-    // console.log('orderList', newOrders)
+  // const groupedOrders = newOrders?.reduce((result, order) => {
+  //   // console.log('orderList', newOrders)
 
-    const userId = order?.user?._id
-    const userOrders = result?.find((group) => group[0].user?._id === userId)
+  //   const userId = order?.user?._id
+  //   const userOrders = result?.find((group) => group[0].user?._id === userId)
 
-    if (userOrders) {
-      userOrders.push(order)
-    } else {
-      result.push([order])
-    }
+  //   if (userOrders) {
+  //     userOrders.push(order)
+  //   } else {
+  //     result.push([order])
+  //   }
 
-    return result
-  }, [])
+  //   return result
+  // }, [])
   // console.log('groupedOrders', groupedOrders)
 
   return (

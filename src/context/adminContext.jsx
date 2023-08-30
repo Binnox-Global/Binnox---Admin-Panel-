@@ -11,9 +11,9 @@ export const AdminContext = createContext()
 function AdminProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  // let apiUrl = 'http://localhost:5000/api'
+  let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
-  let apiUrl = 'https://binnox-backend.vercel.app/api'
+  // let apiUrl = 'https://binnox-backend.vercel.app/api'
   const [modalComponentVisible, setModalComponentVisible] = React.useState(false)
   const [refreshLoading, setRefreshLoading] = React.useState(false)
   const [token, setToken] = React.useState(null)
@@ -44,7 +44,10 @@ function AdminProvider({ children }) {
   })
   const [orderGroupTransferList, setOrderGroupTransferList] = React.useState({
     loading: true,
-    data: [],
+    data: {
+      new: [],
+      accepted: [],
+    },
   })
   const [adminRecords, setAdminRecords] = React.useState({
     loading: true,
@@ -417,6 +420,25 @@ function AdminProvider({ children }) {
       })
       .then((res) => {
         // console.log('orders Request', res.data.orders)
+
+        let newOrdersList = []
+        let acceptedOrdersList = []
+        res?.data?.orders?.reverse()?.forEach((item) => {
+          if (!item?.transfer_approve && !item.transfer_rejected) {
+            // console.log(item)
+            newOrdersList.push(item)
+          } else {
+            acceptedOrdersList.push(item)
+          }
+        })
+        // console.log('orderTransferList', orderTransferList)
+        // setOrderGroupTransferList({
+        //   loading: false,
+        //   data: {
+        //     new: newOrdersList,
+        //     accepted: acceptedOrdersList,
+        //   },
+        // })
         setOrderGroupTransferList({
           loading: false,
           data: res.data.orders.reverse(),

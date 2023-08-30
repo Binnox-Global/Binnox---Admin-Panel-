@@ -1430,6 +1430,8 @@ OrderGroupCardComponent.propTypes = {
     createdAt: PropTypes.string,
     _id: PropTypes.string,
     statues: PropTypes.string,
+    transfer_approve: PropTypes.bool,
+    transfer_rejected: PropTypes.bool,
     // ... other order properties
   }).isRequired,
   transfer: PropTypes.bool,

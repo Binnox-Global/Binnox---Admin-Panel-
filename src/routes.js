@@ -1,5 +1,5 @@
 import React from 'react'
-import Orders from './views/orders/Orders'
+import Orders, { OrdersGroupDelivered } from './views/orders/Orders'
 import { OrdersDelivered, OrdersPickedUp } from './views/orders/Orders'
 import PaymentRequest from './views/records/PaymentRequest'
 import CreateDiscountCodePage from './views/discount/CreateDiscountCodePage'
@@ -9,6 +9,7 @@ import AmbassadorPage from './views/pages/ambassadorPage/AmbassadorPage'
 import RewordPage from './views/pages/rewordPage/RewordPage'
 import OrderTransfer from './views/orderTransfer/OrderTransfer'
 import AdminRecordPage from './views/pages/adminRecordPage/AdminRecordPage'
+import ArchiveRecords from './views/records/ArchiveRecords'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -117,8 +118,9 @@ const routes = [
   { path: '/records/users', name: 'UserRecords', element: UserRecords },
   { path: '/records/businesses', name: 'UserRecords', element: BusinessRecords },
   { path: '/records/admins', name: 'UserRecords', element: AdminRecords },
+  { path: '/records/archive', name: 'UserRecords', element: ArchiveRecords },
   { path: '/orders/new', name: 'UserRecords', element: Orders },
-  { path: '/orders/delivered', name: 'UserRecords', element: OrdersDelivered },
+  { path: '/orders/delivered', name: 'UserRecords', element: OrdersGroupDelivered },
   { path: '/orders/picked-up', name: 'UserRecords', element: OrdersPickedUp },
   { path: '/orders/transfer', name: 'UserRecords', element: OrderTransfer },
   // { path: '/auth/create-admin', name: 'UserRecords', element: Register },

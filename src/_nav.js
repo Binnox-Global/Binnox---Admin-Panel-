@@ -69,6 +69,11 @@ const _nav = [
         name: 'Rewards',
         to: '/rewards',
       },
+      {
+        component: CNavItem,
+        name: 'Archive',
+        to: '/records/archive',
+      },
     ],
   },
   {
@@ -83,19 +88,19 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Order Transfer',
-        to: '/orders/transfer',
-      },
-      {
-        component: CNavItem,
         name: 'New Orders',
         to: '/orders/new',
       },
       {
         component: CNavItem,
-        name: 'Picked up',
-        to: '/orders/picked-up',
+        name: 'Order Transfer',
+        to: '/orders/transfer',
       },
+      // {
+      //   component: CNavItem,
+      //   name: 'Picked up',
+      //   to: '/orders/picked-up',
+      // },
       {
         component: CNavItem,
         name: 'Delivered',

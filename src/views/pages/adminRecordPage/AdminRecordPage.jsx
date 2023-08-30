@@ -39,7 +39,7 @@ function AdminRecordPage() {
                   </div>
                   <div className="col-md-6 my-2">
                     <b>10% of Transaction</b> <br />₦{' '}
-                    {adminRecords.transactions10percent.toLocaleString()}
+                    {adminRecords.transactions5percent.toLocaleString()}
                   </div>
                   <div className="col-md-6 my-2">
                     <b>Ground Total</b> <br />₦ {adminRecords.groundTotal.toLocaleString()}

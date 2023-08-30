@@ -6,7 +6,7 @@ import { cilArrowRight, cilUser, cilLibraryBuilding, cilFastfood, cilNotes } fro
 
 import { AdminContext } from 'src/context/adminContext'
 import { Link } from 'react-router-dom'
-import Orders, { NewOrdersGroupTransfer, NewOrdersTransfer } from '../orders/Orders'
+import Orders, { NewOrdersGroupTransfer, NewOrdersTransfer, OldOrder } from '../orders/Orders'
 import { ActiveBusinessRecords } from '../records/BusinessRecords'
 import UserRecords from '../records/UserRecords'
 
@@ -136,8 +136,9 @@ const Dashboard = () => {
       </CContainer>
 
       <Orders />
-      <NewOrdersTransfer />
       <NewOrdersGroupTransfer />
+      {/* <OldOrder /> */}
+      <NewOrdersTransfer />
       <ActiveBusinessRecords show_max={5} />
       <UserRecords show_max={5} />
     </>

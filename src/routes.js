@@ -1,5 +1,5 @@
 import React from 'react'
-import Orders from './views/orders/Orders'
+import Orders, { OrdersGroupDelivered } from './views/orders/Orders'
 import { OrdersDelivered, OrdersPickedUp } from './views/orders/Orders'
 import PaymentRequest from './views/records/PaymentRequest'
 import CreateDiscountCodePage from './views/discount/CreateDiscountCodePage'
@@ -120,7 +120,7 @@ const routes = [
   { path: '/records/admins', name: 'UserRecords', element: AdminRecords },
   { path: '/records/archive', name: 'UserRecords', element: ArchiveRecords },
   { path: '/orders/new', name: 'UserRecords', element: Orders },
-  { path: '/orders/delivered', name: 'UserRecords', element: OrdersDelivered },
+  { path: '/orders/delivered', name: 'UserRecords', element: OrdersGroupDelivered },
   { path: '/orders/picked-up', name: 'UserRecords', element: OrdersPickedUp },
   { path: '/orders/transfer', name: 'UserRecords', element: OrderTransfer },
   // { path: '/auth/create-admin', name: 'UserRecords', element: Register },

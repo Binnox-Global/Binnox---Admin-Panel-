@@ -87,6 +87,7 @@ function Orders() {
                       )}
                       {newOrders.accepted.length > 0 && (
                         <>
+                          <hr />
                           <b>Accepted</b>
                           {newOrders.accepted?.map((order, i) => {
                             return <OrderGroupCardComponent key={i} order={order} />
@@ -95,6 +96,7 @@ function Orders() {
                       )}
                       {newOrders.pickedUp.length > 0 && (
                         <>
+                          <hr />
                           <b>Picked Up</b>
                           {newOrders.pickedUp?.map((order, i) => {
                             return <OrderGroupCardComponent key={i} order={order} />
@@ -114,6 +116,53 @@ function Orders() {
 }
 
 export default Orders
+
+export function OrdersGroupDelivered() {
+  const { orderGroupList } = React.useContext(AdminContext)
+  const [newOrders, setNewOrders] = useState([])
+
+  useEffect(() => {
+    let deliveredOrdersList = []
+
+    orderGroupList?.data?.forEach((item) => {
+      if (item?.statues === 'Delivered') {
+        console.log(item.statues)
+        deliveredOrdersList.push(item)
+      }
+    })
+
+    setNewOrders(deliveredOrdersList)
+  }, [orderGroupList])
+
+  return (
+    <>
+      <CRow>
+        <CCol xs>
+          <CCard className="mb-4">
+            <CCardHeader>Orders</CCardHeader>
+            <CCardBody>
+              {orderGroupList.loading ? (
+                <>loading...</>
+              ) : (
+                <>
+                  {newOrders?.length <= 0 ? (
+                    <>No Order Currently</>
+                  ) : (
+                    <>
+                      {newOrders?.map((order, i) => {
+                        return <OrderGroupCardComponent key={i} order={order} />
+                      })}
+                    </>
+                  )}
+                </>
+              )}
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+    </>
+  )
+}
 
 export function NewOrdersTransfer() {
   const { orderTransferList, updateOrderTransferStatusFunction } = React.useContext(AdminContext)
@@ -148,31 +197,35 @@ export function NewOrdersTransfer() {
   // console.log('groupedOrders', groupedOrders)
 
   return (
-    <CRow>
-      <CCol xs>
-        <CCard className="mb-4">
-          <CCardHeader>New Orders Transfer</CCardHeader>
-          <CCardBody>
-            {orderTransferList.loading ? (
-              <>loading...</>
-            ) : (
-              <>
-                {newOrders.length <= 0 ? (
-                  <>No Order Transfer Currently</>
+    <>
+      {newOrders.length !== 0 && (
+        <CRow>
+          <CCol xs>
+            <CCard className="mb-4">
+              <CCardHeader>Old Orders Transfer</CCardHeader>
+              <CCardBody>
+                {orderTransferList.loading ? (
+                  <>loading...</>
                 ) : (
                   <>
-                    {' '}
-                    {groupedOrders?.map((orders, i) => {
-                      return <OrderGroupCard key={i} orders={orders} transfer={true} />
-                    })}
+                    {newOrders.length <= 0 ? (
+                      <>No Order Transfer Currently</>
+                    ) : (
+                      <>
+                        {' '}
+                        {groupedOrders?.map((orders, i) => {
+                          return <OrderGroupCard key={i} orders={orders} transfer={true} />
+                        })}
+                      </>
+                    )}
                   </>
                 )}
-              </>
-            )}
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      )}
+    </>
   )
 }
 
@@ -194,31 +247,37 @@ export function NewOrdersGroupTransfer() {
   }, [orderGroupTransferList])
 
   return (
-    <CRow>
-      <CCol xs>
-        <CCard className="mb-4">
-          <CCardHeader>New Orders Group Transfer</CCardHeader>
-          <CCardBody>
-            {orderGroupTransferList.loading ? (
-              <>loading...</>
-            ) : (
-              <>
-                {newOrders.length <= 0 ? (
-                  <>No Order Transfer Currently</>
+    <>
+      {' '}
+      {newOrders.length !== 0 && (
+        // {/* {false && ( */}
+        <CRow>
+          <CCol xs>
+            <CCard className="mb-4">
+              <CCardHeader>New Orders Group Transfer</CCardHeader>
+              <CCardBody>
+                {orderGroupTransferList.loading ? (
+                  <>loading...</>
                 ) : (
                   <>
-                    {' '}
-                    {newOrders?.map((orders, i) => {
-                      return <OrderGroupCardComponent key={i} order={orders} transfer={true} />
-                    })}
+                    {newOrders.length <= 0 ? (
+                      <>No Order Transfer Currently</>
+                    ) : (
+                      <>
+                        {' '}
+                        {newOrders?.map((orders, i) => {
+                          return <OrderGroupCardComponent key={i} order={orders} transfer={true} />
+                        })}
+                      </>
+                    )}
                   </>
                 )}
-              </>
-            )}
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      )}
+    </>
   )
 }
 
@@ -1032,7 +1091,7 @@ export function OrdersDelivered() {
     <CRow>
       <CCol xs>
         <CCard className="mb-4">
-          <CCardHeader>Orders Picked up</CCardHeader>
+          <CCardHeader>Orders Delivered</CCardHeader>
           <CCardBody>
             <CTable
               align="middle"

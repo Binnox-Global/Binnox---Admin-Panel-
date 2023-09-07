@@ -54,7 +54,11 @@ function AmbassadorPage() {
                   <CTableHeaderCell>Ref Code</CTableHeaderCell>
                   <CTableHeaderCell>Ref User</CTableHeaderCell>
                   <CTableHeaderCell>Ref Ambassador</CTableHeaderCell>
-                  <CTableHeaderCell>Reward</CTableHeaderCell>
+                  <CTableHeaderCell style={{ minWidth: '150px' }}>
+                    Reward <br />
+                    inactive || active
+                  </CTableHeaderCell>
+                  <CTableHeaderCell>Points</CTableHeaderCell>
                   <CTableHeaderCell>Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -122,7 +126,12 @@ function AmbassadorPage() {
                             <div>{item?.ambassadorReferralsList?.length}</div>
                           </CTableDataCell>
                           <CTableDataCell>
-                            <div>{item?.rewordPoints}</div>
+                            <div>
+                              {item?.reword?.totalValue} || ₦ {item?.reword?.activeValue}
+                            </div>
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            <div>{item?.reword?.point}</div>
                           </CTableDataCell>
                           <CTableDataCell>
                             <button>Action</button>

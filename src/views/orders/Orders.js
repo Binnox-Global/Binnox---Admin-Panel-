@@ -126,7 +126,7 @@ export function OrdersGroupDelivered() {
 
     orderGroupList?.data?.forEach((item) => {
       if (item?.statues === 'Delivered') {
-        console.log(item.statues)
+        console.log(item)
         deliveredOrdersList.push(item)
       }
     })
@@ -817,7 +817,7 @@ function OrderGroupCardComponent({ order, transfer }) {
             order?.business?.business_location?.lat !== '' ||
             order?.business?.business_location?.long !== '' ? (
               <LocationDropdown
-                location={`https://www.google.com/maps/search/?api=1&query=${order?.business?.business_location?.lat},${order?.business?.business_location?.lat}`}
+                location={`https://www.google.com/maps/search/?api=1&query=${order?.business?.business_location?.lat},${order?.business?.business_location?.long}`}
               />
             ) : (
               'Location not valid'

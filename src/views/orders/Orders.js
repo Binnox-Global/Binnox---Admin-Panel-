@@ -828,7 +828,7 @@ function OrderGroupCardComponent({ order, transfer }) {
         <div className="d-flex  justify-content-between">
           <p>
             <b>Ordered: </b>
-            {moment(order?.createdAt).format('h:mm a')}
+            {moment(order?.createdAt).format('MMM Do YY, h:mm a')}
           </p>
           <CountdownTimer createdAt={order?.createdAt} />
         </div>

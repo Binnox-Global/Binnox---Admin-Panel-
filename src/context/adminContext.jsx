@@ -21,6 +21,7 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [notificationToast, setNotificationToast] = React.useState([])
   const [adminList, setAdminList] = React.useState({
     loading: true,
     data: [],
@@ -140,7 +141,7 @@ function AdminProvider({ children }) {
       calculatedDeliveryFee: 0,
       calculatedProfit: 0,
     })
-    if (orderList.loading) return
+    if (orderList.loading || orderGroupList.loading) return
     // console.log('orderList', orderList.data)
 
     let totalTransactions = 0
@@ -171,10 +172,36 @@ function AdminProvider({ children }) {
       }
     })
 
+    // console.log('orderGroupList', orderGroupList)
+    orderGroupList.data.forEach((order) => {
+      // get totalTransactions from summing up transactions fees
+      // console.log(order.sub_total)
+      if (!isNaN(order?.sub_total)) {
+        totalTransactions += order?.sub_total
+      }
+
+      if (order.delivery_fee) {
+        // get totalDeliveryFee from summing up delivery fees
+        totalDeliveryFee += order.delivery_fee
+      } else {
+        totalDeliveryFee += 600
+      }
+
+      if (order.service_fee) {
+        // get totalServiceFee from summing up service fees
+        totalServiceFee += order.service_fee
+      } else {
+        totalServiceFee += 200
+      }
+    })
+
     // 10% of delivery
     delivery10Percent = calculatePercentage(totalDeliveryFee, 10)
     // remove 10% from totalDeliveryFee
     calculatedDeliveryFee = totalDeliveryFee - delivery10Percent
+    console.log('delivery10Percent', delivery10Percent)
+    console.log('calculatedDeliveryFee', calculatedDeliveryFee)
+    console.log('totalDeliveryFee', totalDeliveryFee)
 
     // 5% of transaction
     transactions5percent = calculatePercentage(totalTransactions, 5)
@@ -185,7 +212,7 @@ function AdminProvider({ children }) {
     // calculatedProfit is service fee (5% from user) +  transaction fee (5% from business) + delivery fee (10% from delivery)
     calculatedProfit = transactions5percent + delivery10Percent + totalServiceFee
 
-    // groundTotal = totalTransactions + totalDeliveryFee + totalServiceFee
+    groundTotal = totalTransactions + totalDeliveryFee + totalServiceFee
     console.log({
       totalTransactions,
       transactions5percent,
@@ -209,7 +236,7 @@ function AdminProvider({ children }) {
       calculatedDeliveryFee,
       calculatedProfit,
     })
-  }, [orderList])
+  }, [orderList, orderGroupList])
 
   async function getAmbassadorRecordsFunction() {
     axios
@@ -377,7 +404,11 @@ function AdminProvider({ children }) {
       })
       .then((res) => {
         // console.log('getOrderGroupRecordsFunction', res.data)
-        setOrderGroupList({ loading: false, data: res.data.orders.reverse() })
+        let orders = res.data.orders.reverse()
+        setOrderGroupList({ loading: false, data: orders })
+
+        let groupOrderByDate = groupOrderByDateFunction(orders)
+        let groupFunctionTest = groupFunctionTestFunction(orders)
       })
       .catch((error) => {
         console.error(error)
@@ -470,7 +501,7 @@ function AdminProvider({ children }) {
     axios
       .get(`${apiUrl}/admin/payment-request`, {
         headers: {
-          Authorization: token,
+          Authorization: cookies.BinnoxAdmin.token,
         },
       })
       .then((res) => {
@@ -894,6 +925,71 @@ status=${status}`,
     // Update state after all promises have resolved
     // setState(/* updated state */);
   }
+
+  function groupOrderByDateFunction(orderArray) {
+    // const moment = require("moment");
+
+    // // Assuming the orders array is named "orders"
+    // const orders = [
+    //   // Your array of orders goes here...
+    // ];
+
+    // Get the current date in the desired format (e.g., "YYYY-MM-DD")
+    const currentDate = moment().format('YYYY-MM-DD')
+
+    // Filter the orders made today using the "createdAt" field
+    const ordersMadeToday = orderArray?.filter((order) =>
+      moment(order.createdAt).isSame(currentDate, 'day'),
+    )
+
+    // Group the orders by date (if needed)
+    const ordersGroupedByDate = orderArray?.reduce((groupedOrders, order) => {
+      const orderDate = moment(order.createdAt).format('YYYY-MM-DD')
+      if (!groupedOrders[orderDate]) {
+        groupedOrders[orderDate] = []
+      }
+      groupedOrders[orderDate].push(order)
+      return groupedOrders
+    }, {})
+
+    //  setReferralOrderGrouping({ ordersGroupedByDate, ordersMadeToday })
+    console.log('Orders:', orderArray)
+    console.log('Orders made today:', ordersMadeToday)
+    console.log('Orders grouped by date:', ordersGroupedByDate)
+    return { ordersMadeToday, ordersGroupedByDate }
+  }
+
+  const [groupedOrderData, setGroupedOrderData] = React.useState({
+    loading: true,
+    data: [],
+  })
+
+  function groupFunctionTestFunction(orderArray) {
+    // Group orders by day
+    const groupedOrders = orderArray.reduce((result, order) => {
+      const orderDate = new Date(order.createdAt).toLocaleDateString() // Group by date
+
+      if (!result[orderDate]) {
+        result[orderDate] = {
+          date: orderDate,
+          totalAmount: 0,
+          orderCount: 0,
+        }
+      }
+
+      result[orderDate].totalAmount += order.total_amount
+      result[orderDate].orderCount++
+
+      return result
+    }, {})
+
+    const groupedOrderData = Object.values(groupedOrders)
+
+    setGroupedOrderData({ data: groupedOrderData })
+    // console.log('groupedOrderData', groupedOrderData)
+    return groupedOrderData
+  }
+
   return (
     <AdminContext.Provider
       value={{
@@ -943,6 +1039,10 @@ status=${status}`,
         setOrderGroupTransferList,
         updateOrderGroupTransferStatusFunction,
         updateOrderGroupStatusFunction,
+        notificationToast,
+        setNotificationToast,
+        groupedOrderData,
+        setGroupedOrderData,
       }}
     >
       {children}

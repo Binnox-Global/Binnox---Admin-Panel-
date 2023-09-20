@@ -142,6 +142,18 @@ const _nav = [
       },
     ],
   },
+  {
+    component: CNavGroup,
+    name: 'Customer Success',
+    icon: <CIcon icon={cilMoney} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Records',
+        to: '/customer-success',
+      },
+    ],
+  },
   // {
   //   component: CNavGroup,
   //   name: 'Discount',

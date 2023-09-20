@@ -382,14 +382,175 @@ function AdminProvider({ children }) {
           Authorization: token,
         },
       })
-      .then((res) => {
-        // console.log('orders', res.data)
+      .then(async (res) => {
+        // console.log('orders', res.data.orders.reverse())
+
+        convertOldOrderToNewOderFunction(res.data.orders.reverse())
+
         setOrderList({ loading: false, data: res.data.orders.reverse() })
       })
       .catch((error) => {
         console.error(error)
       })
   }
+
+  async function convertOldOrderToNewOderFunction(oldOrderArray) {
+    let oldOrderArrayOfArray = await groupOrderWithUserAndTime(oldOrderArray)
+    // console.log('oldOrderArrayOfArray', oldOrderArrayOfArray)
+    let newGroupOrderStructure = []
+    oldOrderArrayOfArray.forEach(async (orderArray) => {
+      let singleOrder = structureOldOrderLikeNewOrder(orderArray)
+      newGroupOrderStructure.push(singleOrder)
+      // console.log('singleOrder', singleOrder)
+      // console.log();
+    })
+    console.log('newGroupOrderStructure', newGroupOrderStructure)
+  }
+
+  async function groupOrderWithUserAndTime(ordersArray) {
+    // Create an array to store grouped orders
+    const groupedOrders = []
+
+    // Iterate through the items
+    ordersArray.forEach((item) => {
+      const { user, createdAt } = item
+      // console.log(item)
+      const orderTime = moment(createdAt)
+
+      // Check if there is a group with the same user ID and order time
+      const existingGroup = groupedOrders.find((group) =>
+        group.some(
+          (groupedItem) =>
+            groupedItem.user._id === user._id &&
+            moment(groupedItem.createdAt).isSame(orderTime, 'second'),
+        ),
+      )
+
+      if (existingGroup) {
+        // Add the item to the existing group
+        existingGroup.push(item)
+      } else {
+        // Create a new group for the item
+        groupedOrders.push([item])
+      }
+    })
+
+    // console.log(groupedOrders)
+    return groupedOrders
+  }
+
+  function structureOldOrderLikeNewOrder(orderArray) {
+    let a = {
+      address: '9.076995051125639,7.486784259472609',
+      business: {
+        business_cover_image:
+          'https://res.cloudinary.com/douhmck38/image/upload/2023-08-09T09:21:48.3767143.jpg',
+        business_location: { lat: 9.0800306, long: 7.4542125 },
+        business_name: 'AMAZING KITCHEN',
+        business_number: '09075358731',
+        _id: '64b93e7497b1c6e9b29d7669',
+      },
+      createdAt: '2023-09-20T12:18:13.223Z',
+      delivered: true,
+      delivery_fee: 612,
+      delivery_rate: null,
+      discount: null,
+      items: [
+        {
+          count: 2,
+          product: {
+            available_count: 20,
+            image_url:
+              'http://res.cloudinary.com/douhmck38/image/upload/v1695211891/2023-09-20T13:11:25.9599021.jpg',
+            name: 'Porridge Beans',
+            prices: 500,
+            sold_count: 0,
+            _id: '650ae1740adb3d81a85f8405',
+          },
+          _id: '650ae2ef0adb3d81a85f854e',
+        },
+      ],
+      receipt: {
+        data: { tx_ref: 'b772a020-57af-11ee-a7e8-812a7a55c41e' },
+        message: 'Bank Transfer',
+        status: 'Success',
+      },
+
+      received: false,
+      service_fee: 108,
+      statues: 'Delivered',
+      sub_total: 2150,
+      total_amount: 2870,
+      updatedAt: '2023-09-20T12:55:08.236Z',
+      user: {
+        email: 'nwosujustus@gmail.com',
+        full_name: 'Justus Nwosu',
+        phone_number: 8101977171,
+        _id: '646b2b975cd5b9d280124145',
+      },
+      _id: '650ae3059f413b767f7a17e5',
+    }
+    let itemsArray = []
+    let calculatedSubTotal = 0
+    orderArray.forEach((order) => {
+      calculatedSubTotal += order?.item_amount
+      // console.log('order?.item_amount', order?.item_amount)
+      itemsArray.push({
+        count: order.item_count,
+        product: {
+          available_count: order.product.available_count,
+          image_url: order.product.image_url,
+          name: order.product.name,
+          prices: order.item_amount,
+          sold_count: order.product.sold_count,
+          _id: order.product._id,
+        },
+        _id: order.product._id,
+      })
+    })
+
+    // let {} firstOrder
+    let {
+      business,
+      delivered,
+      delivery_fee,
+      delivery_rate,
+      discount,
+      receipt,
+      received,
+      address,
+      service_fee,
+      statues,
+      updatedAt,
+      createdAt,
+      _id,
+      user,
+    } = orderArray[0]
+
+    let calculatedTotal = calculatedSubTotal + service_fee + delivery_fee
+
+    let newOrderStructure = {
+      address,
+      business,
+      createdAt,
+      delivered,
+      delivery_fee,
+      delivery_rate,
+      discount,
+      items: itemsArray,
+      receipt,
+      received,
+      service_fee,
+      statues,
+      sub_total: calculatedSubTotal,
+      total_amount: calculatedTotal,
+      updatedAt,
+      user,
+      _id,
+    }
+    return newOrderStructure
+  }
+
   async function getOrderGroupRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
     setOrderGroupList({
@@ -403,7 +564,7 @@ function AdminProvider({ children }) {
         },
       })
       .then((res) => {
-        // console.log('getOrderGroupRecordsFunction', res.data)
+        console.log('getOrderGroupRecordsFunction', res.data)
         let orders = res.data.orders.reverse()
         setOrderGroupList({ loading: false, data: orders })
 
@@ -953,9 +1114,9 @@ status=${status}`,
     }, {})
 
     //  setReferralOrderGrouping({ ordersGroupedByDate, ordersMadeToday })
-    console.log('Orders:', orderArray)
-    console.log('Orders made today:', ordersMadeToday)
-    console.log('Orders grouped by date:', ordersGroupedByDate)
+    // console.log('Orders:', orderArray)
+    // console.log('Orders made today:', ordersMadeToday)
+    // console.log('Orders grouped by date:', ordersGroupedByDate)
     return { ordersMadeToday, ordersGroupedByDate }
   }
 

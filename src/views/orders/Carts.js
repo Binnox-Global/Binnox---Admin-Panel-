@@ -88,7 +88,8 @@ function CartGroupCard({ carts }) {
   }, [carts])
 
   function formatNumber(number) {
-    const formattedNumber = number.toLocaleString()
+    // console.log('Number', number)
+    const formattedNumber = number?.toLocaleString()
     return formattedNumber
   }
   return (

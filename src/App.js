@@ -2,6 +2,7 @@ import React, { Component, Suspense } from 'react'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
 import { ToastContainer } from 'react-toastify'
+import NotificationToast from './components/NotificationToast/NotificationToast'
 
 const loading = (
   <div className="pt-3 text-center">
@@ -23,6 +24,17 @@ class App extends Component {
     return (
       <>
         <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        <NotificationToast
           position="top-right"
           autoClose={5000}
           hideProgressBar={false}

@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { AdminContext } from 'src/context/adminContext'
+import moment from 'moment'
 
 const DefaultLayout = () => {
   const [cookies] = useCookies()
@@ -21,6 +22,9 @@ const DefaultLayout = () => {
     getCartRecordsFunction,
     getAmbassadorRecordsFunction,
     getRewordsFunction,
+    getPaymentRequestFunction,
+    setNotificationToast,
+    paymentRequest,
   } = React.useContext(AdminContext)
   useEffect(() => {
     if (!cookies.BinnoxAdmin || !cookies.BinnoxAdmin.profile || !cookies.BinnoxAdmin.token) {
@@ -29,6 +33,9 @@ const DefaultLayout = () => {
     } else {
       setToken(cookies.BinnoxAdmin.token)
     }
+  }, [])
+  React.useEffect(() => {
+    getPaymentRequestFunction()
   }, [])
   React.useEffect(() => {
     if (!token) return
@@ -53,6 +60,20 @@ const DefaultLayout = () => {
     getRewordsFunction()
     getOrderGroupRecordsFunction()
   }, [token])
+  React.useEffect(() => {
+    let notificationArray = []
+    if (paymentRequest.data.length > 0) {
+      // console.log('paymentRequest', paymentRequest.data)
+      paymentRequest.data.forEach((item) => {
+        notificationArray.push({
+          header: 'Request Withdrawal',
+          message: `${item?.business?.business_name} Request for ₦${item?.amount}`,
+          time: moment(item?.createdAt, 'YYYYMMDD').fromNow(),
+        })
+      })
+    }
+    setNotificationToast(notificationArray)
+  }, [paymentRequest])
   return (
     <div>
       <AppSidebar />

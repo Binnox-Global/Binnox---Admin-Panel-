@@ -35,6 +35,7 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [generalOrder, setGeneralOder] = React.useState({ loading: true, data: [] })
   const [orderGroupList, setOrderGroupList] = React.useState({
     loading: true,
     data: [],
@@ -383,9 +384,9 @@ function AdminProvider({ children }) {
         },
       })
       .then(async (res) => {
-        // console.log('orders', res.data.orders.reverse())
+        console.log('orders', res.data.orders.reverse())
 
-        convertOldOrderToNewOderFunction(res.data.orders.reverse())
+        // convertOldOrderToNewOderFunction(res.data.orders.reverse())
 
         setOrderList({ loading: false, data: res.data.orders.reverse() })
       })
@@ -394,9 +395,24 @@ function AdminProvider({ children }) {
       })
   }
 
+  useEffect(() => {
+    populateGeneralOrder()
+  }, [orderList, orderGroupList])
+
+  async function populateGeneralOrder() {
+    if (orderList.loading === false && orderGroupList.loading === false) {
+      let oldOrderMadeNew = await convertOldOrderToNewOderFunction(orderList.data)
+      // console.log('oldOrderMadeNew', oldOrderMadeNew)
+      setGeneralOder({
+        loading: false,
+        data: [...orderGroupList.data, ...oldOrderMadeNew],
+      })
+    }
+  }
+
   async function convertOldOrderToNewOderFunction(oldOrderArray) {
     let oldOrderArrayOfArray = await groupOrderWithUserAndTime(oldOrderArray)
-    // console.log('oldOrderArrayOfArray', oldOrderArrayOfArray)
+    console.log('oldOrderArray', oldOrderArray)
     let newGroupOrderStructure = []
     oldOrderArrayOfArray.forEach(async (orderArray) => {
       let singleOrder = structureOldOrderLikeNewOrder(orderArray)
@@ -405,6 +421,7 @@ function AdminProvider({ children }) {
       // console.log();
     })
     console.log('newGroupOrderStructure', newGroupOrderStructure)
+    return newGroupOrderStructure
   }
 
   async function groupOrderWithUserAndTime(ordersArray) {

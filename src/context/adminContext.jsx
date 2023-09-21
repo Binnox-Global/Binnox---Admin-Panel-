@@ -21,6 +21,7 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [notificationToast, setNotificationToast] = React.useState([])
   const [adminList, setAdminList] = React.useState({
     loading: true,
     data: [],
@@ -34,6 +35,7 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [generalOrder, setGeneralOrder] = React.useState({ loading: true, data: [] })
   const [orderGroupList, setOrderGroupList] = React.useState({
     loading: true,
     data: [],
@@ -140,7 +142,7 @@ function AdminProvider({ children }) {
       calculatedDeliveryFee: 0,
       calculatedProfit: 0,
     })
-    if (orderList.loading) return
+    if (generalOrder.loading) return
     // console.log('orderList', orderList.data)
 
     let totalTransactions = 0
@@ -153,9 +155,13 @@ function AdminProvider({ children }) {
     let groundTotal = 0
     let calculatedProfit = 0
 
-    orderList.data.forEach((order) => {
+    // console.log('orderGroupList', orderGroupList)
+    generalOrder.data.forEach((order) => {
       // get totalTransactions from summing up transactions fees
-      totalTransactions += order.item_amount
+      // console.log(order)
+      if (!isNaN(order?.sub_total)) {
+        totalTransactions += order?.sub_total
+      }
 
       if (order.delivery_fee) {
         // get totalDeliveryFee from summing up delivery fees
@@ -163,6 +169,7 @@ function AdminProvider({ children }) {
       } else {
         totalDeliveryFee += 600
       }
+
       if (order.service_fee) {
         // get totalServiceFee from summing up service fees
         totalServiceFee += order.service_fee
@@ -175,6 +182,9 @@ function AdminProvider({ children }) {
     delivery10Percent = calculatePercentage(totalDeliveryFee, 10)
     // remove 10% from totalDeliveryFee
     calculatedDeliveryFee = totalDeliveryFee - delivery10Percent
+    // console.log('delivery10Percent', delivery10Percent)
+    // console.log('calculatedDeliveryFee', calculatedDeliveryFee)
+    // console.log('totalDeliveryFee', totalDeliveryFee)
 
     // 5% of transaction
     transactions5percent = calculatePercentage(totalTransactions, 5)
@@ -185,7 +195,7 @@ function AdminProvider({ children }) {
     // calculatedProfit is service fee (5% from user) +  transaction fee (5% from business) + delivery fee (10% from delivery)
     calculatedProfit = transactions5percent + delivery10Percent + totalServiceFee
 
-    // groundTotal = totalTransactions + totalDeliveryFee + totalServiceFee
+    groundTotal = totalTransactions + totalDeliveryFee + totalServiceFee
     console.log({
       totalTransactions,
       transactions5percent,
@@ -209,7 +219,7 @@ function AdminProvider({ children }) {
       calculatedDeliveryFee,
       calculatedProfit,
     })
-  }, [orderList])
+  }, [generalOrder])
 
   async function getAmbassadorRecordsFunction() {
     axios
@@ -355,14 +365,141 @@ function AdminProvider({ children }) {
           Authorization: token,
         },
       })
-      .then((res) => {
-        // console.log('orders', res.data)
+      .then(async (res) => {
+        // console.log('orders', res.data.orders.reverse())
+
+        // convertOldOrderToNewOderFunction(res.data.orders.reverse())
+
         setOrderList({ loading: false, data: res.data.orders.reverse() })
       })
       .catch((error) => {
         console.error(error)
       })
   }
+
+  useEffect(() => {
+    populateGeneralOrder()
+  }, [orderList, orderGroupList])
+
+  async function populateGeneralOrder() {
+    if (orderList.loading === false && orderGroupList.loading === false) {
+      let oldOrderMadeNew = await convertOldOrderToNewOderFunction(orderList.data)
+      // console.log('oldOrderMadeNew', oldOrderMadeNew)
+      setGeneralOrder({
+        loading: false,
+        data: [...orderGroupList.data, ...oldOrderMadeNew],
+      })
+    }
+  }
+
+  async function convertOldOrderToNewOderFunction(oldOrderArray) {
+    let oldOrderArrayOfArray = await groupOrderWithUserAndTime(oldOrderArray)
+    // console.log('oldOrderArray', oldOrderArray)
+    let newGroupOrderStructure = []
+    oldOrderArrayOfArray.forEach(async (orderArray) => {
+      let singleOrder = structureOldOrderLikeNewOrder(orderArray)
+      newGroupOrderStructure.push(singleOrder)
+      // console.log('singleOrder', singleOrder)
+      // console.log();
+    })
+    // console.log('newGroupOrderStructure', newGroupOrderStructure)
+    return newGroupOrderStructure
+  }
+
+  async function groupOrderWithUserAndTime(ordersArray) {
+    // Create an array to store grouped orders
+    const groupedOrders = []
+
+    // Iterate through the items
+    ordersArray.forEach((item) => {
+      const { user, createdAt } = item
+      // console.log(item)
+      const orderTime = moment(createdAt)
+
+      // Check if there is a group with the same user ID and order time
+      const existingGroup = groupedOrders.find((group) =>
+        group.some(
+          (groupedItem) =>
+            groupedItem.user._id === user._id &&
+            moment(groupedItem.createdAt).isSame(orderTime, 'second'),
+        ),
+      )
+
+      if (existingGroup) {
+        // Add the item to the existing group
+        existingGroup.push(item)
+      } else {
+        // Create a new group for the item
+        groupedOrders.push([item])
+      }
+    })
+
+    // console.log(groupedOrders)
+    return groupedOrders
+  }
+
+  function structureOldOrderLikeNewOrder(orderArray) {
+    let itemsArray = []
+    let calculatedSubTotal = 0
+    orderArray.forEach((order) => {
+      calculatedSubTotal += order?.item_amount
+      // console.log('order?.item_amount', order?.item_amount)
+      itemsArray.push({
+        count: order.item_count,
+        product: {
+          available_count: order.product.available_count,
+          image_url: order.product.image_url,
+          name: order.product.name,
+          prices: order.item_amount,
+          sold_count: order.product.sold_count,
+          _id: order.product._id,
+        },
+        _id: order.product._id,
+      })
+    })
+
+    // let {} firstOrder
+    let {
+      business,
+      delivered,
+      delivery_fee,
+      delivery_rate,
+      discount,
+      receipt,
+      received,
+      address,
+      service_fee,
+      statues,
+      updatedAt,
+      createdAt,
+      _id,
+      user,
+    } = orderArray[0]
+
+    let calculatedTotal = calculatedSubTotal + service_fee + delivery_fee
+
+    let newOrderStructure = {
+      address,
+      business,
+      createdAt,
+      delivered,
+      delivery_fee,
+      delivery_rate,
+      discount,
+      items: itemsArray,
+      receipt,
+      received,
+      service_fee,
+      statues,
+      sub_total: calculatedSubTotal,
+      total_amount: calculatedTotal,
+      updatedAt,
+      user,
+      _id,
+    }
+    return newOrderStructure
+  }
+
   async function getOrderGroupRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
     setOrderGroupList({
@@ -377,7 +514,11 @@ function AdminProvider({ children }) {
       })
       .then((res) => {
         // console.log('getOrderGroupRecordsFunction', res.data)
-        setOrderGroupList({ loading: false, data: res.data.orders.reverse() })
+        let orders = res.data.orders.reverse()
+        setOrderGroupList({ loading: false, data: orders })
+
+        let groupOrderByDate = groupOrderByDateFunction(orders)
+        let groupFunctionTest = groupFunctionTestFunction(orders)
       })
       .catch((error) => {
         console.error(error)
@@ -470,7 +611,7 @@ function AdminProvider({ children }) {
     axios
       .get(`${apiUrl}/admin/payment-request`, {
         headers: {
-          Authorization: token,
+          Authorization: cookies.BinnoxAdmin.token,
         },
       })
       .then((res) => {
@@ -894,6 +1035,71 @@ status=${status}`,
     // Update state after all promises have resolved
     // setState(/* updated state */);
   }
+
+  function groupOrderByDateFunction(orderArray) {
+    // const moment = require("moment");
+
+    // // Assuming the orders array is named "orders"
+    // const orders = [
+    //   // Your array of orders goes here...
+    // ];
+
+    // Get the current date in the desired format (e.g., "YYYY-MM-DD")
+    const currentDate = moment().format('YYYY-MM-DD')
+
+    // Filter the orders made today using the "createdAt" field
+    const ordersMadeToday = orderArray?.filter((order) =>
+      moment(order.createdAt).isSame(currentDate, 'day'),
+    )
+
+    // Group the orders by date (if needed)
+    const ordersGroupedByDate = orderArray?.reduce((groupedOrders, order) => {
+      const orderDate = moment(order.createdAt).format('YYYY-MM-DD')
+      if (!groupedOrders[orderDate]) {
+        groupedOrders[orderDate] = []
+      }
+      groupedOrders[orderDate].push(order)
+      return groupedOrders
+    }, {})
+
+    //  setReferralOrderGrouping({ ordersGroupedByDate, ordersMadeToday })
+    // console.log('Orders:', orderArray)
+    // console.log('Orders made today:', ordersMadeToday)
+    // console.log('Orders grouped by date:', ordersGroupedByDate)
+    return { ordersMadeToday, ordersGroupedByDate }
+  }
+
+  const [groupedOrderData, setGroupedOrderData] = React.useState({
+    loading: true,
+    data: [],
+  })
+
+  function groupFunctionTestFunction(orderArray) {
+    // Group orders by day
+    const groupedOrders = orderArray.reduce((result, order) => {
+      const orderDate = new Date(order.createdAt).toLocaleDateString() // Group by date
+
+      if (!result[orderDate]) {
+        result[orderDate] = {
+          date: orderDate,
+          totalAmount: 0,
+          orderCount: 0,
+        }
+      }
+
+      result[orderDate].totalAmount += order.total_amount
+      result[orderDate].orderCount++
+
+      return result
+    }, {})
+
+    const groupedOrderData = Object.values(groupedOrders)
+
+    setGroupedOrderData({ data: groupedOrderData })
+    // console.log('groupedOrderData', groupedOrderData)
+    return groupedOrderData
+  }
+
   return (
     <AdminContext.Provider
       value={{
@@ -943,6 +1149,11 @@ status=${status}`,
         setOrderGroupTransferList,
         updateOrderGroupTransferStatusFunction,
         updateOrderGroupStatusFunction,
+        notificationToast,
+        setNotificationToast,
+        groupedOrderData,
+        setGroupedOrderData,
+        generalOrder,
       }}
     >
       {children}

@@ -28,7 +28,6 @@ function AdminRecordPage() {
       alert('Enter Admin Access Code')
     }
   }
-
   return (
     <>
       {/* <LineChart /> */}
@@ -41,9 +40,8 @@ function AdminRecordPage() {
               <div className="d-flex justify-content-between">
                 Admin Record
                 {/* <ModalComponent title={'Update Rewords'} component={<RewordsForm />} /> */}
-                <button className="btn btn-sm btn-primary" onClick={() => checkAdminAccess()}>
-                  {' '}
-                  Show Full Record{' '}
+                <button className="btn btn-primary btn-sm" onClick={() => checkAdminAccess()}>
+                  Show Full Record
                 </button>
               </div>
             </CCardHeader>
@@ -66,24 +64,28 @@ function AdminRecordPage() {
                     {adminRecords?.totalServiceFee?.toLocaleString()}
                   </div>
                   <div className="col-md-6 my-2">
-                    <b> Delivery Fee</b> <br />₦ {adminRecords?.totalDeliveryFee?.toLocaleString()}
+                    <b>Delivery Fee</b> <br />₦{' '}
+                    {adminRecords.calculatedDeliveryFee.toLocaleString()}
                   </div>
                   <div className="col-md-6 my-2">
                     <b>Transaction</b> <br />₦ {adminRecords?.totalTransactions?.toLocaleString()}
                   </div>
                   <div className="col-md-6 my-2">
                     <b>5% of Transaction</b> <br />₦{' '}
-                    {adminRecords?.transactions5percent?.toLocaleString()}
+                    {adminRecords.transactions5percent.toLocaleString()}
                   </div>
-                  {/* <div className="col-md-6 my-2">
-                    <b>Ground Total</b> <br />₦ {adminRecords?.groundTotal?.toLocaleString()}
-                  </div> */}
+                  <div className="col-md-6 my-2">
+                    <b>Ground Total</b> <br />₦ {adminRecords.groundTotal.toLocaleString()}
+                  </div>
+                  <div className="col-md-6 my-2">
+                    <b>Profit</b> <br />₦ {adminRecords.calculatedProfit.toLocaleString()}
+                  </div>
                 </div>
               )}
             </CCardBody>
           </CCard>
         </CCol>
-      </CRow>
+      </CRow>{' '}
       {adminAccess && (
         <CRow>
           <CCol xs>
@@ -123,27 +125,6 @@ function AdminRecordPage() {
                     <div className="col-md-6 my-2">
                       <b>Ground Total</b> <br />₦ {adminRecords.groundTotal.toLocaleString()}
                     </div>
-                    {/*
-                   <div className="col-md-6 my-2">
-                    <b>User Referral User Reward</b> <br />
-                    {rewords?.data?.user_refer_user_reword} point
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>Ambassador Referral User Reward</b> <br />
-                    {rewords?.data?.ambassador_refer_user_reword} point
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>Ambassador Referral Ambassador Reward</b> <br />
-                    {rewords?.data?.ambassador_refer_ambassador_reword} point
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>Ambassador Referral Order Reward</b> <br />
-                    {rewords?.data?.ambassador_down_line_order_reword}%
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>User Order Reward</b> <br />
-                    {rewords?.data?.user_order_reword}%
-                  </div> */}
                   </div>
                 )}
               </CCardBody>

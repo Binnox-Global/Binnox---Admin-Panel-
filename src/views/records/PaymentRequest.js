@@ -27,11 +27,12 @@ import { AdminContext } from 'src/context/adminContext'
 import moment from 'moment'
 
 function PaymentRequest() {
-  const { token, paymentRequest, updatePaymentRequestStatusFunction, getPaymentRequestFunction } =
+  const { paymentRequest, updatePaymentRequestStatusFunction, getPaymentRequestFunction } =
     React.useContext(AdminContext)
   React.useEffect(() => {
-    if (token) getPaymentRequestFunction()
+    getPaymentRequestFunction()
   }, [])
+
   return (
     <CRow>
       <CCol xs>

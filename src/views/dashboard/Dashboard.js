@@ -11,12 +11,20 @@ import { ActiveBusinessRecords } from '../records/BusinessRecords'
 import UserRecords from '../records/UserRecords'
 
 const Dashboard = () => {
-  const { userList, adminList, businessList, orderList, adminRecords } =
-    React.useContext(AdminContext)
+  const {
+    userList,
+    adminList,
+    businessList,
+    orderList,
+    adminRecords,
+    orderGroupList,
+    generalOrder,
+  } = React.useContext(AdminContext)
 
-  useEffect(() => {
-    console.log('businessList', businessList)
-  }, [])
+  // useEffect(() => {
+  //   console.log('businessList', businessList)
+  //   console.log('orderGroupList', orderGroupList)
+  // }, [orderGroupList])
 
   return (
     <>
@@ -89,7 +97,12 @@ const Dashboard = () => {
               }
               icon={<CIcon icon={cilFastfood} height={24} />}
               title="Orders"
-              value={adminRecords?.loading ? 'Loading...' : orderList?.data?.length}
+              value={generalOrder?.loading ? 'Loading...' : generalOrder?.data?.length}
+              // value={
+              //   adminRecords?.loading ? 'Loading...' : orderList?.data?.length
+              //   // + orderGroupList?.data?.length
+              // }
+              // value={600}
             />
           </CCol>
           <CCol>

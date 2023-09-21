@@ -10,6 +10,7 @@ import RewordPage from './views/pages/rewordPage/RewordPage'
 import OrderTransfer from './views/orderTransfer/OrderTransfer'
 import AdminRecordPage from './views/pages/adminRecordPage/AdminRecordPage'
 import ArchiveRecords from './views/records/ArchiveRecords'
+import CustomerSuccessPage from './views/pages/CustomerSuccessPage/CustomerSuccessPage'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -131,6 +132,7 @@ const routes = [
   { path: '/discount/list', name: 'UserRecords', element: discounts },
   { path: '/Carts', name: 'UserRecords', element: CartsRecord },
   { path: '/ambassador', name: 'Ambassador', element: AmbassadorPage },
+  { path: '/customer-success', name: 'Ambassador', element: CustomerSuccessPage },
 ]
 
 export default routes

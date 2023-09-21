@@ -380,6 +380,9 @@ function AdminProvider({ children }) {
   useEffect(() => {
     populateGeneralOrder()
   }, [orderList, orderGroupList])
+  useEffect(() => {
+    groupFunctionTestFunction(generalOrder.data)
+  }, [generalOrder])
 
   async function populateGeneralOrder() {
     if (orderList.loading === false && orderGroupList.loading === false) {
@@ -442,12 +445,13 @@ function AdminProvider({ children }) {
     let itemsArray = []
     let calculatedSubTotal = 0
     orderArray.forEach((order) => {
+      if (order.product?.available_count === undefined) return
       calculatedSubTotal += order?.item_amount
-      // console.log('order?.item_amount', order?.item_amount)
+      // console.log('order?.item_amount', order?.product?.available_count)
       itemsArray.push({
         count: order.item_count,
         product: {
-          available_count: order.product.available_count,
+          available_count: order.product?.available_count,
           image_url: order.product.image_url,
           name: order.product.name,
           prices: order.item_amount,
@@ -476,7 +480,7 @@ function AdminProvider({ children }) {
       user,
     } = orderArray[0]
 
-    let calculatedTotal = calculatedSubTotal + service_fee + delivery_fee
+    let calculatedTotal = calculatedSubTotal + service_fee || 200 + delivery_fee || 600
 
     let newOrderStructure = {
       address,
@@ -518,7 +522,7 @@ function AdminProvider({ children }) {
         setOrderGroupList({ loading: false, data: orders })
 
         let groupOrderByDate = groupOrderByDateFunction(orders)
-        let groupFunctionTest = groupFunctionTestFunction(orders)
+        // let groupFunctionTest = groupFunctionTestFunction(orders)
       })
       .catch((error) => {
         console.error(error)
@@ -1076,6 +1080,7 @@ status=${status}`,
 
   function groupFunctionTestFunction(orderArray) {
     // Group orders by day
+    // console.log('orderArray', orderArray)
     const groupedOrders = orderArray.reduce((result, order) => {
       const orderDate = new Date(order.createdAt).toLocaleDateString() // Group by date
 

@@ -35,7 +35,7 @@ function AdminProvider({ children }) {
     loading: true,
     data: [],
   })
-  const [generalOrder, setGeneralOder] = React.useState({ loading: true, data: [] })
+  const [generalOrder, setGeneralOrder] = React.useState({ loading: true, data: [] })
   const [orderGroupList, setOrderGroupList] = React.useState({
     loading: true,
     data: [],
@@ -142,7 +142,7 @@ function AdminProvider({ children }) {
       calculatedDeliveryFee: 0,
       calculatedProfit: 0,
     })
-    if (orderList.loading || orderGroupList.loading) return
+    if (generalOrder.loading) return
     // console.log('orderList', orderList.data)
 
     let totalTransactions = 0
@@ -155,28 +155,10 @@ function AdminProvider({ children }) {
     let groundTotal = 0
     let calculatedProfit = 0
 
-    orderList.data.forEach((order) => {
-      // get totalTransactions from summing up transactions fees
-      totalTransactions += order.item_amount
-
-      if (order.delivery_fee) {
-        // get totalDeliveryFee from summing up delivery fees
-        totalDeliveryFee += order.delivery_fee
-      } else {
-        totalDeliveryFee += 600
-      }
-      if (order.service_fee) {
-        // get totalServiceFee from summing up service fees
-        totalServiceFee += order.service_fee
-      } else {
-        totalServiceFee += 200
-      }
-    })
-
     // console.log('orderGroupList', orderGroupList)
-    orderGroupList.data.forEach((order) => {
+    generalOrder.data.forEach((order) => {
       // get totalTransactions from summing up transactions fees
-      // console.log(order.sub_total)
+      // console.log(order)
       if (!isNaN(order?.sub_total)) {
         totalTransactions += order?.sub_total
       }
@@ -200,9 +182,9 @@ function AdminProvider({ children }) {
     delivery10Percent = calculatePercentage(totalDeliveryFee, 10)
     // remove 10% from totalDeliveryFee
     calculatedDeliveryFee = totalDeliveryFee - delivery10Percent
-    console.log('delivery10Percent', delivery10Percent)
-    console.log('calculatedDeliveryFee', calculatedDeliveryFee)
-    console.log('totalDeliveryFee', totalDeliveryFee)
+    // console.log('delivery10Percent', delivery10Percent)
+    // console.log('calculatedDeliveryFee', calculatedDeliveryFee)
+    // console.log('totalDeliveryFee', totalDeliveryFee)
 
     // 5% of transaction
     transactions5percent = calculatePercentage(totalTransactions, 5)
@@ -237,7 +219,7 @@ function AdminProvider({ children }) {
       calculatedDeliveryFee,
       calculatedProfit,
     })
-  }, [orderList, orderGroupList])
+  }, [generalOrder])
 
   async function getAmbassadorRecordsFunction() {
     axios
@@ -384,7 +366,7 @@ function AdminProvider({ children }) {
         },
       })
       .then(async (res) => {
-        console.log('orders', res.data.orders.reverse())
+        // console.log('orders', res.data.orders.reverse())
 
         // convertOldOrderToNewOderFunction(res.data.orders.reverse())
 
@@ -403,7 +385,7 @@ function AdminProvider({ children }) {
     if (orderList.loading === false && orderGroupList.loading === false) {
       let oldOrderMadeNew = await convertOldOrderToNewOderFunction(orderList.data)
       // console.log('oldOrderMadeNew', oldOrderMadeNew)
-      setGeneralOder({
+      setGeneralOrder({
         loading: false,
         data: [...orderGroupList.data, ...oldOrderMadeNew],
       })
@@ -412,7 +394,7 @@ function AdminProvider({ children }) {
 
   async function convertOldOrderToNewOderFunction(oldOrderArray) {
     let oldOrderArrayOfArray = await groupOrderWithUserAndTime(oldOrderArray)
-    console.log('oldOrderArray', oldOrderArray)
+    // console.log('oldOrderArray', oldOrderArray)
     let newGroupOrderStructure = []
     oldOrderArrayOfArray.forEach(async (orderArray) => {
       let singleOrder = structureOldOrderLikeNewOrder(orderArray)
@@ -420,7 +402,7 @@ function AdminProvider({ children }) {
       // console.log('singleOrder', singleOrder)
       // console.log();
     })
-    console.log('newGroupOrderStructure', newGroupOrderStructure)
+    // console.log('newGroupOrderStructure', newGroupOrderStructure)
     return newGroupOrderStructure
   }
 
@@ -457,56 +439,6 @@ function AdminProvider({ children }) {
   }
 
   function structureOldOrderLikeNewOrder(orderArray) {
-    let a = {
-      address: '9.076995051125639,7.486784259472609',
-      business: {
-        business_cover_image:
-          'https://res.cloudinary.com/douhmck38/image/upload/2023-08-09T09:21:48.3767143.jpg',
-        business_location: { lat: 9.0800306, long: 7.4542125 },
-        business_name: 'AMAZING KITCHEN',
-        business_number: '09075358731',
-        _id: '64b93e7497b1c6e9b29d7669',
-      },
-      createdAt: '2023-09-20T12:18:13.223Z',
-      delivered: true,
-      delivery_fee: 612,
-      delivery_rate: null,
-      discount: null,
-      items: [
-        {
-          count: 2,
-          product: {
-            available_count: 20,
-            image_url:
-              'http://res.cloudinary.com/douhmck38/image/upload/v1695211891/2023-09-20T13:11:25.9599021.jpg',
-            name: 'Porridge Beans',
-            prices: 500,
-            sold_count: 0,
-            _id: '650ae1740adb3d81a85f8405',
-          },
-          _id: '650ae2ef0adb3d81a85f854e',
-        },
-      ],
-      receipt: {
-        data: { tx_ref: 'b772a020-57af-11ee-a7e8-812a7a55c41e' },
-        message: 'Bank Transfer',
-        status: 'Success',
-      },
-
-      received: false,
-      service_fee: 108,
-      statues: 'Delivered',
-      sub_total: 2150,
-      total_amount: 2870,
-      updatedAt: '2023-09-20T12:55:08.236Z',
-      user: {
-        email: 'nwosujustus@gmail.com',
-        full_name: 'Justus Nwosu',
-        phone_number: 8101977171,
-        _id: '646b2b975cd5b9d280124145',
-      },
-      _id: '650ae3059f413b767f7a17e5',
-    }
     let itemsArray = []
     let calculatedSubTotal = 0
     orderArray.forEach((order) => {
@@ -581,7 +513,7 @@ function AdminProvider({ children }) {
         },
       })
       .then((res) => {
-        console.log('getOrderGroupRecordsFunction', res.data)
+        // console.log('getOrderGroupRecordsFunction', res.data)
         let orders = res.data.orders.reverse()
         setOrderGroupList({ loading: false, data: orders })
 
@@ -1221,6 +1153,7 @@ status=${status}`,
         setNotificationToast,
         groupedOrderData,
         setGroupedOrderData,
+        generalOrder,
       }}
     >
       {children}

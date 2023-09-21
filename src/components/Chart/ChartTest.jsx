@@ -26,7 +26,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
+      text: 'Transaction',
     },
   },
   scales: {
@@ -73,21 +73,24 @@ export function ChartTest() {
     labels: [],
     datasets: [],
   })
-  const { groupedOrderData } = useContext(AdminContext)
+  const { groupedOrderData, generalOrder } = useContext(AdminContext)
 
   useEffect(() => {
-    console.log('groupedOrderData', groupedOrderData)
+    // console.log('groupedOrderData', groupedOrderData)
 
     let labelsArray = []
     let dataSetsArray = []
 
-    console.log(groupedOrderData.data)
+    // console.log(groupedOrderData.data)
+    // console.log('groupedOrderData', groupedOrderData.data)
+    // console.log('generalOrder', generalOrder.data)
 
     let dataSetsArrayDataOrderCount = []
     let dataSetsArrayDataTotalAmount = []
     let labelsArrayData = []
 
     groupedOrderData?.data?.reverse()?.forEach((item) => {
+      // console.log(item)
       let rearrangeDateArray = item?.date.split('/')
       let rearrangeDate = `${rearrangeDateArray[1]}/${rearrangeDateArray[0]}/${rearrangeDateArray[2]}`
       // console.log(rearrangeDate)
@@ -121,7 +124,9 @@ export function ChartTest() {
       datasets: dataSetsArray,
     })
   }, [groupedOrderData])
-
+  useEffect(() => {
+    // console.log('data', data)
+  }, [data])
   return (
     <>
       <Line options={options} data={data} />

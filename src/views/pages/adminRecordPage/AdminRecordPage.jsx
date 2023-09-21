@@ -31,7 +31,13 @@ function AdminRecordPage() {
   return (
     <>
       {/* <LineChart /> */}
-      <ChartTest />
+      <CCard className="mb-4">
+        {' '}
+        <CCardHeader>Transaction Chart</CCardHeader>
+        <CCardBody>
+          <ChartTest />
+        </CCardBody>
+      </CCard>
       <CRow>
         <CCol xs>
           <CCard className="mb-4">

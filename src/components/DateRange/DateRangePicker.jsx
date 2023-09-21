@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 const DateRangePicker = ({ startDate, endDate, onChange }) => {
   return (
-    <div className="date-range-picker">
+    <div className="date-range-picker d-flex flex-wrap">
       <DatePicker
         selected={startDate}
         startDate={startDate}

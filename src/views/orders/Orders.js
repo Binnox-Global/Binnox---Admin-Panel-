@@ -838,7 +838,7 @@ function OrderGroupCardComponent({ order, transfer }) {
             return (
               <div className="item m-1" key={i}>
                 <div className="d-flex align-items-center justify-content-center gap-2 ">
-                  <img src={item?.product.image_url} />
+                  <img src={item?.product?.image_url} />
                   {item?.product?.name} x{item?.count}
                 </div>
                 {item?.product?.prices * item?.count}

@@ -113,7 +113,7 @@ export function ActiveBusinessRecords({ show_max }) {
                   <CTableHeaderCell>Email</CTableHeaderCell>
                   <CTableHeaderCell>Contact</CTableHeaderCell>
                   {/* <CTableHeaderCell>Verification Docs</CTableHeaderCell> */}
-                  <CTableHeaderCell>Location</CTableHeaderCell>
+                  {!show_max && <CTableHeaderCell>Location</CTableHeaderCell>}
                   <CTableHeaderCell>Address</CTableHeaderCell>
                   <CTableHeaderCell>Wallet</CTableHeaderCell>
                   <CTableHeaderCell>Product</CTableHeaderCell>
@@ -239,19 +239,21 @@ export function ActiveBusinessRecords({ show_max }) {
                             longitude={item?.business_location?.long}
                             latitude={item?.business_location?.lat}
                           /> */}
-                              <>
-                                {item?.business_location?.lat &&
-                                item?.business_location?.long &&
-                                item?.business_location?.lat !== '' &&
-                                item?.business_location?.long !== '' ? (
-                                  <GetLocation
-                                    longitude={item?.business_location?.long}
-                                    latitude={item?.business_location?.lat}
-                                  />
-                                ) : (
-                                  <CTableDataCell className="text-center">--</CTableDataCell>
-                                )}
-                              </>
+                              {!show_max && (
+                                <>
+                                  {item?.business_location?.lat &&
+                                  item?.business_location?.long &&
+                                  item?.business_location?.lat !== '' &&
+                                  item?.business_location?.long !== '' ? (
+                                    <GetLocation
+                                      longitude={item?.business_location?.long}
+                                      latitude={item?.business_location?.lat}
+                                    />
+                                  ) : (
+                                    <CTableDataCell className="text-center">--</CTableDataCell>
+                                  )}
+                                </>
+                              )}
 
                               <CTableDataCell className="">
                                 <div>
@@ -432,20 +434,21 @@ export function ActiveBusinessRecords({ show_max }) {
                             longitude={item?.business_location?.long}
                             latitude={item?.business_location?.lat}
                           /> */}
-                              <>
-                                {item?.business_location?.lat &&
-                                item?.business_location?.long &&
-                                item?.business_location?.lat !== '' &&
-                                item?.business_location?.long !== '' ? (
-                                  <GetLocation
-                                    longitude={item?.business_location?.long}
-                                    latitude={item?.business_location?.lat}
-                                  />
-                                ) : (
-                                  <CTableDataCell className="text-center">--</CTableDataCell>
-                                )}
-                              </>
-
+                              {!show_max && (
+                                <>
+                                  {item?.business_location?.lat &&
+                                  item?.business_location?.long &&
+                                  item?.business_location?.lat !== '' &&
+                                  item?.business_location?.long !== '' ? (
+                                    <GetLocation
+                                      longitude={item?.business_location?.long}
+                                      latitude={item?.business_location?.lat}
+                                    />
+                                  ) : (
+                                    <CTableDataCell className="text-center">--</CTableDataCell>
+                                  )}
+                                </>
+                              )}
                               <CTableDataCell className="">
                                 <div>
                                   ₦

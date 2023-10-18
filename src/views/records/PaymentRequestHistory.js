@@ -27,7 +27,8 @@ import { AdminContext } from 'src/context/adminContext'
 import moment from 'moment'
 
 function PaymentRequestHistory() {
-  const [total, setTotal] = React.useState(0)
+  const [payoutTotal, setPayoutTotal] = React.useState(0)
+  const [requestTotal, setRequestTotal] = React.useState(0)
   const {
     paymentRequest,
     updatePaymentRequestStatusFunction,
@@ -45,15 +46,24 @@ function PaymentRequestHistory() {
     instantPayment.data.forEach((payout) => {
       totalAmount += payout?.amount
     })
-    setTotal(totalAmount)
+    setPayoutTotal(totalAmount)
   }, [instantPayment])
+  React.useEffect(() => {
+    // console.log({ paymentRequest })
+    let totalAmount = 0
+    paymentRequest?.history?.forEach((payout) => {
+      totalAmount += payout?.amount
+    })
+    setRequestTotal(totalAmount)
+  }, [paymentRequest])
   return (
     <>
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
             <CCardHeader className="d-flex justify-content-between ">
-              Instant Payment History <b className="d-block ">Total: {total.toLocaleString()}</b>
+              Instant Payment History{' '}
+              <b className="d-block ">Total: {payoutTotal.toLocaleString()}</b>
             </CCardHeader>
             <CCardBody>
               <CTable
@@ -117,7 +127,11 @@ function PaymentRequestHistory() {
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Payment Request History</CCardHeader>
+            <CCardHeader className="d-flex justify-content-between ">
+              Payment Request History
+              <b className="d-block ">Total: {requestTotal.toLocaleString()}</b>
+            </CCardHeader>
+
             <CCardBody>
               <CTable
                 align="middle"

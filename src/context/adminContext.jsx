@@ -74,6 +74,11 @@ function AdminProvider({ children }) {
     data: [],
     history: [],
   })
+
+  const [instantPayment, setInstantPayment] = React.useState({
+    loading: true,
+    data: [],
+  })
   const [discountList, setDisCountList] = React.useState({
     loading: true,
     data: {},
@@ -630,6 +635,29 @@ function AdminProvider({ children }) {
         console.error(error)
       })
   }
+  async function getInstantPaymentRecordFunction() {
+    //  console.log(cookies.BinnoxAdmin.token)
+    setPaymentRequest({
+      loading: true,
+      data: [],
+    })
+    axios
+      .get(`${apiUrl}/payout`, {
+        headers: {
+          Authorization: cookies.BinnoxAdmin.token,
+        },
+      })
+      .then((res) => {
+        // console.log('Instant Payout', res.data)
+        setInstantPayment({
+          loading: false,
+          data: res.data.reverse(),
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 
   async function activeAccountFunction(account_type, account_id) {
     // return
@@ -1159,6 +1187,8 @@ status=${status}`,
         groupedOrderData,
         setGroupedOrderData,
         generalOrder,
+        instantPayment,
+        getInstantPaymentRecordFunction,
       }}
     >
       {children}

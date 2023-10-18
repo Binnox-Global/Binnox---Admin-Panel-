@@ -988,6 +988,7 @@ export function GetLocation({ latitude, longitude }) {
     )
       .then((response) => response.json())
       .then((data) => {
+        // console.log({ data })
         setAddress(data.address)
         setAddressLoading(false)
       })
@@ -1005,7 +1006,9 @@ export function GetLocation({ latitude, longitude }) {
     <CTableDataCell className="text-center">
       {/* {address !== '' ? address : '--'} */}
       {/* Address */}
-      {addressLoading ? 'Loading...' : address?.suburb || address.road}
+      {addressLoading
+        ? 'Loading...'
+        : ` ${address.road && address?.road}, ${address.suburb && address?.suburb}`}
     </CTableDataCell>
   )
 }

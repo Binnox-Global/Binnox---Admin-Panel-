@@ -137,7 +137,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Withdrawal Request History',
+        name: 'Withdrawal History',
         to: '/payment/history',
       },
     ],

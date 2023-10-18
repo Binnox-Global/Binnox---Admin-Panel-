@@ -27,6 +27,7 @@ import { AdminContext } from 'src/context/adminContext'
 import moment from 'moment'
 
 function PaymentRequestHistory() {
+  const [total, setTotal] = React.useState(0)
   const {
     paymentRequest,
     updatePaymentRequestStatusFunction,
@@ -38,12 +39,22 @@ function PaymentRequestHistory() {
     getPaymentRequestFunction()
     getInstantPaymentRecordFunction()
   }, [])
+
+  React.useEffect(() => {
+    let totalAmount = 0
+    instantPayment.data.forEach((payout) => {
+      totalAmount += payout?.amount
+    })
+    setTotal(totalAmount)
+  }, [instantPayment])
   return (
     <>
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Instant Payment History</CCardHeader>
+            <CCardHeader className="d-flex justify-content-between ">
+              Instant Payment History <b className="d-block ">Total: {total.toLocaleString()}</b>
+            </CCardHeader>
             <CCardBody>
               <CTable
                 align="middle"

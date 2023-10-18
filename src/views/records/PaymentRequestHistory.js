@@ -24,71 +24,143 @@ import CIcon from '@coreui/icons-react'
 import { cilPeople } from '@coreui/icons'
 
 import { AdminContext } from 'src/context/adminContext'
+import moment from 'moment'
 
 function PaymentRequestHistory() {
-  const { paymentRequest, updatePaymentRequestStatusFunction, getPaymentRequestFunction } =
-    React.useContext(AdminContext)
+  const {
+    paymentRequest,
+    updatePaymentRequestStatusFunction,
+    getPaymentRequestFunction,
+    instantPayment,
+    getInstantPaymentRecordFunction,
+  } = React.useContext(AdminContext)
   React.useEffect(() => {
     getPaymentRequestFunction()
+    getInstantPaymentRecordFunction()
   }, [])
   return (
-    <CRow>
-      <CCol xs>
-        <CCard className="mb-4">
-          <CCardHeader>Payment Request History</CCardHeader>
-          <CCardBody>
-            <CTable
-              align="middle"
-              className="mb-0 border"
-              hover
-              responsive
-              style={{ overflow: 'visible' }}
-            >
-              <CTableHead color="light">
-                <CTableRow>
-                  {/* <CTableHeaderCell className="text-center">
+    <>
+      <CRow>
+        <CCol xs>
+          <CCard className="mb-4">
+            <CCardHeader>Instant Payment History</CCardHeader>
+            <CCardBody>
+              <CTable
+                align="middle"
+                className="mb-0 border"
+                hover
+                responsive
+                style={{ overflow: 'visible' }}
+              >
+                <CTableHead color="light">
+                  <CTableRow>
+                    {/* <CTableHeaderCell className="text-center">
                     <CIcon icon={cilPeople} />
                   </CTableHeaderCell> */}
-                  <CTableHeaderCell>Business Name</CTableHeaderCell>
-                  <CTableHeaderCell>Amount</CTableHeaderCell>
-                  {/* <CTableHeaderCell>Contact</CTableHeaderCell> */}
-                  <CTableHeaderCell>Activity</CTableHeaderCell>
-                  <CTableHeaderCell>Date</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {paymentRequest.loading ? (
-                  <>loading...</>
-                ) : (
-                  <>
-                    {/* {console.log('Request', paymentRequest)} */}
-                    {paymentRequest?.history?.map((item, index) => {
-                      // if (!item.pending) return
-                      return (
-                        <CTableRow v-for="item in tableItems" key={index}>
-                          <CTableDataCell>
-                            <div>{item?.business?.business_name}</div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>₦{item?.amount.toLocaleString()} </div>
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <div>{item?.approved ? 'Approved' : null}</div>
-                            <div>{item?.pending ? 'Pending' : null}</div>
-                            <div>{item?.rejected ? 'Rejected' : null}</div>
-                          </CTableDataCell>
-                          <CTableDataCell>{item?.updatedAt.split('T')[0]}</CTableDataCell>
-                        </CTableRow>
-                      )
-                    })}
-                  </>
-                )}
-              </CTableBody>
-            </CTable>
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+                    <CTableHeaderCell>Business Name</CTableHeaderCell>
+                    <CTableHeaderCell>Amount</CTableHeaderCell>
+                    {/* <CTableHeaderCell>Contact</CTableHeaderCell> */}
+                    <CTableHeaderCell>Activity</CTableHeaderCell>
+                    <CTableHeaderCell>Date</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {instantPayment.loading ? (
+                    <>loading...</>
+                  ) : (
+                    <>
+                      {/* {console.log('Request', paymentRequest)} */}
+                      {instantPayment?.data?.map((item, index) => {
+                        // if (!item.pending) return
+                        return (
+                          <CTableRow v-for="item in tableItems" key={index}>
+                            <CTableDataCell>
+                              <div>{item?.business?.business_name}</div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <div>₦{item?.amount.toLocaleString()} </div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <div>{item?.status} </div>
+                            </CTableDataCell>
+                            {/* <CTableDataCell>
+                              <div>{item?.approved ? 'Approved' : null}</div>
+                              <div>{item?.pending ? 'Pending' : null}</div>
+                              <div>{item?.rejected ? 'Rejected' : null}</div>
+                            </CTableDataCell> */}
+                            <CTableDataCell>
+                              {moment(item?.updatedAt).format('MMM Do YY, h:mm a')}
+                              {/* {item?.updatedAt.split('T')[0]} */}
+                            </CTableDataCell>
+                          </CTableRow>
+                        )
+                      })}
+                    </>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+      <CRow>
+        <CCol xs>
+          <CCard className="mb-4">
+            <CCardHeader>Payment Request History</CCardHeader>
+            <CCardBody>
+              <CTable
+                align="middle"
+                className="mb-0 border"
+                hover
+                responsive
+                style={{ overflow: 'visible' }}
+              >
+                <CTableHead color="light">
+                  <CTableRow>
+                    {/* <CTableHeaderCell className="text-center">
+                    <CIcon icon={cilPeople} />
+                  </CTableHeaderCell> */}
+                    <CTableHeaderCell>Business Name</CTableHeaderCell>
+                    <CTableHeaderCell>Amount</CTableHeaderCell>
+                    {/* <CTableHeaderCell>Contact</CTableHeaderCell> */}
+                    <CTableHeaderCell>Activity</CTableHeaderCell>
+                    <CTableHeaderCell>Date</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {paymentRequest.loading ? (
+                    <>loading...</>
+                  ) : (
+                    <>
+                      {/* {console.log('Request', paymentRequest)} */}
+                      {paymentRequest?.history?.map((item, index) => {
+                        // if (!item.pending) return
+                        return (
+                          <CTableRow v-for="item in tableItems" key={index}>
+                            <CTableDataCell>
+                              <div>{item?.business?.business_name}</div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <div>₦{item?.amount.toLocaleString()} </div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <div>{item?.approved ? 'Approved' : null}</div>
+                              <div>{item?.pending ? 'Pending' : null}</div>
+                              <div>{item?.rejected ? 'Rejected' : null}</div>
+                            </CTableDataCell>
+                            <CTableDataCell>{item?.updatedAt.split('T')[0]}</CTableDataCell>
+                          </CTableRow>
+                        )
+                      })}
+                    </>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>{' '}
+    </>
   )
 }
 

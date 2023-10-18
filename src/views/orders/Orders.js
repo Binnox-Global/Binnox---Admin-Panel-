@@ -1328,6 +1328,12 @@ function CountdownTimer({ createdAt }) {
   const [remainingTime, setRemainingTime] = useState(0)
   const [delayTime, setDelayTime] = useState(0)
 
+  const [time, setTime] = useState({
+    hours: '',
+    minutes: '',
+    seconds: '',
+  })
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       const now = new Date().getTime()
@@ -1348,14 +1354,56 @@ function CountdownTimer({ createdAt }) {
       clearInterval(intervalId)
     }
   }, [endTime])
+
+  useEffect(() => {
+    // Given date (replace this with your given date)
+    const givenDate = new Date(createdAt)
+    const interval = setInterval(() => {
+      // Current date
+      const currentDate = new Date()
+
+      // Calculate the time difference in milliseconds
+      const timeDifference = currentDate - givenDate
+
+      // Calculate the time components
+      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000)
+
+      setTime({
+        hours,
+        minutes,
+        seconds,
+      })
+      // console.log(`Days: ${days}, Hours: ${hours}, Minutes: ${minutes}, Seconds: ${seconds}`)
+    }, 1000) // Update every 1 second
+
+    // Clear the interval on component unmount to prevent memory leaks
+    return () => clearInterval(interval)
+  }, [])
   // useEffect(() => {
   //   console.log('remainingTime', remainingTime)
   //   console.log('delayTime', delayTime)
   // }, [remainingTime])
 
   return (
-    <div>
-      {remainingTime <= 0 ? (
+    <div
+      style={
+        time.minutes >= 30
+          ? {
+              color: 'red',
+            }
+          : time.minutes >= 20
+          ? {
+              color: '#f98200',
+            }
+          : {
+              color: 'green',
+            }
+      }
+    >
+      {/* {remainingTime <= 0 ? (
         <div className="text-red" style={{ color: 'red' }}>
           {delayTime} minutes
           <div className="small " style={{ color: 'red' }}>
@@ -1364,7 +1412,14 @@ function CountdownTimer({ createdAt }) {
         </div>
       ) : (
         <div>{remainingTime} minutes left</div>
-      )}
+      )} */}
+      {time.hours > 0 && `${time.hours} Hours, `}
+
+      {time.minutes > 0 && `${time.minutes} Minutes, `}
+
+      {time.seconds > 0 && `${time.seconds} Seconds`}
+      {/* {console.log(Math.floor(moment().diff(createdAt, 'hours')))} */}
+      {/* {console.log(moment().now().diff(moment(createdAt), 'seconds'))} */}
     </div>
   )
 }

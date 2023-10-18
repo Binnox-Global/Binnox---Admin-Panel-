@@ -126,7 +126,7 @@ export function OrdersGroupDelivered() {
 
     orderGroupList?.data?.forEach((item) => {
       if (item?.statues === 'Delivered') {
-        console.log(item)
+        // console.log(item)
         deliveredOrdersList.push(item)
       }
     })

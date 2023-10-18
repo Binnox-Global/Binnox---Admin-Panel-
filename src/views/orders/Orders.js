@@ -729,6 +729,7 @@ function OrderGroupCardComponent({ order, transfer }) {
             // src={item?.user?.user_avatar}
             src="https://via.placeholder.com/600x400?text=Image"
             status={'success'}
+            className="d-none d-md-block"
           />
           <div className="user-name">
             {order?.user?.full_name}
@@ -794,7 +795,7 @@ function OrderGroupCardComponent({ order, transfer }) {
               }
         }
       >
-        <div className="business-head">
+        <div className="business-head flex-wrap">
           <div className="d-flex gap-3">
             {/* <div className="user-name"> */}
             <img
@@ -826,7 +827,7 @@ function OrderGroupCardComponent({ order, transfer }) {
           </div>
         </div>
         <hr />
-        <div className="d-flex  justify-content-between">
+        <div className="d-flex  justify-content-between flex-wrap">
           <p>
             <b>Ordered: </b>
             {moment(order?.createdAt).format('MMM Do YY, h:mm a')}

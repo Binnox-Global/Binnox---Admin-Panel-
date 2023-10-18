@@ -733,7 +733,8 @@ function OrderGroupCardComponent({ order, transfer }) {
           <div className="user-name">
             {order?.user?.full_name}
             <br />
-            <b>Email:</b> {order?.user?.email} || <b>Contact:</b> {order?.user?.phone_number} ||{' '}
+            {/* <b>Email:</b> {order?.user?.email} || */}
+            <b>Contact:</b> {order?.user?.phone_number}
             <>
               {order?.address?.split(',')[0] &&
               order?.address?.split(',')[1] &&
@@ -1324,36 +1325,11 @@ export function LocationDropdown({ location }) {
 // }
 
 function CountdownTimer({ createdAt }) {
-  const endTime = new Date(createdAt).getTime() + 30 * 60 * 1000 // endTime is 30 minutes after the given time
-  const [remainingTime, setRemainingTime] = useState(0)
-  const [delayTime, setDelayTime] = useState(0)
-
   const [time, setTime] = useState({
     hours: '',
     minutes: '',
     seconds: '',
   })
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const now = new Date().getTime()
-      const distance = endTime - now
-      const remainingMinutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-      let calculatedDelayTimeDistance = now - endTime
-      let calculatedDelayTimeMinutes = Math.floor(
-        (calculatedDelayTimeDistance % (1000 * 60 * 60)) / (1000 * 60),
-      )
-
-      // console.log()
-
-      setDelayTime(calculatedDelayTimeMinutes)
-      setRemainingTime(remainingMinutes)
-    }, 1000)
-
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [endTime])
 
   useEffect(() => {
     // Given date (replace this with your given date)

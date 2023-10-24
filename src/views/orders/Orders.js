@@ -832,7 +832,11 @@ function OrderGroupCardComponent({ order, transfer }) {
             <b>Ordered: </b>
             {moment(order?.createdAt).format('MMM Do YY, h:mm a')}
           </p>
-          <CountdownTimer createdAt={order?.createdAt} />
+          {order.statues === 'Delivered' ? (
+            'Delivered'
+          ) : (
+            <CountdownTimer createdAt={order?.createdAt} />
+          )}
         </div>
         <div className="product-body">
           {order?.items.map((item, i) => {
@@ -847,6 +851,9 @@ function OrderGroupCardComponent({ order, transfer }) {
               </div>
             )
           })}
+          <hr />
+          <b>Message:</b>
+          {order?.note || 'No message'}
           <hr />
           <div className="d-flex justify-content-between">
             <div>
@@ -1367,7 +1374,11 @@ function CountdownTimer({ createdAt }) {
   return (
     <div
       style={
-        time.minutes >= 30
+        time.hours > 0
+          ? {
+              color: 'red',
+            }
+          : time.minutes >= 30
           ? {
               color: 'red',
             }

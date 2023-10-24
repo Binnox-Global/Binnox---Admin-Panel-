@@ -1008,7 +1008,9 @@ export function GetLocation({ latitude, longitude }) {
       {/* Address */}
       {addressLoading
         ? 'Loading...'
-        : ` ${address.road && address?.road}, ${address.suburb && address?.suburb}`}
+        : ` ${address.road ? `${address?.road}` : ''} ${
+            address.suburb ? `,${address?.suburb}` : ''
+          }`}
     </CTableDataCell>
   )
 }

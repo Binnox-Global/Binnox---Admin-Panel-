@@ -1,5 +1,5 @@
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ModalComponent from 'src/components/ModalComponent/ModalComponent'
 // import RewordsForm from './RewordsForm'
 import { AdminContext } from 'src/context/adminContext'
@@ -7,6 +7,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import LineChart from 'src/components/Chart/LineChat'
 import { ChartTest } from 'src/components/Chart/ChartTest'
+import { useCookies } from 'react-cookie'
 
 function AdminRecordPage() {
   const { adminRecords } = useContext(AdminContext)
@@ -143,3 +144,106 @@ function AdminRecordPage() {
 }
 
 export default AdminRecordPage
+
+export function SubmitRecordPage() {
+  const { referralOrderGrouping, setModalComponentVisible, apiUrl } = useContext(AdminContext)
+  const [record, setRecord] = useState({
+    todayOrderCount: 0,
+    totalPrice: 0,
+    totalServiceFee: 0,
+    totalDelivery: 0,
+  })
+  const [cookies] = useCookies()
+  useEffect(() => {
+    // console.log(referralOrderGrouping)
+    let total_service_fee = 0
+    let total_delivery_fee = 0
+    let sub_total_order_amount = 0
+    referralOrderGrouping?.ordersMadeToday?.forEach((order) => {
+      total_service_fee += order.service_fee
+      total_delivery_fee += order.delivery_fee
+      sub_total_order_amount += order.sub_total
+    })
+
+    setRecord({
+      todayOrderCount: referralOrderGrouping?.ordersMadeToday.length,
+      totalPrice: sub_total_order_amount,
+      totalServiceFee: total_service_fee,
+      totalDelivery: total_delivery_fee,
+    })
+
+    // console.log({ referralOrderGrouping })
+
+    // console.log({
+    //   order: referralOrderGrouping?.ordersMadeToday.length,
+    //   total_service_fee,
+    //   total_delivery_fee,
+    //   sub_total_order_amount,
+    // })
+  }, [referralOrderGrouping])
+
+  function closeDayRecordFunction() {
+    if (!window.confirm('Are you sure you want to close record for today')) {
+      return setModalComponentVisible(false)
+    }
+    // axios Get request
+    const options = {
+      url: `${apiUrl}/admin/end_the_day`,
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: cookies?.BinnoxAdmin?.token,
+      },
+    }
+    // setLoading(false)
+    // return console.log(data)
+
+    axios(options)
+      .then((response) => {
+        console.log(response.data)
+        toast.success('Record Saved')
+        setModalComponentVisible(false)
+      })
+      .catch((error) => {
+        // setLoading(false)
+        // console.log(error)
+        if (error.response.status || error.response.status === 400) {
+          setModalComponentVisible(false)
+          return toast.error(error.response.data.message)
+        }
+        if (error.response.status || error.response.status === 404) {
+          setModalComponentVisible(false)
+          return toast.error(error.response.data.message)
+        }
+        toast.error(error.message)
+      })
+  }
+  return (
+    <>
+      <h3>Confirm Today Order Record</h3>
+
+      <div className="row">
+        <div className="col-md-6 mt-3">
+          <b>Total Order</b> <br />
+          {record.todayOrderCount}
+        </div>
+        <div className="col-md-6 mt-3">
+          <b>Total Service Fee</b> <br />₦ {record.totalServiceFee.toLocaleString()}
+        </div>
+        <div className="col-md-6 mt-3">
+          <b>Total Delivery fee</b> <br />₦ {record.totalDelivery.toLocaleString()}
+        </div>
+        <div className="col-md-6 mt-3">
+          <b>Total Product Price</b> <br />₦ {record.totalPrice.toLocaleString()}
+        </div>
+      </div>
+
+      <div className="mt-5">
+        <button className="btn btn- btn-primary" onClick={() => closeDayRecordFunction()}>
+          Close Record For today
+        </button>
+      </div>
+    </>
+  )
+}

@@ -19,6 +19,7 @@ const Dashboard = () => {
     adminRecords,
     orderGroupList,
     generalOrder,
+    referralOrderGrouping,
   } = React.useContext(AdminContext)
 
   // useEffect(() => {
@@ -97,7 +98,11 @@ const Dashboard = () => {
               }
               icon={<CIcon icon={cilFastfood} height={24} />}
               title="Orders"
-              value={generalOrder?.loading ? 'Loading...' : generalOrder?.data?.length}
+              value={
+                generalOrder?.loading
+                  ? 'Loading...'
+                  : `${generalOrder?.data?.length}, (${referralOrderGrouping.ordersMadeToday?.length} Today)`
+              }
               // value={
               //   adminRecords?.loading ? 'Loading...' : orderList?.data?.length
               //   // + orderGroupList?.data?.length

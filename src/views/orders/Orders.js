@@ -1453,6 +1453,7 @@ OrderGroupCardComponent.propTypes = {
         // ... other properties of an item
       }),
     ),
+    note: PropTypes.string,
     address: PropTypes.string,
     sub_total: PropTypes.number,
     total_amount: PropTypes.number,

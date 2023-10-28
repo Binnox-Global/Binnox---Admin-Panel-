@@ -1132,6 +1132,40 @@ status=${status}`,
     // console.log('groupedOrderData', groupedOrderData)
     return groupedOrderData
   }
+  const [referralOrderGrouping, setReferralOrderGrouping] = React.useState({
+    ordersGroupedByDate: {},
+    ordersMadeToday: [],
+  })
+
+  useEffect(() => {
+    groupOrderFunction()
+  }, [generalOrder])
+
+  function groupOrderFunction() {
+    // Get the current date in the desired format (e.g., "YYYY-MM-DD")
+    const currentDate = moment().format('YYYY-MM-DD')
+
+    // Filter the orders made today using the "createdAt" field
+    const ordersMadeToday = generalOrder.data?.filter((order) =>
+      moment(order.createdAt).isSame(currentDate, 'day'),
+    )
+
+    // Group the orders by date (if needed)
+    const ordersGroupedByDate = generalOrder.data?.reduce((groupedOrders, order) => {
+      const orderDate = moment(order.createdAt).format('YYYY-MM-DD')
+      if (!groupedOrders[orderDate]) {
+        groupedOrders[orderDate] = []
+      }
+      groupedOrders[orderDate].push(order)
+      return groupedOrders
+    }, {})
+
+    setReferralOrderGrouping({ ordersGroupedByDate, ordersMadeToday })
+    // console.log('Orders:', generalOrder.data)
+    // console.log('Orders made today:', ordersMadeToday)
+    // console.log('Orders grouped by date:', ordersGroupedByDate)
+    // return { ordersMadeToday, ordersGroupedByDate };
+  }
 
   return (
     <AdminContext.Provider
@@ -1189,6 +1223,7 @@ status=${status}`,
         generalOrder,
         instantPayment,
         getInstantPaymentRecordFunction,
+        referralOrderGrouping,
       }}
     >
       {children}

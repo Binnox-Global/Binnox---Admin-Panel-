@@ -24,17 +24,20 @@ import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
 import { AdminContext } from 'src/context/adminContext'
+import ModalComponent from '../ModalComponent/ModalComponent'
+import { SubmitRecordPage } from 'src/views/pages/adminRecordPage/AdminRecordPage'
 
 const AppHeaderDropdown = () => {
   const { logoutFunction } = React.useContext(AdminContext)
   return (
-    <CDropdown variant="nav-item">
-      <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
-      </CDropdownToggle>
-      <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
-        {/* <CDropdownItem href="#">
+    <>
+      <CDropdown variant="nav-item">
+        <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
+          <CAvatar src={avatar8} size="md" />
+        </CDropdownToggle>
+        <CDropdownMenu className="pt-0" placement="bottom-end">
+          <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
+          {/* <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
           Updates
           <CBadge color="info" className="ms-2">
@@ -85,13 +88,17 @@ const AppHeaderDropdown = () => {
             42
           </CBadge>
         </CDropdownItem> */}
-        {/* <CDropdownDivider /> */}
-        <CDropdownItem onClick={() => logoutFunction()}>
-          <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
-        </CDropdownItem>
-      </CDropdownMenu>
-    </CDropdown>
+          {/* <CDropdownDivider /> */}
+          <CDropdownItem className="my-2">
+            <ModalComponent title={' Submit today record'} component={<SubmitRecordPage />} />
+          </CDropdownItem>
+          <CDropdownItem onClick={() => logoutFunction(true)}>
+            <CIcon icon={cilLockLocked} className="me-2" />
+            Logout
+          </CDropdownItem>
+        </CDropdownMenu>
+      </CDropdown>
+    </>
   )
 }
 

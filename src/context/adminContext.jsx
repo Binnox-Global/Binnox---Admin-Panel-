@@ -201,17 +201,17 @@ function AdminProvider({ children }) {
     calculatedProfit = transactions5percent + delivery10Percent + totalServiceFee
 
     groundTotal = totalTransactions + totalDeliveryFee + totalServiceFee
-    console.log({
-      totalTransactions,
-      transactions5percent,
-      calculatedTransactions,
-      totalDeliveryFee,
-      totalServiceFee,
-      groundTotal,
-      calculatedDeliveryFee,
-      delivery10Percent,
-      calculatedProfit,
-    })
+    // console.log({
+    //   totalTransactions,
+    //   transactions5percent,
+    //   calculatedTransactions,
+    //   totalDeliveryFee,
+    //   totalServiceFee,
+    //   groundTotal,
+    //   calculatedDeliveryFee,
+    //   delivery10Percent,
+    //   calculatedProfit,
+    // })
     setAdminRecords({
       loading: false,
       totalTransactions,
@@ -1176,6 +1176,7 @@ status=${status}`,
         getUserRecordsFunction,
         getBusinessRecordsFunction,
         getOrderRecordsFunction,
+        setOrderList,
         getOrderTransferRecordsFunction,
         getOrderGroupTransferRecordsFunction,
         getAdminRecordsFunction,

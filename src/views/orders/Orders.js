@@ -34,9 +34,11 @@ import { useEffect, useState } from 'react'
 import moment from 'moment'
 import './Orders.scss'
 import { GetLocation } from '../records/BusinessRecords'
+import { SocketContext } from 'src/context/socketContext'
 
-function Orders({ orderGroupList }) {
-  // // const { orderGroupList } = React.useContext(AdminContext )
+function Orders() {
+  const { adminGetOrdersSocketFunction } = React.useContext(SocketContext)
+  const { orderGroupList } = React.useContext(AdminContext)
   // const [newOrders, setNewOrders] = useState({
   //   new: [],
   //   accepted: [],
@@ -67,6 +69,10 @@ function Orders({ orderGroupList }) {
   //   })
   // }, [orderGroupList])
 
+  useEffect(() => {
+    adminGetOrdersSocketFunction()
+  }, [])
+
   return (
     <>
       <CRow>
@@ -77,46 +83,6 @@ function Orders({ orderGroupList }) {
               <button className="btn btn-sm btn-primary">Reload</button>
             </CCardHeader>
             <CCardBody>
-              {/* {orderGroupList.loading ? (
-                <>loading...</>
-              ) : (
-                <>
-                  {newOrders.new?.length <= 0 &&
-                  newOrders.accepted?.length <= 0 &&
-                  newOrders?.pickedUp.length <= 0 ? (
-                    <>No Order Currently</>
-                  ) : (
-                    <>
-                      {newOrders.new.length > 0 && (
-                        <>
-                          <b>New Order</b>
-                          {newOrders.new?.map((order, i) => {
-                            return <OrderGroupCardComponent key={i} order={order} />
-                          })}
-                        </>
-                      )}
-                      {newOrders.accepted.length > 0 && (
-                        <>
-                          <hr />
-                          <b>Accepted</b>
-                          {newOrders.accepted?.map((order, i) => {
-                            return <OrderGroupCardComponent key={i} order={order} />
-                          })}
-                        </>
-                      )}
-                      {newOrders.pickedUp.length > 0 && (
-                        <>
-                          <hr />
-                          <b>Picked Up</b>
-                          {newOrders.pickedUp?.map((order, i) => {
-                            return <OrderGroupCardComponent key={i} order={order} />
-                          })}
-                        </>
-                      )}
-                    </>
-                  )}
-                </>
-              )} */}
               <OrderTabComponent orderGroupList={orderGroupList} />
             </CCardBody>
           </CCard>
@@ -129,36 +95,43 @@ function Orders({ orderGroupList }) {
 export default Orders
 
 function OrderTabComponent({ orderGroupList }) {
-  const [activeKey, setActiveKey] = useState(1)
+  // console.log('OrderTabComponent', orderGroupList)
+  const [activeKey, setActiveKey] = useState(0)
   const [tabHeader, setTabHeader] = useState([
     {
       name: 'Pending',
       statues: 'Pending',
+      data: [],
     },
     {
       name: 'Processing',
       statues: 'Processing',
+      data: [],
     },
     {
       name: 'Assigned',
       statues: 'Assigned',
+      data: [],
     },
     {
       name: 'Delivered',
       statues: 'Delivered',
+      data: [],
     },
     // {
     //   name: 'Completed',
     //   statues: 'Completed',
+    // data:[]
     // },
   ])
   useEffect(() => {
+    // console.log('first', { data: orderGroupList.data })
     const pendingOrders = []
     const processingOrders = []
     const assignedOrders = []
     const deliveredOrders = []
     // const completedOrders = []
-    orderGroupList.data.map((order, i) => {
+    orderGroupList?.data?.map((order, i) => {
       if (order.statues === 'Pending') {
         pendingOrders.push(order)
       }
@@ -190,7 +163,7 @@ function OrderTabComponent({ orderGroupList }) {
       <CNav variant="pills" role="tablist" className="my-3">
         {tabHeader?.map((tab, i) => {
           return (
-            <CNavItem role="presentation" key={1}>
+            <CNavItem role="presentation" key={`CNav${i}`}>
               <CNavLink
                 active={activeKey === i}
                 component="button"
@@ -214,9 +187,21 @@ function OrderTabComponent({ orderGroupList }) {
               visible={activeKey === i}
               key={`CTabContent${i}`}
             >
-              {tab?.data?.map((order, i) => {
-                return <OrderGroupCardComponent key={i} order={order} />
-              })}
+              {orderGroupList.loading ? (
+                <>loading...</>
+              ) : (
+                <>
+                  {tab.data?.length <= 0 ? (
+                    <>No {tabHeader[i].name} Order Currently</>
+                  ) : (
+                    <>
+                      {tab.data?.map((order, i) => {
+                        return <OrderGroupCardComponent key={i} order={order} />
+                      })}
+                    </>
+                  )}
+                </>
+              )}
             </CTabPane>
           )
         })}
@@ -859,6 +844,13 @@ function OrderGroupCardComponent({ order, transfer }) {
             </>
           </div>
         </div>
+
+        {/* <div className="bg-success p-2 text-white">{order.statues}</div> */}
+        {order.statues === 'Delivered' ? (
+          'Delivered'
+        ) : (
+          <CountdownTimer createdAt={order?.createdAt} />
+        )}
 
         {transfer === false || !transfer ? (
           <div className="user-name">
@@ -1541,7 +1533,7 @@ OrderGroupCardComponent.propTypes = {
     user: PropTypes.shape({
       full_name: PropTypes.string,
       email: PropTypes.string,
-      phone_number: PropTypes.string,
+      phone_number: PropTypes.number,
       // ... other user properties
     }),
     business: PropTypes.shape({
@@ -1587,24 +1579,22 @@ Orders.propTypes = {
 
         description: PropTypes.string.isRequired,
       }),
-    ).isRequired,
-  }).isRequired,
+    ),
+  }),
 }
-
-
-
 
 OrderTabComponent.propTypes = {
   orderGroupList: PropTypes.shape({
+    loading: PropTypes.bool.isRequired,
     data: PropTypes.arrayOf(
       PropTypes.shape({
         // Define the properties of each order object
         status: PropTypes.string.isRequired,
         // ... other properties
       }),
-    ).isRequired,
+    ),
     // ... other properties of orderGroupList
-  }).isRequired,
+  }),
 }
 
 // ... (export statement if applicable)

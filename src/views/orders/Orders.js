@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
-
+// import Tab from 'react-bootstrap/Tab'
+// import Tabs from 'react-bootstrap/Tabs'
 import {
   CAvatar,
   CCard,
@@ -10,7 +11,12 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CNav,
+  CNavItem,
+  CNavLink,
   CRow,
+  CTabContent,
+  CTabPane,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -29,19 +35,20 @@ import moment from 'moment'
 import './Orders.scss'
 import { GetLocation } from '../records/BusinessRecords'
 
-function Orders() {
-  const { orderGroupList } = React.useContext(AdminContext)
+function Orders({ orderGroupList }) {
+  // const { orderGroupList } = React.useContext(AdminContext )
   const [newOrders, setNewOrders] = useState({
     new: [],
     accepted: [],
     pickedUp: [],
   })
-
+  // console.log({ orderGroupList })
   useEffect(() => {
     let newOrdersList = []
     let acceptedOrdersList = []
     let pickedUpOrdersList = []
     orderGroupList?.data?.forEach((item) => {
+      console.log('item?.statues ', item.statues)
       if (item?.statues === 'Pending') {
         newOrdersList.push(item)
       }
@@ -65,9 +72,12 @@ function Orders() {
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Orders</CCardHeader>
+            <CCardHeader className="d-flex justify-content-between">
+              Orders
+              <button className="btn btn-sm btn-primary">Reload</button>
+            </CCardHeader>
             <CCardBody>
-              {orderGroupList.loading ? (
+              {/* {orderGroupList.loading ? (
                 <>loading...</>
               ) : (
                 <>
@@ -106,7 +116,8 @@ function Orders() {
                     </>
                   )}
                 </>
-              )}
+              )} */}
+              <OrderTabComponent orderGroupList={orderGroupList} />
             </CCardBody>
           </CCard>
         </CCol>
@@ -116,6 +127,103 @@ function Orders() {
 }
 
 export default Orders
+
+function OrderTabComponent({ orderGroupList }) {
+  const [activeKey, setActiveKey] = useState(1)
+  const [tabHeader, setTabHeader] = useState([
+    {
+      name: 'Pending',
+      statues: 'Pending',
+    },
+    {
+      name: 'Processing',
+      statues: 'Processing',
+    },
+    {
+      name: 'Assigned',
+      statues: 'Assigned',
+    },
+    {
+      name: 'Delivered',
+      statues: 'Delivered',
+    },
+    // {
+    //   name: 'Completed',
+    //   statues: 'Completed',
+    // },
+  ])
+  useEffect(() => {
+    const pendingOrders = []
+    const processingOrders = []
+    const assignedOrders = []
+    const deliveredOrders = []
+    // const completedOrders = []
+    orderGroupList.data.map((order, i) => {
+      if (order.statues === 'Pending') {
+        pendingOrders.push(order)
+      }
+      if (order.statues === 'Processing') {
+        processingOrders.push(order)
+      }
+      if (order.statues === 'Assigned') {
+        assignedOrders.push(order)
+      }
+      if (order.statues === 'Delivered') {
+        deliveredOrders.push(order)
+      }
+      // if (order.statues === 'Completed') {
+      //   completedOrders.push(order)
+      // }
+    })
+    // Update the state with the new counts
+    setTabHeader((prevTabHeader) => [
+      { ...prevTabHeader[0], count: pendingOrders.length, data: pendingOrders },
+      { ...prevTabHeader[1], count: processingOrders.length, data: processingOrders },
+      { ...prevTabHeader[2], count: assignedOrders.length, data: assignedOrders },
+      { ...prevTabHeader[3], count: deliveredOrders.length, data: deliveredOrders },
+      // { ...prevTabHeader[4], count: completedOrders.length, data: completedOrders },
+    ])
+  }, [orderGroupList])
+
+  return (
+    <>
+      <CNav variant="pills" role="tablist" className="my-3">
+        {tabHeader?.map((tab, i) => {
+          return (
+            <CNavItem role="presentation" key={1}>
+              <CNavLink
+                active={activeKey === i}
+                component="button"
+                role="tab"
+                aria-controls="home-tab-pane"
+                aria-selected={activeKey === i}
+                onClick={() => setActiveKey(i)}
+              >
+                {tab.name} <>{tab?.count}</>
+              </CNavLink>
+            </CNavItem>
+          )
+        })}
+      </CNav>
+      <CTabContent className="">
+        {tabHeader?.map((tab, i) => {
+          return (
+            <CTabPane
+              role="tabpanel"
+              aria-labelledby="home-tab-pane"
+              visible={activeKey === i}
+              key={`CTabContent${i}`}
+            >
+              {tab?.data?.map((order, i) => {
+                return <OrderGroupCardComponent key={i} order={order} />
+              })}
+            </CTabPane>
+          )
+        })}
+      </CTabContent>
+    </>
+  )
+}
 
 export function OrdersGroupDelivered() {
   const { orderGroupList } = React.useContext(AdminContext)
@@ -1467,4 +1575,18 @@ OrderGroupCardComponent.propTypes = {
     // ... other order properties
   }).isRequired,
   transfer: PropTypes.bool,
+}
+
+Orders.propTypes = {
+  orderGroupList: PropTypes.shape({
+    loading: PropTypes.bool.isRequired,
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+
+        description: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
 }

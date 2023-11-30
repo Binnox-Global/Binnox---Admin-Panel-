@@ -36,36 +36,36 @@ import './Orders.scss'
 import { GetLocation } from '../records/BusinessRecords'
 
 function Orders({ orderGroupList }) {
-  // const { orderGroupList } = React.useContext(AdminContext )
-  const [newOrders, setNewOrders] = useState({
-    new: [],
-    accepted: [],
-    pickedUp: [],
-  })
-  // console.log({ orderGroupList })
-  useEffect(() => {
-    let newOrdersList = []
-    let acceptedOrdersList = []
-    let pickedUpOrdersList = []
-    orderGroupList?.data?.forEach((item) => {
-      console.log('item?.statues ', item.statues)
-      if (item?.statues === 'Pending') {
-        newOrdersList.push(item)
-      }
-      if (item?.statues === 'Processing') {
-        acceptedOrdersList.push(item)
-      }
-      if (item.statues === 'Picked up') {
-        pickedUpOrdersList.push(item)
-      }
-    })
+  // // const { orderGroupList } = React.useContext(AdminContext )
+  // const [newOrders, setNewOrders] = useState({
+  //   new: [],
+  //   accepted: [],
+  //   pickedUp: [],
+  // })
+  // // console.log({ orderGroupList })
+  // useEffect(() => {
+  //   let newOrdersList = []
+  //   let acceptedOrdersList = []
+  //   let pickedUpOrdersList = []
+  //   orderGroupList?.data?.forEach((item) => {
+  //     console.log('item?.statues ', item.statues)
+  //     if (item?.statues === 'Pending') {
+  //       newOrdersList.push(item)
+  //     }
+  //     if (item?.statues === 'Processing') {
+  //       acceptedOrdersList.push(item)
+  //     }
+  //     if (item.statues === 'Picked up') {
+  //       pickedUpOrdersList.push(item)
+  //     }
+  //   })
 
-    setNewOrders({
-      new: newOrdersList,
-      accepted: acceptedOrdersList,
-      pickedUp: pickedUpOrdersList,
-    })
-  }, [orderGroupList])
+  //   setNewOrders({
+  //     new: newOrdersList,
+  //     accepted: acceptedOrdersList,
+  //     pickedUp: pickedUpOrdersList,
+  //   })
+  // }, [orderGroupList])
 
   return (
     <>
@@ -1590,3 +1590,21 @@ Orders.propTypes = {
     ).isRequired,
   }).isRequired,
 }
+
+
+
+
+OrderTabComponent.propTypes = {
+  orderGroupList: PropTypes.shape({
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        // Define the properties of each order object
+        status: PropTypes.string.isRequired,
+        // ... other properties
+      }),
+    ).isRequired,
+    // ... other properties of orderGroupList
+  }).isRequired,
+}
+
+// ... (export statement if applicable)

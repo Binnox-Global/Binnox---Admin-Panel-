@@ -9,14 +9,17 @@ import store from './store'
 import AdminProvider from './context/adminContext'
 import { CookiesProvider } from 'react-cookie'
 import 'react-toastify/dist/ReactToastify.css'
+import SocketProvider from './context/socketContext'
 
 createRoot(document.getElementById('root')).render(
   <AdminProvider>
-    <CookiesProvider>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </CookiesProvider>
+    <SocketProvider>
+      <CookiesProvider>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </CookiesProvider>
+    </SocketProvider>
   </AdminProvider>,
 )
 

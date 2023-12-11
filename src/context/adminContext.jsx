@@ -1166,6 +1166,37 @@ status=${status}`,
     // console.log('Orders grouped by date:', ordersGroupedByDate)
     // return { ordersMadeToday, ordersGroupedByDate };
   }
+  const [adminDailyRecords, setAdminDailyRecords] = React.useState({
+    loading: true,
+    data: [],
+  })
+  useEffect(() => {
+    if (!token) return
+    getAdminDailyRecordsFunction()
+  }, [token])
+  function getAdminDailyRecordsFunction() {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${apiUrl}/admin/admin_records`,
+      headers: {
+        Authorization: token,
+      },
+    }
+
+    axios
+      .request(config)
+      .then((response) => {
+        setAdminDailyRecords({
+          loading: false,
+          data: response.data.records.reverse(),
+        })
+        // console.log(response.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
   return (
     <AdminContext.Provider
@@ -1225,6 +1256,7 @@ status=${status}`,
         instantPayment,
         getInstantPaymentRecordFunction,
         referralOrderGrouping,
+        adminDailyRecords,
       }}
     >
       {children}

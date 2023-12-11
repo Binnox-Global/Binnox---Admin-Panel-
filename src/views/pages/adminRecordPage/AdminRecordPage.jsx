@@ -8,10 +8,13 @@ import { toast } from 'react-toastify'
 import LineChart from 'src/components/Chart/LineChat'
 import { ChartTest } from 'src/components/Chart/ChartTest'
 import { useCookies } from 'react-cookie'
+import moment from 'moment'
+import DateRangePicker from 'src/components/DateRange/DateRangePicker'
 
 function AdminRecordPage() {
-  const { adminRecords } = useContext(AdminContext)
+  const { adminRecords, adminDailyRecords } = useContext(AdminContext)
   const [adminAccess, setAdminAccess] = useState(false)
+  const [open, setOpen] = useState(false)
 
   function checkAdminAccess() {
     const userInput = window.prompt('Enter Admin Access Code')
@@ -29,6 +32,53 @@ function AdminRecordPage() {
       alert('Enter Admin Access Code')
     }
   }
+
+  const [showData, setShowData] = useState([])
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const [filteredData, setFilteredData] = useState(null)
+  const [data, setData] = useState({
+    labels: [],
+    datasets: [],
+  })
+
+  function clearFilter() {
+    setStartDate(null)
+    setEndDate(null)
+    setFilteredData(null)
+    // setShowData(adminDailyRecords.data)
+  }
+  const handleDateChange = (type, date) => {
+    if (type === 'start') {
+      setStartDate(date)
+    } else if (type === 'end') {
+      if (!startDate) {
+        return setStartDate(date)
+      }
+      setEndDate(date)
+    }
+  }
+  useEffect(() => {
+    if (!filteredData) {
+      console.log(adminDailyRecords)
+      // setShowData(adminDailyRecords.data.reverse())
+      setShowData(adminDailyRecords.data.reverse())
+    } else {
+      setShowData(filteredData.data.reverse())
+    }
+  }, [startDate, endDate, filteredData, adminDailyRecords])
+  useEffect(() => {
+    // Filter data when startDate and endDate are set
+    if (startDate && endDate) {
+      const filtered = adminDailyRecords.data.filter((item) => {
+        const itemDate = new Date(item.createdAt)
+        return itemDate >= startDate && itemDate <= endDate
+      })
+      console.log('filtered', filtered)
+      // setFilteredData(filtered)
+    }
+  }, [adminDailyRecords, startDate, endDate])
+
   return (
     <>
       {/* <LineChart /> */}
@@ -47,49 +97,87 @@ function AdminRecordPage() {
               <div className="d-flex justify-content-between">
                 Admin Record
                 {/* <ModalComponent title={'Update Rewords'} component={<RewordsForm />} /> */}
-                <button className="btn btn-primary btn-sm" onClick={() => checkAdminAccess()}>
-                  Show Full Record
+                <button className="btn btn-primary btn-sm" onClick={() => setOpen(!open)}>
+                  Expand
                 </button>
+                {/* <button className="btn btn-primary btn-sm" onClick={() => checkAdminAccess()}>
+                  Show Full Record
+                </button> */}
               </div>
             </CCardHeader>
-            <CCardBody>
-              {adminRecords.loading ? (
-                <>Loading...</>
-              ) : (
-                <div className="row">
-                  <div className="col-md-6 my-2">
-                    {/* {    totalTransactions: 0,
-      transactions5percent: 0,
-      totalDeliveryFee: 0,
-      totalServiceFee: 0,
-      groundTotal: 0,
-      calculatedTransactions: 0,
-      delivery10Percent: 0,
-      calculatedDeliveryFee: 0,
-      calculatedProfit: 0,} */}
-                    <b>Total Service Fee</b> <br />₦{' '}
-                    {adminRecords?.totalServiceFee?.toLocaleString()}
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>Delivery Fee</b> <br />₦{' '}
-                    {adminRecords.calculatedDeliveryFee.toLocaleString()}
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>Transaction</b> <br />₦ {adminRecords?.totalTransactions?.toLocaleString()}
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>5% of Transaction</b> <br />₦{' '}
-                    {adminRecords.transactions5percent.toLocaleString()}
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>Ground Total</b> <br />₦ {adminRecords.groundTotal.toLocaleString()}
-                  </div>
-                  <div className="col-md-6 my-2">
-                    <b>Profit</b> <br />₦ {adminRecords.calculatedProfit.toLocaleString()}
-                  </div>
-                </div>
-              )}
-            </CCardBody>
+            {open && (
+              <CCardBody>
+                {adminDailyRecords.loading ? (
+                  <>Loading...</>
+                ) : (
+                  <>
+                    <div className="">
+                      {/* <h1>Date Range Picker Example</h1> */}
+                      <div className="d-flex flex-wrap">
+                        {' '}
+                        <DateRangePicker
+                          startDate={startDate}
+                          endDate={endDate}
+                          onChange={handleDateChange}
+                        />{' '}
+                        <button
+                          onClick={() => {
+                            clearFilter()
+                          }}
+                        >
+                          Clear Filter
+                        </button>
+                      </div>
+                      <p>
+                        Selected Date Range:{' '}
+                        {startDate && endDate
+                          ? `${startDate.toDateString()} - ${endDate.toDateString()}`
+                          : 'Select a date range'}
+                      </p>
+                    </div>
+                    {/* {console.log('showData', showData)} */}
+                    {showData?.map((record, i) => {
+                      console.log(record)
+                      return (
+                        <div key={i} className="card p-3 my-2">
+                          <b>{moment(record?.createdAt).format('ddd, MMM Do YYYY h:mm a')}</b>
+                          <div className="d-flex gap-5 justify-content-between mt-1">
+                            <div className="d-flex gap-5 mt-1">
+                              <div className="d-flex flex-column text-center">
+                                <b>Order:</b> {record.total_order.toLocaleString()}
+                              </div>
+                              <div className="d-flex flex-column text-center">
+                                <b>Amount:</b> {record.sub_total_order_amount.toLocaleString()}
+                              </div>
+                              <div className="d-flex flex-column text-center">
+                                <b>Service:</b> {record.total_service_fee.toLocaleString()}
+                              </div>
+                              <div className="d-flex flex-column text-center">
+                                <b>Delivery:</b> {record.total_delivery_fee.toLocaleString()}
+                              </div>
+                            </div>
+                            <div className="d-flex gap-2 mt-1">
+                              <div className="d-flex flex-column text-center">
+                                <b>User</b> {record.current_user_service_charge}%
+                              </div>
+                              <div className="d-flex flex-column text-center">
+                                <b>Business</b> {record.current_business_service_charge}%
+                              </div>
+                              <div className="d-flex flex-column text-center">
+                                <b>Rider</b> {record.current_delivery_charge}%
+                              </div>
+                              {/* <div className="d-flex flex-column text-center">
+                                <b>Delivery</b> {record.total_delivery_fee.toLocaleString()}
+                              </div> */}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </>
+                )}
+              </CCardBody>
+            )}
           </CCard>
         </CCol>
       </CRow>{' '}

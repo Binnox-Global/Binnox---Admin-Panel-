@@ -64,7 +64,7 @@ function SocketProvider({ children }) {
     })
     // Event handler for 'message' event
     socket.on('Error', (data) => {
-      setError(data)
+      // setError(data)
       // console.log('Error', data)
     })
   }, [socket])

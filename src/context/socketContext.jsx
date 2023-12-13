@@ -34,6 +34,7 @@ function SocketProvider({ children }) {
     // }) // Replace with your server URL
 
     setSocket(socket)
+    //
     // Event handler for 'connect' event
     socket.on('connect', () => {
       console.log('Connected to server')

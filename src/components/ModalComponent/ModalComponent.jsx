@@ -5,15 +5,27 @@ import { AdminContext } from 'src/context/adminContext'
 
 function ModalComponent({ component, title }) {
   const { modalComponentVisible, setModalComponentVisible } = React.useContext(AdminContext)
+  // console.log('ModalComponent')
+  // TODO: debug this and know why it keeps closing
+  // BUG: modal component
   return (
     <>
-      <CButton className="btn-sm" onClick={() => setModalComponentVisible(true)}>
+      <CButton
+        className="btn-sm"
+        onClick={() => {
+          // console.log('ModalComponent onOpen')
+          setModalComponentVisible(true)
+        }}
+      >
         {title}
       </CButton>
       <CModal
         fullscreen="xxl"
         visible={modalComponentVisible}
-        onClose={() => setModalComponentVisible(false)}
+        onClose={() => {
+          // console.log('ModalComponent onClose')
+          setModalComponentVisible((prev) => false)
+        }}
       >
         <CModalHeader>
           <CModalTitle>{title}</CModalTitle>

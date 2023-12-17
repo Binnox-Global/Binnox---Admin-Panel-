@@ -137,10 +137,14 @@ function AdminRecordPage() {
                     </div>
                     {/* {console.log('showData', showData)} */}
                     {showData?.map((record, i) => {
-                      console.log(record)
+                      // console.log(record)
                       return (
                         <div key={i} className="card p-3 my-2">
-                          <b>{moment(record?.createdAt).format('ddd, MMM Do YYYY h:mm a')}</b>
+                          <b>
+                            {moment(record.corrected_data || record?.createdAt).format(
+                              'ddd, MMM Do YYYY h:mm a',
+                            )}
+                          </b>
                           <div className="d-flex gap-5 justify-content-between mt-1">
                             <div className="d-flex gap-5 mt-1">
                               <div className="d-flex flex-column text-center">

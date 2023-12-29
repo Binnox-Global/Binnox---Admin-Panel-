@@ -134,7 +134,7 @@ function CreateDiscountCodePage() {
                 </CInputGroupText>
                 <CFormInput
                   placeholder="Discount Code"
-                  autoComplete={false}
+                  autoComplete="false"
                   onChange={(e) => handelChanges(e)}
                   name="code"
                 />
@@ -146,7 +146,7 @@ function CreateDiscountCodePage() {
                 {/* </CInputGroupText> */}
                 <CFormInput
                   placeholder="Discount percent"
-                  autoComplete={false}
+                  autoComplete="false"
                   onChange={(e) => handelChanges(e)}
                   name="discount"
                 />
@@ -158,7 +158,7 @@ function CreateDiscountCodePage() {
                 <CFormInput
                   type="number"
                   placeholder="Max usage"
-                  autoComplete={false}
+                  autoComplete="false"
                   onChange={(e) => handelChanges(e)}
                   name="max_valid_count"
                 />

@@ -12,7 +12,7 @@ import io from 'socket.io-client'
 export const SocketContext = createContext()
 
 function SocketProvider({ children }) {
-  const { setOrderList, orderList } = useContext(AdminContext)
+  const { setOrderList, orderList, token } = useContext(AdminContext)
   const [testOrder, setTestOrder] = useState({
     loading: true,
     data: [],
@@ -21,10 +21,11 @@ function SocketProvider({ children }) {
   const [cookies, removeCookie] = useCookies()
 
   useEffect(() => {
+    if (!token) return
     // Connect to the Socket.IO server
     const socket = io('https://binnox-socket-c7299d8dfb25.herokuapp.com', {
       query: {
-        token: cookies?.BinnoxAdmin.token, // Include your JWT token here
+        token: token, // Include your JWT token here
       },
     }) // Replace with your server URL
     // const socket = io('http://localhost:1000', {
@@ -50,7 +51,7 @@ function SocketProvider({ children }) {
       socket.disconnect()
       setSocket(null)
     }
-  }, [])
+  }, [token])
 
   useEffect(() => {
     // Connect to the Socket.IO server

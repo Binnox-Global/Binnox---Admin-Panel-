@@ -34,6 +34,18 @@
     align-items: center;
     margin: 10px 0;
     cursor: pointer;
+    position: relative;
+      .discount-tag{
+      // border: solid 1px;
+     position: absolute;
+     top: 5px;
+    right:5px;
+    width: auto;
+    padding: 2px 5px;
+    border-radius: 20px; 
+    background-color: red;
+    color: #fff;
+    }
   }
   .dropdown{ 
      display: flex;

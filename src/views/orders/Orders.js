@@ -121,7 +121,7 @@ function OrderTabComponent({ orderGroupList }) {
     // {
     //   name: 'Completed',
     //   statues: 'Completed',
-    // data:[]
+    //   data: [],
     // },
   ])
   useEffect(() => {
@@ -130,18 +130,19 @@ function OrderTabComponent({ orderGroupList }) {
     const processingOrders = []
     const assignedOrders = []
     const deliveredOrders = []
-    // const completedOrders = []
+    const completedOrders = []
     orderGroupList?.data?.map((order, i) => {
       if (order.statues === 'Pending') {
         pendingOrders.push(order)
       }
       if (order.statues === 'Processing') {
+        console.log(order)
         processingOrders.push(order)
       }
       if (order.statues === 'Assigned') {
         assignedOrders.push(order)
       }
-      if (order.statues === 'Delivered') {
+      if (order.statues === 'Delivered' || order.statues === 'Completed') {
         deliveredOrders.push(order)
       }
       // if (order.statues === 'Completed') {
@@ -195,6 +196,7 @@ function OrderTabComponent({ orderGroupList }) {
                     <>No {tabHeader[i].name} Order Currently</>
                   ) : (
                     <>
+                      {/* TODO: this will be a filter for business */}
                       {tab.data?.map((order, i) => {
                         return <OrderGroupCardComponent key={i} order={order} />
                       })}
@@ -829,25 +831,31 @@ function OrderGroupCardComponent({ order, transfer }) {
             <br />
             {/* <b>Email:</b> {order?.user?.email} || */}
             <b>Contact:</b> {order?.user?.phone_number}
-            <>
-              {order?.address?.split(',')[0] &&
-              order?.address?.split(',')[1] &&
-              order?.address?.split(',')[0] !== '' &&
-              order?.address?.split(',')[1] !== '' ? (
-                <GetLocation
-                  longitude={order?.address?.split(',')[1]}
-                  latitude={order?.address?.split(',')[0]}
-                />
-              ) : (
-                <div className="text-center">--</div>
-              )}
-            </>
+            {/* {order.statues === 'Delivered' || order.statues === 'Completed' ? (
+              ''
+            ) : (
+              <>
+                {order?.address?.split(',')[0] &&
+                order?.address?.split(',')[1] &&
+                order?.address?.split(',')[0] !== '' &&
+                order?.address?.split(',')[1] !== '' ? (
+                  <GetLocation
+                    longitude={order?.address?.split(',')[1]}
+                    latitude={order?.address?.split(',')[0]}
+                  />
+                ) : (
+                  <div className="text-center">--</div>
+                )}
+              </>
+            )} */}
+            <br />
+            <b>Business: </b>
+            {order?.business?.business_name}
           </div>
         </div>
-
         {/* <div className="bg-success p-2 text-white">{order.statues}</div> */}
-        {order.statues === 'Delivered' ? (
-          'Delivered'
+        {order.statues === 'Delivered' || order.statues === 'Completed' ? (
+          moment(order?.createdAt).format('MMM Do YY, h:mm a')
         ) : (
           <CountdownTimer createdAt={order?.createdAt} />
         )}
@@ -883,6 +891,14 @@ function OrderGroupCardComponent({ order, transfer }) {
               </CDropdownMenu>
             </CDropdown>
           </div>
+        )}
+        {order.discount ? (
+          <div className="discount-tag">
+            {order.discount.type == 'percent' && <>{order.discount.discount}%</>}
+            {order.discount.type == 'rate' && <>₦{order.discount.discount}</>}
+          </div>
+        ) : (
+          ''
         )}
       </div>
       <div
@@ -932,8 +948,8 @@ function OrderGroupCardComponent({ order, transfer }) {
             <b>Ordered: </b>
             {moment(order?.createdAt).format('MMM Do YY, h:mm a')}
           </p>
-          {order.statues === 'Delivered' ? (
-            'Delivered'
+          {order.statues === 'Delivered' || order.statues === 'Completed' ? (
+            order.statues
           ) : (
             <CountdownTimer createdAt={order?.createdAt} />
           )}

@@ -1552,6 +1552,11 @@ OrderGroupCardComponent.propTypes = {
       phone_number: PropTypes.number,
       // ... other user properties
     }),
+    discount: PropTypes.shape({
+      type: PropTypes.string,
+      discount: PropTypes.number,
+      // Add more nested properties if necessary
+    }),
     business: PropTypes.shape({
       business_cover_image: PropTypes.string,
       business_name: PropTypes.string,

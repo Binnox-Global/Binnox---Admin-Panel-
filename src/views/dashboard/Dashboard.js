@@ -27,6 +27,31 @@ const Dashboard = () => {
   //   console.log('orderGroupList', orderGroupList)
   // }, [orderGroupList])
 
+  useEffect(() => {
+    // Trigger notification and ring sound
+    triggerNotification()
+  }, [])
+
+  const triggerNotification = (order) => {
+    // Customize the notification sound if supported by the browser
+    const audio = new Audio('/Binnox.webm') // Replace with your sound file
+    console.log({ audio })
+    audio.addEventListener('error', (e) => {
+      console.error('Error loading audio:', e)
+    })
+
+    audio.play().catch((error) => {
+      console.error('Error playing audio:', error)
+    })
+
+    // Use the browser's Notification API to show a notification
+    if ('Notification' in window) {
+      const notification = new Notification('New Order Received', {
+        body: `Order ID: 123456993`,
+      })
+    }
+  }
+
   return (
     <>
       <CContainer>

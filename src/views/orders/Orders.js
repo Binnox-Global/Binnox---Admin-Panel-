@@ -197,6 +197,7 @@ function OrderTabComponent({ orderGroupList }) {
                   ) : (
                     <>
                       {/* TODO: this will be a filter for business */}
+
                       {tab.data?.map((order, i) => {
                         return <OrderGroupCardComponent key={i} order={order} />
                       })}
@@ -982,7 +983,9 @@ function OrderGroupCardComponent({ order, transfer }) {
               </p>
             </div>
             <div>
-              {' '}
+              <p>
+                <b>Sub Total Fee: </b> {order?.pay_with_reword_point?.value}
+              </p>
               <p>
                 <b>Sub Total Fee: </b> {order?.sub_total}
               </p>

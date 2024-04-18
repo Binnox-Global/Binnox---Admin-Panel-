@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { createContext, useEffect } from 'react'
+import React, { createContext, useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useCookies } from 'react-cookie'
 import { toast } from 'react-toastify'
@@ -9,6 +9,8 @@ import moment from 'moment'
 export const AdminContext = createContext()
 
 function AdminProvider({ children }) {
+  // const { socket } = useContext(SocketContext)
+
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
   // let apiUrl = 'http://localhost:5000/api'
@@ -598,14 +600,6 @@ function AdminProvider({ children }) {
         //   loading: false,
         //   data: res.data.orders.reverse(),
         // })
-        setOrderGroupTransferList({
-          loading: false,
-          data: {
-            new: newOrdersList,
-            accepted: acceptedOrdersList,
-            rejected: rejectedOrdersList,
-          },
-        })
       })
       .catch((error) => {
         console.error(error)
@@ -831,6 +825,7 @@ status=${status}`,
         console.error(error)
       })
   }
+
   async function updateOrderTransferStatusFunction(ids, status) {
     // return
     // console.log(token)
@@ -873,40 +868,51 @@ status=${status}`,
   async function updateOrderGroupTransferStatusFunction(id, status) {
     // return
     // console.log(token)
-    axios
-      .put(
-        `${apiUrl}/admin/status/transfer/group`,
-        {
-          group_transfer_id: id,
-          status,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        },
-      )
-      .then((res) => {
-        toast.success('Successfully')
-        // getOrderRecordsFunction()
-        setOrderGroupTransferList({
-          loading: false,
-          data: res.data.update.reverse(),
-        })
-      })
-      .catch((error) => {
-        if (error.response.status || error.response.status === 400) {
-          return toast.error(error.response.data.message)
-        }
-        if (error.response.status || error.response.status === 401) {
-          return toast.error(error.response.data.message)
-        }
-        if (error.response.status || error.response.status === 404) {
-          return toast.error(error.response.data.message)
-        }
-        // toast.success('Successfully')
-        console.error(error)
-      })
+    // axios
+    //   .put(
+    //     `${apiUrl}/admin/status/transfer/group`,
+    //     {
+    //       group_transfer_id: id,
+    //       status,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: token,
+    //       },
+    //     },
+    //   )
+    //   .then((res) => {
+    //     toast.success('Successfully')
+    //     // getOrderRecordsFunction()
+    //     setOrderGroupTransferList({
+    //       loading: false,
+    //       data: res.data.update.reverse(),
+    //     })
+    //   })
+    //   .catch((error) => {
+    //     if (error.response.status || error.response.status === 400) {
+    //       return toast.error(error.response.data.message)
+    //     }
+    //     if (error.response.status || error.response.status === 401) {
+    //       return toast.error(error.response.data.message)
+    //     }
+    //     if (error.response.status || error.response.status === 404) {
+    //       return toast.error(error.response.data.message)
+    //     }
+    //     // toast.success('Successfully')
+    //     console.error(error)
+    //   })
+    // socket.emit(
+    //   'admin_orderWithTransferAction',
+    //   {
+    //     group_transfer_id: id,
+    //     status,
+    //   },
+    //   (callback) => {
+    //     // console.log('Received data:', { data: callback.data })
+    //     // setOrderList({ loading: false, data: callback.data?.reverse() })
+    //   },
+    // )
   }
 
   async function updatePaymentRequestStatusFunction(_id, status) {

@@ -795,6 +795,8 @@ function OrderGroupCard({ orders, transfer }) {
 }
 
 function OrderGroupCardComponent({ order, transfer }) {
+  const { socket } = useContext(SocketContext)
+
   const { updateOrderGroupTransferStatusFunction, updateOrderGroupStatusFunction } =
     useContext(AdminContext)
   const [showDropDown, setShowDropDown] = useState(false)
@@ -811,7 +813,19 @@ function OrderGroupCardComponent({ order, transfer }) {
       }
     }
 
-    updateOrderGroupTransferStatusFunction(order._id, status)
+    socket.emit(
+      'admin_orderWithTransferAction',
+      {
+        group_transfer_id: order._id,
+        status,
+      },
+      (callback) => {
+        // console.log('Received data:', { data: callback.data })
+        // setOrderList({ loading: false, data: callback.data?.reverse() })
+      },
+    )
+
+    // updateOrderGroupTransferStatusFunction(order._id, status)
   }
   return (
     <div className="OrderGroupCardComponent">

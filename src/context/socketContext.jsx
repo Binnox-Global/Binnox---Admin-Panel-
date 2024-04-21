@@ -12,7 +12,7 @@ import io from 'socket.io-client'
 export const SocketContext = createContext()
 
 function SocketProvider({ children }) {
-  const { setOrderList, orderList, setOrderGroupTransferList } = useContext(AdminContext)
+  const { token, setOrderList, orderList, setOrderGroupTransferList } = useContext(AdminContext)
   const [testOrder, setTestOrder] = useState({
     loading: true,
     data: [],
@@ -22,6 +22,7 @@ function SocketProvider({ children }) {
 
   useEffect(
     function () {
+      if (!token) return
       const socket = io('http://localhost:1000', {
         query: {
           token: token, // Include your JWT token here
@@ -141,6 +142,8 @@ function SocketProvider({ children }) {
 
   function adminGetOrdersSocketFunction() {
     // console.log('adminGetOrdersSocketFunction called')
+
+    if (!socket) return
     // Event handler for 'message' event
     socket.emit('admin_getPendingOrders', {}, (callback) => {
       // console.log('Received data:', { data: callback.data })

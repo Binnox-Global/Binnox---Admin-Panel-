@@ -35,15 +35,31 @@
     margin: 10px 0;
     cursor: pointer;
     position: relative;
+    .flot-container{
+      display: flex;
+      position: absolute;
+      top: 5px;
+     right:5px;
+     gap: 5px;
+    }
       .discount-tag{
       // border: solid 1px;
-     position: absolute;
-     top: 5px;
-    right:5px;
+    //  position: absolute;
     width: auto;
     padding: 2px 5px;
     border-radius: 20px; 
     background-color: red;
+    color: #fff;
+    }
+      .reword-tag{
+      // border: solid 1px;
+    //  position: absolute;
+    //  top: 5px;
+    // right:5px;
+    width: auto;
+    padding: 2px 5px;
+    border-radius: 20px; 
+    background-color: green;
     color: #fff;
     }
   }

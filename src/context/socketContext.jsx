@@ -23,17 +23,17 @@ function SocketProvider({ children }) {
   useEffect(
     function () {
       if (!token) return
-      const socket = io('http://localhost:1000', {
+      // const socket = io('http://localhost:1000', {
+      //   query: {
+      //     token: token, // Include your JWT token here
+      //   },
+      // }) // Replace with your server URL
+      // Connect to the Socket.IO server
+      const socket = io('https://binnox-socket-c7299d8dfb25.herokuapp.com', {
         query: {
-          token: token, // Include your JWT token here
+          token: cookies?.BinnoxAdmin.token, // Include your JWT token here
         },
       }) // Replace with your server URL
-      //   // Connect to the Socket.IO server
-      //   const socket = io('https://binnox-socket-c7299d8dfb25.herokuapp.com', {
-      //     query: {
-      //       token: cookies?.BinnoxAdmin.token, // Include your JWT token here
-      //     },
-      //   }) // Replace with your server URL
 
       setSocket(socket)
       //

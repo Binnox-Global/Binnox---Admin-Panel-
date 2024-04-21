@@ -13,9 +13,9 @@ function AdminProvider({ children }) {
 
   const [cookies, removeCookie] = useCookies()
   // const navigate = useNavigate()
-  let apiUrl = 'http://localhost:5000/api'
+  // let apiUrl = 'http://localhost:5000/api'
   // let apiUrl = 'https://binnox.herokuapp.com/api'
-  // let apiUrl = 'https://binnox-backend.vercel.app/api'
+  let apiUrl = 'https://binnox-backend.vercel.app/api'
   const [modalComponentVisible, setModalComponentVisible] = React.useState(false)
   const [refreshLoading, setRefreshLoading] = React.useState(false)
   const [token, setToken] = React.useState(null)
@@ -340,6 +340,7 @@ function AdminProvider({ children }) {
   }
 
   async function getCartRecordsFunction() {
+    if (!cookies.BinnoxAdmin.token) return
     setCartList({
       loading: true,
       data: [],
@@ -347,7 +348,7 @@ function AdminProvider({ children }) {
     axios
       .get(`${apiUrl}/cart/admin`, {
         headers: {
-          Authorization: cookies.BinnoxAdmin.token,
+          Authorization: cookies?.BinnoxAdmin?.token,
         },
       })
       .then((res) => {
@@ -513,97 +514,95 @@ function AdminProvider({ children }) {
 
   async function getOrderGroupRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
-    setOrderGroupList({
-      loading: true,
-      data: [],
-    })
-    axios
-      .get(`${apiUrl}/admin/orders/group?max_data_return=100`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        // console.log('getOrderGroupRecordsFunction', res.data)
-        let orders = res.data.orders.reverse()
-        setOrderGroupList({ loading: false, data: orders })
-
-        let groupOrderByDate = groupOrderByDateFunction(orders)
-        // let groupFunctionTest = groupFunctionTestFunction(orders)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    // setOrderGroupList({
+    //   loading: true,
+    //   data: [],
+    // })
+    // axios
+    //   .get(`${apiUrl}/admin/orders/group?max_data_return=100`, {
+    //     headers: {
+    //       Authorization: token,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     // console.log('getOrderGroupRecordsFunction', res.data)
+    //     let orders = res.data.orders.reverse()
+    //     setOrderGroupList({ loading: false, data: orders })
+    //     let groupOrderByDate = groupOrderByDateFunction(orders)
+    //     // let groupFunctionTest = groupFunctionTestFunction(orders)
+    //   })
+    //   .catch((error) => {
+    //     console.error(error)
+    //   })
   }
   async function getOrderTransferRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
-    setOrderTransferList({
-      loading: true,
-      data: [],
-    })
-    axios
-      .get(`${apiUrl}/admin/orders/transfer?max_data_return=100`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        // console.log('orders Request', res.data.orders)
-        setOrderTransferList({
-          loading: false,
-          data: res.data.orders.reverse(),
-        })
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    // setOrderTransferList({
+    //   loading: true,
+    //   data: [],
+    // })
+    // axios
+    //   .get(`${apiUrl}/admin/orders/transfer?max_data_return=100`, {
+    //     headers: {
+    //       Authorization: token,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     // console.log('orders Request', res.data.orders)
+    //     setOrderTransferList({
+    //       loading: false,
+    //       data: res.data.orders.reverse(),
+    //     })
+    //   })
+    //   .catch((error) => {
+    //     console.error(error)
+    //   })
   }
 
   async function getOrderGroupTransferRecordsFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
-    setOrderGroupTransferList({
-      loading: true,
-      data: {
-        new: [],
-        accepted: [],
-        rejected: [],
-      },
-    })
-    axios
-      .get(`${apiUrl}/admin/orders/transfer/group?max_data_return=100`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        // console.log('orders Request', res.data.orders)
-
-        let newOrdersList = []
-        let acceptedOrdersList = []
-        let rejectedOrdersList = []
-        res?.data?.orders?.reverse()?.forEach((item) => {
-          if (!item?.transfer_approve && !item.transfer_rejected) {
-            // console.log(item)
-            newOrdersList.push(item)
-          } else {
-            if (item?.transfer_approve && !item.transfer_rejected) {
-              // console.log('AA', item)
-              acceptedOrdersList.push(item)
-            } else {
-              // console.log('BB', item)
-              rejectedOrdersList.push(item)
-            }
-          }
-        })
-        // console.log('orderTransferList', orderTransferList)
-        // setOrderGroupTransferList({
-        //   loading: false,
-        //   data: res.data.orders.reverse(),
-        // })
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    // setOrderGroupTransferList({
+    //   loading: true,
+    //   data: {
+    //     new: [],
+    //     accepted: [],
+    //     rejected: [],
+    //   },
+    // })
+    // axios
+    //   .get(`${apiUrl}/admin/orders/transfer/group?max_data_return=100`, {
+    //     headers: {
+    //       Authorization: token,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     // console.log('orders Request', res.data.orders)
+    //     let newOrdersList = []
+    //     let acceptedOrdersList = []
+    //     let rejectedOrdersList = []
+    //     res?.data?.orders?.reverse()?.forEach((item) => {
+    //       if (!item?.transfer_approve && !item.transfer_rejected) {
+    //         // console.log(item)
+    //         newOrdersList.push(item)
+    //       } else {
+    //         if (item?.transfer_approve && !item.transfer_rejected) {
+    //           // console.log('AA', item)
+    //           acceptedOrdersList.push(item)
+    //         } else {
+    //           // console.log('BB', item)
+    //           rejectedOrdersList.push(item)
+    //         }
+    //       }
+    //     })
+    //     // console.log('orderTransferList', orderTransferList)
+    //     // setOrderGroupTransferList({
+    //     //   loading: false,
+    //     //   data: res.data.orders.reverse(),
+    //     // })
+    //   })
+    //   .catch((error) => {
+    //     console.error(error)
+    //   })
   }
   async function getPaymentRequestFunction() {
     //  console.log(cookies.BinnoxAdmin.token)
@@ -611,10 +610,12 @@ function AdminProvider({ children }) {
       loading: true,
       data: [],
     })
+
+    if (!cookies?.BinnoxAdmin?.token) return
     axios
       .get(`${apiUrl}/admin/payment-request`, {
         headers: {
-          Authorization: cookies.BinnoxAdmin.token,
+          Authorization: cookies?.BinnoxAdmin?.token,
         },
       })
       .then((res) => {
@@ -1248,6 +1249,7 @@ status=${status}`,
         refreshDashboardFunction,
         getOrderGroupRecordsFunction,
         orderGroupList,
+        setOrderGroupList,
         adminRecords,
         setAdminRecords,
         orderGroupTransferList,

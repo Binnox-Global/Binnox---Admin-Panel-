@@ -21,8 +21,8 @@ function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null)
   const [cookies, removeCookie] = useCookies()
 
-  // const socketUrl = 'https://binnox-socket-c7299d8dfb25.herokuapp.com'
-  const socketUrl = 'http://localhost:1000'
+  const socketUrl = 'https://binnox-socket-c7299d8dfb25.herokuapp.com'
+  // const socketUrl = 'http://localhost:1000'
   // useEffect(() => {
   //   // Trigger notification and ring sound
   //   triggerNotification()

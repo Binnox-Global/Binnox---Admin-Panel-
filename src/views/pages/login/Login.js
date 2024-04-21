@@ -85,10 +85,10 @@ const Login = () => {
       .catch((error) => {
         setLoading(false)
         // console.log(error)
-        if (error.response.status || error.response.status === 400) {
+        if (error?.response?.status || error?.response?.status === 400) {
           return toast.error(error.response.data.message)
         }
-        if (error.response.status || error.response.status === 404) {
+        if (error?.response?.status || error?.response?.status === 404) {
           return toast.error(error.response.data.message)
         }
         toast.error(error.message)

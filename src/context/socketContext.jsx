@@ -23,6 +23,38 @@ function SocketProvider({ children }) {
 
   // const socketUrl = 'https://binnox-socket-c7299d8dfb25.herokuapp.com'
   const socketUrl = 'http://localhost:1000'
+  // useEffect(() => {
+  //   // Trigger notification and ring sound
+  //   triggerNotification()
+  // }, [])
+  const [isNotifying, setIsNotifying] = useState(false)
+
+  const triggerNotification = (order) => {
+    if (isNotifying) return // Prevent duplicate notifications
+    setIsNotifying(true)
+
+    // Customize the notification sound if supported by the browser
+    const audio = new Audio('/Binnox.webm') // Replace with your sound file
+    // console.log({ audio })
+    audio.addEventListener('error', (e) => {
+      console.error('Error loading audio:', e)
+    })
+
+    // audio.muted = true // Mute the audio initially
+    audio.play().catch((error) => {
+      console.error('Error playing audio:', error)
+    })
+
+    // Use the browser's Notification API to show a notification
+    if ('Notification' in window) {
+      const notification = new Notification('New Order Received', {
+        body: `Order ID: 123456993`,
+      })
+      notification.onclose = () => {
+        setIsNotifying(false) // Reset the flag when the notification is closed
+      }
+    }
+  }
 
   useEffect(
     function () {
@@ -57,6 +89,7 @@ function SocketProvider({ children }) {
     if (!socket) return
     socket.on('admin_orderWithTransfer', (data) => {
       // console.log('admin_orderWithTransfer', data)
+      triggerNotification()
       setOrderGroupTransferList((prevOrderGroupTransferList) => ({
         ...prevOrderGroupTransferList,
         loading: false,
@@ -69,6 +102,7 @@ function SocketProvider({ children }) {
     })
     // socket to get orders
     socket.on('admin_orders', (data) => {
+      triggerNotification()
       // console.log('admin_orders', data)
       setOrderGroupList((prevOrderGroupList) => ({
         ...prevOrderGroupList,

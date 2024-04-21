@@ -37,7 +37,7 @@ import { GetLocation } from '../records/BusinessRecords'
 import { SocketContext } from 'src/context/socketContext'
 
 function Orders() {
-  const { adminGetOrdersSocketFunction } = React.useContext(SocketContext)
+  const {} = React.useContext(SocketContext)
   const { orderGroupList } = React.useContext(AdminContext)
   // const [newOrders, setNewOrders] = useState({
   //   new: [],
@@ -68,10 +68,6 @@ function Orders() {
   //     pickedUp: pickedUpOrdersList,
   //   })
   // }, [orderGroupList])
-
-  useEffect(() => {
-    adminGetOrdersSocketFunction()
-  }, [])
 
   return (
     <>
@@ -136,7 +132,7 @@ function OrderTabComponent({ orderGroupList }) {
         pendingOrders.push(order)
       }
       if (order.statues === 'Processing') {
-        console.log(order)
+        // console.log(order)
         processingOrders.push(order)
       }
       if (order.statues === 'Assigned') {
@@ -1409,62 +1405,6 @@ export function LocationDropdown({ location }) {
   )
 }
 
-// export function CountDown({ time }) {
-//   const [timeLeft, setTimeLeft] = React.useState(null)
-//   useEffect(() => {
-//     // const second = 1000,
-//     //   minute = second * 60,
-//     //   hour = minute * 60,
-//     //   day = hour * 24
-
-//     // console.log(time)
-//     // // let gmonth = "jan";
-//     // // let gday = "01";
-//     // // let gyear = "2023";
-//     // // let gtime = "00:00:00";
-//     // // console.log(userInvestment?.endDate);
-//     // let countTill = time,
-//     //   // let countTill = `${gmonth} ${gday} , ${gyear} ${gtime}`,
-//     //   // let newyear = "April 12, 2001 00:00:00",
-//     //   countDown = new Date(countTill).getTime()
-//     // console.log(countDown)
-//     // const intervalId = setInterval(() => {
-//     //   let now = new Date().getTime(),
-//     //     distance = now - countDown
-
-//     //   // console.log(distance)
-//     //   let calculatedDate = {
-//     //     days: Math.floor(distance / day),
-//     //     hours: Math.floor((distance % day) / hour),
-//     //     minutes: Math.floor((distance % hour) / minute),
-//     //     seconds: Math.floor((distance % minute) / second),
-//     //   }
-//     // console.log(calculatedDate)
-
-//     // setInvestmentTime(calculatedDate)
-//     // }, 1000)
-
-//     // return () => {
-//     //   clearInterval(intervalId) //This is important
-//     // }
-
-//     // var d = new Date(time)
-//     // d.setHours(d.getHours() + 5)
-//     // d.setMinutes(d.getMinutes() + 30)
-
-//     // console.log(d)
-
-//     // let dateNow = new Date().getTime()
-//     // let calTime = dateNow + 30 * 60 * 1000
-//     let dt = new Date()
-//     dt = new Date(dt.getTime() + 30 * 60 * 1000)
-
-//     console.log('calTime', dt.toLocaleTimeString())
-//   }, [timeLeft])
-
-//   return <>0</>
-// }
-
 function CountdownTimer({ createdAt }) {
   const [time, setTime] = useState({
     hours: '',
@@ -1498,11 +1438,7 @@ function CountdownTimer({ createdAt }) {
 
     // Clear the interval on component unmount to prevent memory leaks
     return () => clearInterval(interval)
-  }, [])
-  // useEffect(() => {
-  //   console.log('remainingTime', remainingTime)
-  //   console.log('delayTime', delayTime)
-  // }, [remainingTime])
+  }, [createdAt])
 
   return (
     <div
@@ -1524,23 +1460,11 @@ function CountdownTimer({ createdAt }) {
             }
       }
     >
-      {/* {remainingTime <= 0 ? (
-        <div className="text-red" style={{ color: 'red' }}>
-          {delayTime} minutes
-          <div className="small " style={{ color: 'red' }}>
-            Delayed
-          </div>
-        </div>
-      ) : (
-        <div>{remainingTime} minutes left</div>
-      )} */}
       {time.hours > 0 && `${time.hours} Hours, `}
 
       {time.minutes > 0 && `${time.minutes} Minutes, `}
 
       {time.seconds > 0 && `${time.seconds} Seconds`}
-      {/* {console.log(Math.floor(moment().diff(createdAt, 'hours')))} */}
-      {/* {console.log(moment().now().diff(moment(createdAt), 'seconds'))} */}
     </div>
   )
 }
@@ -1555,11 +1479,6 @@ OrderGroupCard.propTypes = {
   orders: PropTypes.array,
   transfer: PropTypes.bool,
 }
-// OrderGroupCardComponent.propTypes = {
-//   orders: PropTypes.object,
-//   'orders.user': PropTypes.object,
-//   transfer: PropTypes.bool,
-// }
 
 OrderGroupCardComponent.propTypes = {
   order: PropTypes.shape({

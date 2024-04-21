@@ -903,14 +903,21 @@ function OrderGroupCardComponent({ order, transfer }) {
             </CDropdown>
           </div>
         )}
-        {order.discount ? (
-          <div className="discount-tag">
-            {order.discount.type == 'percent' && <>{order.discount.discount}%</>}
-            {order.discount.type == 'rate' && <>₦{order.discount.discount}</>}
-          </div>
-        ) : (
-          ''
-        )}
+        <div className="flot-container">
+          {order?.pay_with_reword_point?.value ? (
+            <div className="reword-tag">{<>₦{order?.pay_with_reword_point?.value}</>}</div>
+          ) : (
+            ''
+          )}
+          {order.discount ? (
+            <div className="discount-tag">
+              {order.discount.type == 'percent' && <>{order.discount.discount}%</>}
+              {order.discount.type == 'rate' && <>₦{order.discount.discount}</>}
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
       </div>
       <div
         className="dropdown"
@@ -993,9 +1000,17 @@ function OrderGroupCardComponent({ order, transfer }) {
               </p>
             </div>
             <div>
-              <p>
-                <b>Sub Total Fee: </b> {order?.pay_with_reword_point?.value}
-              </p>
+              {/*   <p>
+                <b>Sub Total Fee: </b>{' '}
+               {order?.pay_with_reword_point?.value ? (
+                  <>
+                    <s>{order?.sub_total}</s>{' '}
+                    {order?.pay_with_reword_point?.value - order?.sub_total}
+                  </>
+                ) : (
+                  order?.sub_total
+                )}
+              </p> */}
               <p>
                 <b>Sub Total Fee: </b> {order?.sub_total}
               </p>
@@ -1491,6 +1506,10 @@ OrderGroupCardComponent.propTypes = {
     discount: PropTypes.shape({
       type: PropTypes.string,
       discount: PropTypes.number,
+      // Add more nested properties if necessary
+    }),
+    pay_with_reword_point: PropTypes.shape({
+      value: PropTypes.number,
       // Add more nested properties if necessary
     }),
     business: PropTypes.shape({

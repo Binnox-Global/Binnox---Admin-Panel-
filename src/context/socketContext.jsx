@@ -155,20 +155,20 @@ function SocketProvider({ children }) {
     // socket to get orders
     socket.on('admin_orders', (data) => {
       // triggerNotification()
-      let pendingOrders = []
-      data.forEach((order) => {
-        // console.log(order.statues)
-        if (order.statues === 'Pending') {
-          pendingOrders.push(order)
-        }
-      })
+      // let pendingOrders = []
+      // data.forEach((order) => {
+      //   // console.log(order.statues)
+      //   if (order.statues === 'Pending') {
+      //     pendingOrders.push(order)
+      //   }
+      // })
 
-      if (pendingOrders?.length) {
-        triggerNotification({
-          notificationMessage: `They are (${pendingOrders?.length}) unattended order`,
-          notificationHeader: pendingOrders?.length + ' Order Notification',
-        })
-      }
+      // if (pendingOrders?.length) {
+      //   triggerNotification({
+      //     notificationMessage: `They are (${pendingOrders?.length}) unattended order`,
+      //     notificationHeader: pendingOrders?.length + ' Order Notification',
+      //   })
+      // }
       // console.log('admin_orders', data)
       setOrderGroupList((prevOrderGroupList) => ({
         ...prevOrderGroupList,

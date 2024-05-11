@@ -10,11 +10,11 @@ import { ChartTest } from 'src/components/Chart/ChartTest'
 import { useCookies } from 'react-cookie'
 import moment from 'moment'
 import DateRangePicker from 'src/components/DateRange/DateRangePicker'
+import './AdminRecordPage.scss'
 
 function AdminRecordPage() {
   const { adminRecords, adminDailyRecords } = useContext(AdminContext)
   const [adminAccess, setAdminAccess] = useState(false)
-  const [open, setOpen] = useState(false)
 
   function checkAdminAccess() {
     const userInput = window.prompt('Enter Admin Access Code')
@@ -81,111 +81,91 @@ function AdminRecordPage() {
 
   return (
     <>
-      {/* <LineChart /> */}
-      <CCard className="mb-4">
-        {' '}
-        <CCardHeader>Transaction Chart</CCardHeader>
-        <CCardBody>
-          <ChartTest />
-        </CCardBody>
-      </CCard>
+      <ExpandableCardComponent title="Transaction Chart">
+        <ChartTest />
+      </ExpandableCardComponent>
       <CRow>
         <CCol xs>
-          <CCard className="mb-4">
-            {' '}
-            <CCardHeader>
-              <div className="d-flex justify-content-between">
-                Admin Record
-                {/* <ModalComponent title={'Update Rewords'} component={<RewordsForm />} /> */}
-                <button className="btn btn-primary btn-sm" onClick={() => setOpen(!open)}>
-                  Expand
-                </button>
-                {/* <button className="btn btn-primary btn-sm" onClick={() => checkAdminAccess()}>
-                  Show Full Record
-                </button> */}
-              </div>
-            </CCardHeader>
-            {open && (
-              <CCardBody>
-                {adminDailyRecords.loading ? (
-                  <>Loading...</>
-                ) : (
-                  <>
-                    <div className="">
-                      {/* <h1>Date Range Picker Example</h1> */}
-                      <div className="d-flex flex-wrap">
-                        {' '}
-                        <DateRangePicker
-                          startDate={startDate}
-                          endDate={endDate}
-                          onChange={handleDateChange}
-                        />{' '}
-                        <button
-                          onClick={() => {
-                            clearFilter()
-                          }}
-                        >
-                          Clear Filter
-                        </button>
-                      </div>
-                      <p>
-                        Selected Date Range:{' '}
-                        {startDate && endDate
-                          ? `${startDate.toDateString()} - ${endDate.toDateString()}`
-                          : 'Select a date range'}
-                      </p>
+          <ExpandableCardComponent title="Admin Record">
+            <CCardBody>
+              {adminDailyRecords.loading ? (
+                <>Loading...</>
+              ) : (
+                <>
+                  <div className="">
+                    {/* <h1>Date Range Picker Example</h1> */}
+                    <div className="d-flex flex-wrap">
+                      {' '}
+                      <DateRangePicker
+                        startDate={startDate}
+                        endDate={endDate}
+                        onChange={handleDateChange}
+                      />{' '}
+                      <button
+                        onClick={() => {
+                          clearFilter()
+                        }}
+                      >
+                        Clear Filter
+                      </button>
                     </div>
-                    {/* {console.log('showData', showData)} */}
-                    {showData?.map((record, i) => {
-                      // console.log(record)
-                      return (
-                        <div key={i} className="card p-3 my-2">
-                          <b>
-                            {moment(record.corrected_data || record?.createdAt).format(
-                              'ddd, MMM Do YYYY h:mm a',
-                            )}
-                          </b>
-                          <div className="d-flex gap-5 justify-content-between mt-1">
-                            <div className="d-flex gap-5 mt-1">
-                              <div className="d-flex flex-column text-center">
-                                <b>Order:</b> {record.total_order.toLocaleString()}
-                              </div>
-                              <div className="d-flex flex-column text-center">
-                                <b>Amount:</b> {record.sub_total_order_amount.toLocaleString()}
-                              </div>
-                              <div className="d-flex flex-column text-center">
-                                <b>Service:</b> {record.total_service_fee.toLocaleString()}
-                              </div>
-                              <div className="d-flex flex-column text-center">
-                                <b>Delivery:</b> {record.total_delivery_fee.toLocaleString()}
-                              </div>
+                    <p>
+                      Selected Date Range:{' '}
+                      {startDate && endDate
+                        ? `${startDate.toDateString()} - ${endDate.toDateString()}`
+                        : 'Select a date range'}
+                    </p>
+                  </div>
+                  {/* {console.log('showData', showData)} */}
+                  {showData?.map((record, i) => {
+                    // console.log(record)
+                    return (
+                      <div key={i} className="card p-3 my-2">
+                        <b>
+                          {moment(record.corrected_data || record?.createdAt).format(
+                            'ddd, MMM Do YYYY h:mm a',
+                          )}
+                        </b>
+                        <div className="d-flex gap-5 justify-content-between mt-1">
+                          <div className="d-flex gap-5 mt-1">
+                            <div className="d-flex flex-column text-center">
+                              <b>Order:</b> {record.total_order.toLocaleString()}
                             </div>
-                            <div className="d-flex gap-2 mt-1">
-                              <div className="d-flex flex-column text-center">
-                                <b>User</b> {record.current_user_service_charge}%
-                              </div>
-                              <div className="d-flex flex-column text-center">
-                                <b>Business</b> {record.current_business_service_charge}%
-                              </div>
-                              <div className="d-flex flex-column text-center">
-                                <b>Rider</b> {record.current_delivery_charge}%
-                              </div>
-                              {/* <div className="d-flex flex-column text-center">
-                                <b>Delivery</b> {record.total_delivery_fee.toLocaleString()}
-                              </div> */}
+                            <div className="d-flex flex-column text-center">
+                              <b>Amount:</b> {record.sub_total_order_amount.toLocaleString()}
+                            </div>
+                            <div className="d-flex flex-column text-center">
+                              <b>Service:</b> {record.total_service_fee.toLocaleString()}
+                            </div>
+                            <div className="d-flex flex-column text-center">
+                              <b>Delivery:</b> {record.total_delivery_fee.toLocaleString()}
                             </div>
                           </div>
+                          <div className="d-flex gap-2 mt-1">
+                            <div className="d-flex flex-column text-center">
+                              <b>User</b> {record.current_user_service_charge}%
+                            </div>
+                            <div className="d-flex flex-column text-center">
+                              <b>Business</b> {record.current_business_service_charge}%
+                            </div>
+                            <div className="d-flex flex-column text-center">
+                              <b>Rider</b> {record.current_delivery_charge}%
+                            </div>
+                            {/* <div className="d-flex flex-column text-center">
+                                <b>Delivery</b> {record.total_delivery_fee.toLocaleString()}
+                              </div> */}
+                          </div>
                         </div>
-                      )
-                    })}
-                  </>
-                )}
-              </CCardBody>
-            )}
-          </CCard>
+                      </div>
+                    )
+                  })}
+                </>
+              )}
+            </CCardBody>
+          </ExpandableCardComponent>
         </CCol>
       </CRow>{' '}
-      {adminAccess && (
+      {/* {adminAccess && (
         <CRow>
           <CCol xs>
             <CCard className="mb-4">
@@ -193,7 +173,7 @@ function AdminRecordPage() {
               <CCardHeader>
                 <div className="d-flex justify-content-between">
                   Admin Record
-                  {/* <ModalComponent title={'Update Rewords'} component={<RewordsForm />} /> */}
+                  {/* <ModalComponent title={'Update Rewords'} component={<RewordsForm />} /> * /}
                   <button className="btn btn-sm btn-primary" onClick={() => setAdminAccess(false)}>
                     {' '}
                     Hide Full Record{' '}
@@ -230,7 +210,7 @@ function AdminRecordPage() {
             </CCard>
           </CCol>
         </CRow>
-      )}
+      )} */}
     </>
   )
 }
@@ -337,5 +317,23 @@ export function SubmitRecordPage() {
         </button>
       </div>
     </>
+  )
+}
+
+export function ExpandableCardComponent(props) {
+  const [open, setOpen] = useState(false)
+  return (
+    <CCard className="mb-4">
+      {' '}
+      <CCardHeader>
+        <div className="d-flex justify-content-between">
+          {props.title}
+          <button className="btn btn-primary btn-sm" onClick={() => setOpen(!open)}>
+            Expand
+          </button>
+        </div>
+      </CCardHeader>
+      {open && <> {props.children}</>}
+    </CCard>
   )
 }

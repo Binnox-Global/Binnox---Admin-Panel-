@@ -84,6 +84,9 @@ function AdminRecordPage() {
       <ExpandableCardComponent title="Transaction Chart">
         <ChartTest />
       </ExpandableCardComponent>
+      <ExpandableCardComponent title="User Analysis">
+        <UserAnalysisComponent />
+      </ExpandableCardComponent>
       <CRow>
         <CCol xs>
           <ExpandableCardComponent title="Admin Record">
@@ -335,5 +338,170 @@ export function ExpandableCardComponent(props) {
       </CCardHeader>
       {open && <> {props.children}</>}
     </CCard>
+  )
+}
+
+function UserAnalysisComponent() {
+  const { token, setOrderList, orderGroupList, orderList, setOrderGroupTransferList } =
+    useContext(AdminContext)
+
+  const [groupOrderByUser, setGroupOrderByUser] = useState(null)
+  const [groupedOrdersByBusiness, setGroupedOrdersByBusiness] = useState(null)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [selectedBusiness, setSelectedBusiness] = useState(null)
+
+  const handleUserClick = (userId) => {
+    setSelectedUserId(userId)
+  }
+
+  useEffect(() => {
+    if (orderGroupList.loading) return
+    // console.log('UserAnalysisComponent', { orderGroupList })
+
+    const groupOrder = groupOrdersByUser(orderGroupList.data)
+    // console.log('UserAnalysisComponent', { groupOrder })
+    setGroupOrderByUser(groupOrder)
+  }, [orderGroupList])
+
+  const groupOrdersByBusiness = () => {
+    const selectedUserId = selectedUser._id
+    if (!selectedUserId) return {}
+
+    const userOrders = groupOrderByUser[selectedUserId].orders
+    const groupedOrders = {}
+
+    userOrders.forEach((order) => {
+      // Check if order.business is defined
+      if (!order.business) return // Skip this iteration if business is not defined
+
+      const businessId = order.business._id
+      if (!businessId) return // Skip this iteration if businessId is not defined
+
+      if (!groupedOrders[businessId]) {
+        groupedOrders[businessId] = {
+          business: order.business,
+          orders: [order],
+          totalAmount: order.total_amount,
+          orderDays: [new Date(order.createdAt).toLocaleDateString('en-US', { weekday: 'long' })],
+        }
+      } else {
+        groupedOrders[businessId].orders.push(order)
+        groupedOrders[businessId].totalAmount += order.total_amount
+        const orderDay = new Date(order.createdAt).toLocaleDateString('en-US', {
+          weekday: 'long',
+        })
+        if (!groupedOrders[businessId].orderDays.includes(orderDay)) {
+          groupedOrders[businessId].orderDays.push(orderDay)
+        }
+      }
+    })
+
+    return groupedOrders
+  }
+
+  useEffect(() => {
+    if (!selectedUser) return
+    console.log('UserAnalysisComponent', { selectedUser })
+    const groupedOrdersByBusiness = groupOrdersByBusiness()
+
+    console.log('UserAnalysisComponent', { groupedOrdersByBusiness })
+    setGroupedOrdersByBusiness(groupedOrdersByBusiness)
+  }, [selectedUser])
+
+  const groupOrdersByUser = (orders) => {
+    const groupedOrders = {}
+
+    orders.forEach((order) => {
+      const userId = order.user._id
+      if (!groupedOrders[userId]) {
+        groupedOrders[userId] = {
+          user: order.user,
+          orders: [order],
+        }
+      } else {
+        groupedOrders[userId].orders.push(order)
+      }
+    })
+
+    return groupedOrders
+  }
+  return (
+    <div className="UserAnalysisComponent">
+      <div>
+        {groupOrderByUser === null ? (
+          <>Loading .....</>
+        ) : (
+          <>
+            {Object.values(groupOrderByUser).map((userOrders) => (
+              <div key={userOrders.user._id} onClick={() => setSelectedUser(userOrders.user)}>
+                <div className="userInfoCard">
+                  <h3>{userOrders.user.full_name}</h3>
+                  <span className="">{userOrders.orders.length}</span>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+      <div>
+        {selectedUser && (
+          <div className="userRecordDetail">
+            <div className="top-section">
+              <h2> {selectedUser.full_name}</h2>
+
+              <div className="top-card-group">
+                <div className="card">
+                  <b>Total Order</b>
+                  10
+                </div>
+                <div className="card">
+                  <b>Total used restaurant</b>
+                  10
+                </div>
+                <div className="card">
+                  <b>Total Amount Spent</b>
+                  10
+                </div>
+              </div>
+            </div>
+            <h2>Orders by Business</h2>
+            <div className="business-section">
+              {groupedOrdersByBusiness && (
+                <div className="business-list">
+                  <div
+                    className="business-name-tab bg-danger text-white"
+                    onClick={() => setSelectedBusiness(null)}
+                  >
+                    X
+                  </div>
+                  {Object.values(groupedOrdersByBusiness).map((businessOrders) => (
+                    <div
+                      className={`business-name-tab ${
+                        selectedBusiness?.business._id === businessOrders?.business._id
+                          ? ' selected'
+                          : ''
+                      }`}
+                      key={businessOrders.business._id}
+                      onClick={() => setSelectedBusiness(businessOrders)}
+                    >
+                      {businessOrders.business.business_name} ({businessOrders.orders.length})
+                    </div>
+                  ))}
+                  {selectedBusiness && (
+                    <div className="business-details">
+                      <hr />
+                      <b>{selectedBusiness.business.business_name}</b>
+                      <p>Total Orders: {selectedBusiness.orders.length}</p>
+                      <p>Total Amount Spent: {selectedBusiness.totalAmount}</p>
+                      <p>Order Days: {selectedBusiness.orderDays.join(', ')}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }

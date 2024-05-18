@@ -1,5 +1,5 @@
 import React from 'react'
-import Orders, { OrdersGroupDelivered } from './views/orders/Orders'
+import Orders, { OrdersGroupDelivered, OrdersPickedUp } from './views/orders/Orders'
 // import { OrdersDelivered, OrdersPickedUp } from './views/orders/Orders'
 import PaymentRequest from './views/records/PaymentRequest'
 // import CreateDiscountCodePage from './views/discount/CreateDiscountCodePage'

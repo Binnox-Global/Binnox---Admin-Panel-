@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { useLocation } from 'react-router-dom'
 
-
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 import { AdminContext } from 'src/context/adminContext'
 

@@ -1,16 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import {
   CAvatar,
-  CButtonGroup,
   CCard,
   CCardBody,
   CCardHeader,
   CCol,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CFormCheck,
   CRow,
   CTable,
   CTableBody,

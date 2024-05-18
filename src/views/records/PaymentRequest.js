@@ -1,8 +1,6 @@
 import React from 'react'
 
 import {
-  CAvatar,
-  CButtonGroup,
   CCard,
   CCardBody,
   CCardHeader,
@@ -11,7 +9,6 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-  CFormCheck,
   CRow,
   CTable,
   CTableBody,
@@ -20,8 +17,6 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilPeople } from '@coreui/icons'
 
 import { AdminContext } from 'src/context/adminContext'
 import moment from 'moment'
@@ -68,7 +63,7 @@ function PaymentRequest() {
                 ) : (
                   <>
                     {paymentRequest.data.map((item, index) => {
-                      if (!item.pending) return
+                      if (!item.pending) return <></>
                       return (
                         <CTableRow v-for="item in tableItems" key={index}>
                           {/* <CTableDataCell className="text-center">

@@ -5,7 +5,7 @@ import ModalComponent from 'src/components/ModalComponent/ModalComponent'
 import { AdminContext } from 'src/context/adminContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import LineChart from 'src/components/Chart/LineChat'
+// import LineChart from 'src/components/Chart/LineChat'
 import { ChartTest } from 'src/components/Chart/ChartTest'
 import { useCookies } from 'react-cookie'
 import moment from 'moment'
@@ -13,34 +13,17 @@ import DateRangePicker from 'src/components/DateRange/DateRangePicker'
 import './AdminRecordPage.scss'
 
 function AdminRecordPage() {
-  const { adminRecords, adminDailyRecords } = useContext(AdminContext)
-  const [adminAccess, setAdminAccess] = useState(false)
-
-  function checkAdminAccess() {
-    const userInput = window.prompt('Enter Admin Access Code')
-    if (userInput !== null) {
-      if (userInput.trim() === '') {
-        return alert('Enter An Admin Access Code')
-      }
-
-      if (userInput !== 'victor') {
-        return alert('Invalid Admin Access Code')
-      }
-      setAdminAccess(true)
-    } else {
-      setAdminAccess(false)
-      alert('Enter Admin Access Code')
-    }
-  }
+  const { adminDailyRecords } = useContext(AdminContext)
+  // const [adminAccess, setAdminAccess] = useState(false)
 
   const [showData, setShowData] = useState([])
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [filteredData, setFilteredData] = useState(null)
-  const [data, setData] = useState({
-    labels: [],
-    datasets: [],
-  })
+  // const [data, setData] = useState({
+  //   labels: [],
+  //   datasets: [],
+  // })
 
   function clearFilter() {
     setStartDate(null)
@@ -342,17 +325,12 @@ export function ExpandableCardComponent(props) {
 }
 
 function UserAnalysisComponent() {
-  const { token, setOrderList, orderGroupList, orderList, setOrderGroupTransferList } =
-    useContext(AdminContext)
+  const { orderGroupList } = useContext(AdminContext)
 
   const [groupOrderByUser, setGroupOrderByUser] = useState(null)
   const [groupedOrdersByBusiness, setGroupedOrdersByBusiness] = useState(null)
   const [selectedUser, setSelectedUser] = useState(null)
   const [selectedBusiness, setSelectedBusiness] = useState(null)
-
-  const handleUserClick = (userId) => {
-    setSelectedUserId(userId)
-  }
 
   useEffect(() => {
     if (orderGroupList.loading) return

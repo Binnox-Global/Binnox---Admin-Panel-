@@ -37,7 +37,7 @@ import { GetLocation } from '../records/BusinessRecords'
 import { SocketContext } from 'src/context/socketContext'
 
 function Orders() {
-  const {} = React.useContext(SocketContext)
+  // const {} = React.useContext(SocketContext)
   const { orderGroupList } = React.useContext(AdminContext)
   // const [newOrders, setNewOrders] = useState({
   //   new: [],

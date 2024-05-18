@@ -1,10 +1,8 @@
 import React, { useContext } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import routes from '../routes'
 
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
-import Buttons from './../views/buttons/buttons/Buttons'
 import { AdminContext } from 'src/context/adminContext'
 
 const AppBreadcrumb = () => {

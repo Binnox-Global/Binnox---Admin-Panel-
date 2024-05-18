@@ -29,8 +29,8 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <img className="sidebar-brand-full" src={logo} height={35} />
-        <img className="sidebar-brand-narrow" src={logoSm} height={35} />
+        <img className="sidebar-brand-full" src={logo} height={35} alt="logo" />
+        <img className="sidebar-brand-narrow" src={logoSm} height={35} alt="logo" />
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>

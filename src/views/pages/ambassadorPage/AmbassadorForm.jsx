@@ -9,7 +9,7 @@ import {
   CInputGroupText,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilUser } from '@coreui/icons'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { AdminContext } from 'src/context/adminContext'

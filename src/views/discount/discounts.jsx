@@ -1,7 +1,6 @@
 import React from 'react'
 import { AdminContext } from 'src/context/adminContext'
 import {
-  CAvatar,
   CCard,
   CCardBody,
   CCardHeader,
@@ -16,7 +15,6 @@ import {
   CDropdownToggle,
   CTableHead,
   CTableHeaderCell,
-  CFormSwitch,
   CTableRow,
 } from '@coreui/react'
 import ModalComponent from 'src/components/ModalComponent/ModalComponent'

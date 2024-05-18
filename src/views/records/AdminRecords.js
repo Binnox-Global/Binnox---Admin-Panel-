@@ -2,7 +2,6 @@ import React from 'react'
 
 import {
   CAvatar,
-  CButtonGroup,
   CCard,
   CCardBody,
   CCardHeader,
@@ -11,7 +10,6 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-  CFormCheck,
   CRow,
   CTable,
   CTableBody,

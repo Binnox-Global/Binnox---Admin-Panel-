@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  ApprovedOrdersTransfer,
-  OrdersDelivered,
-  OrdersPickedUp,
-  RejectedOrdersTransfer,
-} from '../orders/Orders'
+import { ApprovedOrdersTransfer, OrdersDelivered, RejectedOrdersTransfer } from '../orders/Orders'
 
 function ArchiveRecords() {
   return (

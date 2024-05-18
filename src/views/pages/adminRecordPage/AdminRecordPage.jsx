@@ -11,7 +11,7 @@ import { useCookies } from 'react-cookie'
 import moment from 'moment'
 import DateRangePicker from 'src/components/DateRange/DateRangePicker'
 import './AdminRecordPage.scss'
-
+import PropTypes from 'prop-types'
 function AdminRecordPage() {
   const { adminDailyRecords } = useContext(AdminContext)
   // const [adminAccess, setAdminAccess] = useState(false)
@@ -483,7 +483,6 @@ function UserAnalysisComponent() {
     </div>
   )
 }
-
 
 ExpandableCardComponent.propTypes = {
   title: PropTypes.string.isRequired, // Required string prop

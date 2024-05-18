@@ -484,7 +484,6 @@ function UserAnalysisComponent() {
   )
 }
 
-
 ExpandableCardComponent.propTypes = {
   title: PropTypes.string.isRequired, // Required string prop
   children: PropTypes.node, // Optional prop that can be any type

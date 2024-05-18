@@ -1,10 +1,7 @@
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
-import React, { useContext, useState } from 'react'
-import ModalComponent from 'src/components/ModalComponent/ModalComponent'
+import React, { useContext } from 'react'
 // import RewordsForm from './RewordsForm'
 import { AdminContext } from 'src/context/adminContext'
-import axios from 'axios'
-import { toast } from 'react-toastify'
 
 function CustomerSuccessPage() {
   const { apiUrl } = useContext(AdminContext)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -134,7 +134,7 @@ const Login = () => {
               <CCard className="text-white bg-primary py-5  d-none d-md-block">
                 <CCardBody className="text-center">
                   <div>
-                    <img className="sidebar-brand-narrow" src={logoSm} width={80} />
+                    <img className="sidebar-brand-narrow" src={logoSm} width={80} alt="logo" />
                     <h2>
                       Binnox Admin <br /> Login
                     </h2>

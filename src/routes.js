@@ -1,8 +1,8 @@
 import React from 'react'
 import Orders, { OrdersGroupDelivered } from './views/orders/Orders'
-import { OrdersDelivered, OrdersPickedUp } from './views/orders/Orders'
+// import { OrdersDelivered, OrdersPickedUp } from './views/orders/Orders'
 import PaymentRequest from './views/records/PaymentRequest'
-import CreateDiscountCodePage from './views/discount/CreateDiscountCodePage'
+// import CreateDiscountCodePage from './views/discount/CreateDiscountCodePage'
 import discounts from './views/discount/discounts'
 import CartsRecord from './views/orders/Carts'
 import AmbassadorPage from './views/pages/ambassadorPage/AmbassadorPage'
@@ -66,7 +66,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const UserRecords = React.lazy(() => import('./views/records/UserRecords'))
 const AdminRecords = React.lazy(() => import('./views/records/AdminRecords'))
 const BusinessRecords = React.lazy(() => import('./views/records/BusinessRecords'))
-const Register = React.lazy(() => import('./views/pages/register/Register'))
+// const Register = React.lazy(() => import('./views/pages/register/Register'))
 const PaymentRequestHistory = React.lazy(() => import('./views/records/PaymentRequestHistory'))
 
 const routes = [

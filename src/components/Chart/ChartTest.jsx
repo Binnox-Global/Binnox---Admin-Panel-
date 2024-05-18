@@ -12,7 +12,6 @@ import {
 import { Line } from 'react-chartjs-2'
 import 'chartjs-adapter-moment' // Import the 'chartjs-adapter-moment'
 // import faker from 'faker'
-import { faker } from '@faker-js/faker'
 import { AdminContext } from 'src/context/adminContext'
 import moment from 'moment'
 import DateRangePicker from '../DateRange/DateRangePicker'
@@ -78,7 +77,7 @@ export function ChartTest() {
     labels: [],
     datasets: [],
   })
-  const { groupedOrderData, generalOrder } = useContext(AdminContext)
+  const { groupedOrderData } = useContext(AdminContext)
   // Function to filter data by date range
   function filterDataByDateRange(data, startDate, endDate) {
     // Convert start and end dates to Date objects

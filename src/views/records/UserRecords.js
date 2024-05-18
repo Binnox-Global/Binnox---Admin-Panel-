@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 import {
   CAvatar,
-  CButtonGroup,
   CCard,
   CCardBody,
   CCardHeader,
@@ -11,7 +10,6 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-  CFormCheck,
   CRow,
   CTable,
   CTableBody,
@@ -119,7 +117,7 @@ function UserRecords({ show_max }) {
                     {searchQuery
                       ? filteredData.map((item, index) => {
                           if (show_max != null && index > show_max) {
-                            return
+                            return <></>
                           }
                           return (
                             <CTableRow v-for="item in tableItems" key={index}>

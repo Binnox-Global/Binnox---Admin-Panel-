@@ -24,7 +24,7 @@ function RewordsForm() {
     e.preventDefault()
     // return console.dir(e.target)
 
-    const formElement = e.target
+    // const formElement = e.target
 
     // if (formElement[0].value === '') {
     //   return toast.info('Full name is Required')

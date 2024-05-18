@@ -16,6 +16,7 @@ import { faker } from '@faker-js/faker'
 import { AdminContext } from 'src/context/adminContext'
 import moment from 'moment'
 import DateRangePicker from '../DateRange/DateRangePicker'
+import ApexCharts from 'apexcharts'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
@@ -227,3 +228,20 @@ export function ChartTest() {
     </>
   )
 }
+
+
+export function PieChartComponent() {
+  return (
+    <div>
+      <div id="chart">
+        <ReactApexChart
+          options={this.state.options}
+          series={this.state.series}
+          type="pie"
+          width={380}
+        />
+      </div>
+      <div id="html-dist"></div>
+    </div>
+  )
+} 

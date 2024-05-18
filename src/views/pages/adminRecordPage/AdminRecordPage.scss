@@ -1,0 +1,70 @@
+.UserAnalysisComponent{
+  display: flex;
+  margin: 20px;
+  &>div{
+    // border: solid;
+    width: 100%;
+  }
+  .userInfoCard{
+    border: solid 2px #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    span{
+      background-color: blue;
+      color: #fff;
+      border-radius: 10px;
+      padding: 5px 10px;
+    }
+  }
+  .userRecordDetail{
+    // border: solid red;
+    padding: 12px;
+    .top-section{
+      .top-card-group{
+        display: flex;
+        justify-content: space-evenly;
+        gap: 3px;
+        .card{
+          padding: 5px 10px;
+          text-align: center;
+          b{
+            font-size: 13px;
+          }
+        }
+      }
+    }
+
+    .business-section{
+      display: flex;
+      flex-direction: column;
+      .business-list{
+      // border: solid green;
+display: flex;
+width: 100%;
+flex-wrap: wrap;
+// justify-content: s;
+gap: 10px;
+  .selected{
+          background: blue;
+          color: #fff;
+      }
+      .business-name-tab{
+        border: solid 2px #ddd;
+        padding: 5px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        &:hover{
+          background: rgb(114, 114, 206);
+          color: #fff;
+        }
+      }
+      .business-details{
+        width: 100%;
+      }
+    }
+    }
+  }
+}

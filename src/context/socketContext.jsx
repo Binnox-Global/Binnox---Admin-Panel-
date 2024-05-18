@@ -134,7 +134,7 @@ function SocketProvider({ children }) {
   useEffect(() => {
     if (!socket) return
     socket.on('admin_orderWithTransfer', (data) => {
-      // console.log('admin_orderWithTransfer', data)
+      console.log('admin_orderWithTransfer', data)
 
       if (data.pendingTransfer?.length) {
         triggerNotification({

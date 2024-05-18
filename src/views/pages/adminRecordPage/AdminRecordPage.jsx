@@ -363,13 +363,48 @@ function UserAnalysisComponent() {
     setGroupOrderByUser(groupOrder)
   }, [orderGroupList])
 
+  // const groupOrdersByBusiness = () => {
+  //   const selectedUserId = selectedUser._id
+  //   if (!selectedUserId) return {}
+
+  //   const userOrders = groupOrderByUser[selectedUserId].orders
+  //   const groupedOrders = {}
+
+  //   userOrders.forEach((order) => {
+  //     // Check if order.business is defined
+  //     if (!order.business) return // Skip this iteration if business is not defined
+
+  //     const businessId = order.business._id
+  //     if (!businessId) return // Skip this iteration if businessId is not defined
+
+  //     if (!groupedOrders[businessId]) {
+  //       groupedOrders[businessId] = {
+  //         business: order.business,
+  //         orders: [order],
+  //         totalAmount: order.total_amount,
+  //         orderDays: [new Date(order.createdAt).toLocaleDateString('en-US', { weekday: 'long' })],
+  //       }
+  //     } else {
+  //       groupedOrders[businessId].orders.push(order)
+  //       groupedOrders[businessId].totalAmount += order.total_amount
+  //       const orderDay = new Date(order.createdAt).toLocaleDateString('en-US', {
+  //         weekday: 'long',
+  //       })
+  //       if (!groupedOrders[businessId].orderDays.includes(orderDay)) {
+  //         groupedOrders[businessId].orderDays.push(orderDay)
+  //       }
+  //     }
+  //   })
+
+  //   return groupedOrders
+  // }
+
   const groupOrdersByBusiness = () => {
+    const groupedOrders = {}
     const selectedUserId = selectedUser._id
     if (!selectedUserId) return {}
 
     const userOrders = groupOrderByUser[selectedUserId].orders
-    const groupedOrders = {}
-
     userOrders.forEach((order) => {
       // Check if order.business is defined
       if (!order.business) return // Skip this iteration if business is not defined
@@ -380,31 +415,59 @@ function UserAnalysisComponent() {
       if (!groupedOrders[businessId]) {
         groupedOrders[businessId] = {
           business: order.business,
-          orders: [order],
+          totalOrders: 1,
           totalAmount: order.total_amount,
-          orderDays: [new Date(order.createdAt).toLocaleDateString('en-US', { weekday: 'long' })],
+          orders: [order],
+          productCounts: {},
+          daysOfWeek: {},
+          averageAmount: 0,
+          averageTime: 0,
         }
       } else {
-        groupedOrders[businessId].orders.push(order)
+        groupedOrders[businessId].totalOrders++
         groupedOrders[businessId].totalAmount += order.total_amount
-        const orderDay = new Date(order.createdAt).toLocaleDateString('en-US', {
-          weekday: 'long',
-        })
-        if (!groupedOrders[businessId].orderDays.includes(orderDay)) {
-          groupedOrders[businessId].orderDays.push(orderDay)
+        groupedOrders[businessId].orders.push(order)
+      }
+
+      // Extract product names and count occurrences
+      order?.items?.forEach((item) => {
+        if (!item.product) return
+        const productName = item.product.name
+        if (!groupedOrders[businessId].productCounts[productName]) {
+          groupedOrders[businessId].productCounts[productName] = 1
+        } else {
+          groupedOrders[businessId].productCounts[productName]++
         }
+      })
+
+      // Determine day of the week and count occurrences
+      const orderDate = new Date(order.createdAt)
+      const dayOfWeek = orderDate.toLocaleDateString('en-US', { weekday: 'long' })
+      if (!groupedOrders[businessId].daysOfWeek[dayOfWeek]) {
+        groupedOrders[businessId].daysOfWeek[dayOfWeek] = 1
+      } else {
+        groupedOrders[businessId].daysOfWeek[dayOfWeek]++
       }
     })
+
+    // Calculate average amount spent on each business
+    Object.values(groupedOrders).forEach((business) => {
+      business.averageAmount = business.totalAmount / business.totalOrders
+    })
+
+    // Calculate average time of the day the user placed orders on each business
+    // (This step requires more detailed time analysis and is not included here)
+    // You can use timestamps from order.createdAt and analyze the time of day.
 
     return groupedOrders
   }
 
   useEffect(() => {
     if (!selectedUser) return
-    console.log('UserAnalysisComponent', { selectedUser })
+    // console.log('UserAnalysisComponent', { selectedUser })
     const groupedOrdersByBusiness = groupOrdersByBusiness()
 
-    console.log('UserAnalysisComponent', { groupedOrdersByBusiness })
+    // console.log('UserAnalysisComponent', { groupedOrdersByBusiness })
     setGroupedOrdersByBusiness(groupedOrdersByBusiness)
   }, [selectedUser])
 
@@ -425,24 +488,32 @@ function UserAnalysisComponent() {
 
     return groupedOrders
   }
+
   return (
     <div className="UserAnalysisComponent">
-      <div>
+      {/* <div>
         {groupOrderByUser === null ? (
           <>Loading .....</>
         ) : (
           <>
-            {Object.values(groupOrderByUser).map((userOrders) => (
-              <div key={userOrders.user._id} onClick={() => setSelectedUser(userOrders.user)}>
-                <div className="userInfoCard">
-                  <h3>{userOrders.user.full_name}</h3>
-                  <span className="">{userOrders.orders.length}</span>
+            {/* {Object.values(groupOrderByUser)
+              .slice(1, 10)
+              .map((userOrders) => (
+                <div key={userOrders.user._id} onClick={() => setSelectedUser(userOrders.user)}>
+                  <div className="userInfoCard">
+                    <h3>{userOrders.user.full_name}</h3>
+                    <span className="">{userOrders.orders.length}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))} * /}
           </>
         )}
-      </div>
+      </div> */}
+      <UserAnalysisComponentPagination
+        groupOrderByUser={groupOrderByUser}
+        setSelectedUser={setSelectedUser}
+        setSelectedBusiness={setSelectedBusiness}
+      />
       <div>
         {selectedUser && (
           <div className="userRecordDetail">
@@ -491,9 +562,30 @@ function UserAnalysisComponent() {
                     <div className="business-details">
                       <hr />
                       <b>{selectedBusiness.business.business_name}</b>
-                      <p>Total Orders: {selectedBusiness.orders.length}</p>
+                      <p>Total Orders: {selectedBusiness.totalOrders}</p>
                       <p>Total Amount Spent: {selectedBusiness.totalAmount}</p>
-                      <p>Order Days: {selectedBusiness.orderDays.join(', ')}</p>
+                      <p>Average Amount Spent: {Math.floor(selectedBusiness.averageAmount)}</p>
+                      {/* <p>Order Days: {selectedBusiness.orderDays.join(', ')}</p> */}
+
+                      <p>Product Counts:</p>
+                      <ul>
+                        {Object.entries(selectedBusiness.productCounts).map(
+                          ([productName, count]) => (
+                            <li key={productName}>
+                              {productName}: {count}
+                            </li>
+                          ),
+                        )}
+                      </ul>
+
+                      <p>Days of Week Orders Placed:</p>
+                      <ul>
+                        {Object.entries(selectedBusiness.daysOfWeek).map(([day, count]) => (
+                          <li key={day}>
+                            {day}: {count}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                 </div>
@@ -502,6 +594,81 @@ function UserAnalysisComponent() {
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+function UserAnalysisComponentPagination({
+  groupOrderByUser,
+  setSelectedUser,
+  setSelectedBusiness,
+}) {
+  // const YourComponent = ({ groupOrderByUser }) => {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(10) // Change this to set the number of items per page
+
+  // Calculate the index of the first and last item of the current page
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+
+  // Slice the data array to display only the items for the current page
+  const currentItems = groupOrderByUser
+    ? Object.values(groupOrderByUser).slice(indexOfFirstItem, indexOfLastItem)
+    : []
+
+  // Calculate the total number of pages
+  const totalItems = Object.values(groupOrderByUser || {}).length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber)
+  }
+
+  return (
+    <div>
+      {groupOrderByUser === null ? (
+        <>Loading .....</>
+      ) : (
+        <>
+          {currentItems.map((userOrders) => (
+            <div
+              key={userOrders.user._id}
+              onClick={() => {
+                setSelectedBusiness(null)
+                setSelectedUser(userOrders.user)
+              }}
+            >
+              <div className="userInfoCard">
+                <h5>{userOrders.user.full_name}</h5>
+                <span className="">{userOrders.orders.length}</span>
+              </div>
+            </div>
+          ))}
+          <div className="mt-2 d-flex gap-3">
+            <button onClick={handlePrevPage} disabled={currentPage === 1}>
+              Prev
+            </button>
+            <span>
+              {currentPage} / {totalPages}
+            </span>
+            <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   )
 }

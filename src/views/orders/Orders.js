@@ -1515,7 +1515,7 @@ OrderGroupCardComponent.propTypes = {
     business: PropTypes.shape({
       business_cover_image: PropTypes.string,
       business_name: PropTypes.string,
-      business_number: PropTypes.number,
+      business_number: PropTypes.string,
       business_location: PropTypes.object,
       // ... other business properties
     }),
@@ -1565,7 +1565,7 @@ OrderTabComponent.propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         // Define the properties of each order object
-        status: PropTypes.string.isRequired,
+        status: PropTypes.string,
         // ... other properties
       }),
     ),

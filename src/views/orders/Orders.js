@@ -336,34 +336,34 @@ export function NewOrdersGroupTransfer() {
   return (
     <>
       {' '}
-      {newOrders?.length !== 0 && (
-        // {/* {false && ( */}
-        <CRow>
-          <CCol xs>
-            <CCard className="mb-4">
-              <CCardHeader>New Orders Group Transfer</CCardHeader>
-              <CCardBody>
-                {orderGroupTransferList.loading ? (
-                  <>loading...</>
-                ) : (
-                  <>
-                    {newOrders?.length <= 0 ? (
-                      <>No Order Transfer Currently</>
-                    ) : (
-                      <>
-                        {' '}
-                        {newOrders?.map((orders, i) => {
-                          return <OrderGroupCardComponent key={i} order={orders} transfer={true} />
-                        })}
-                      </>
-                    )}
-                  </>
-                )}
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CRow>
-      )}
+      {/* {newOrders?.length !== 0 && ( */}
+      {/* {false && ( */}
+      <CRow>
+        <CCol xs>
+          <CCard className="mb-4">
+            <CCardHeader>New Orders Group Transfer</CCardHeader>
+            <CCardBody>
+              {orderGroupTransferList.loading ? (
+                <>loading...</>
+              ) : (
+                <>
+                  {newOrders?.length <= 0 ? (
+                    <>No Order Transfer Currently</>
+                  ) : (
+                    <>
+                      {' '}
+                      {newOrders?.map((orders, i) => {
+                        return <OrderGroupCardComponent key={i} order={orders} transfer={true} />
+                      })}
+                    </>
+                  )}
+                </>
+              )}
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+      {/* )} */}
     </>
   )
 }

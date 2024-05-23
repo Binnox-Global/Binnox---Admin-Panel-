@@ -131,7 +131,7 @@ function SocketProvider({ children }) {
   useEffect(() => {
     if (!socket) return
     socket.on('admin_orderWithTransfer', (data) => {
-      // console.log('admin_orderWithTransfer', data)
+      console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
 
       if (data.pendingTransfer?.length) {
         triggerNotification({
@@ -139,6 +139,7 @@ function SocketProvider({ children }) {
           notificationHeader: data.pendingTransfer?.length + ' Order With Transfer',
         })
       }
+      console.log('admin_orderWithTransfer populate state')
       setOrderGroupTransferList((prevOrderGroupTransferList) => ({
         ...prevOrderGroupTransferList,
         loading: false,
@@ -148,6 +149,7 @@ function SocketProvider({ children }) {
           rejected: data.rejectedTransfer.reverse(),
         },
       }))
+      console.log('admin_orderWithTransfer populate state end')
     })
     // socket to get orders
     socket.on('admin_orders', (data) => {

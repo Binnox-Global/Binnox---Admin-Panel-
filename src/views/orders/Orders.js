@@ -330,8 +330,14 @@ export function NewOrdersGroupTransfer() {
     // let newOrdersList = []
     // console.log(orderGroupTransferList?.data)
     // console.log('orderGroupTransferList', orderGroupTransferList)
+    console.log('NewOrdersGroupTransfer  orderGroupTransferList', {
+      DATA_NEW: orderGroupTransferList?.data?.new,
+    })
     setNewOrders(orderGroupTransferList?.data?.new)
   }, [orderGroupTransferList])
+  useEffect(() => {
+    console.log('NewOrdersGroupTransfer  newOrders', { newOrders })
+  }, [newOrders])
 
   return (
     <>

@@ -132,6 +132,7 @@ function SocketProvider({ children }) {
     if (!socket) return
     socket.on('admin_orderWithTransfer', (data) => {
       console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
+      console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
 
       if (data.pendingTransfer?.length) {
         triggerNotification({
@@ -139,6 +140,7 @@ function SocketProvider({ children }) {
           notificationHeader: data.pendingTransfer?.length + ' Order With Transfer',
         })
       }
+      console.log('admin_orderWithTransfer populate state')
       console.log('admin_orderWithTransfer populate state')
       setOrderGroupTransferList((prevOrderGroupTransferList) => ({
         ...prevOrderGroupTransferList,

@@ -156,7 +156,7 @@ const Dashboard = () => {
       <Orders />
       <NewOrdersGroupTransfer />
       {/* <OldOrder /> */}
-      <NewOrdersTransfer />
+      {/* <NewOrdersTransfer /> */}
       <ActiveBusinessRecords show_max={5} />
       <UserRecords show_max={5} />
     </>

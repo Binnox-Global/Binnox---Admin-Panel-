@@ -9,14 +9,22 @@ import io from 'socket.io-client'
 export const SocketContext = createContext()
 
 function SocketProvider({ children }) {
-  const { token, setOrderList, setOrderGroupList, orderList, setOrderGroupTransferList } =
-    useContext(AdminContext)
+  const { token, setOrderList, setOrderGroupList, orderList } = useContext(AdminContext)
   const [testOrder, setTestOrder] = useState({
     loading: true,
     data: [],
   })
   const [socket, setSocket] = useState(null)
   const [cookies, removeCookie] = useCookies()
+
+  const [orderGroupTransferList, setOrderGroupTransferList] = React.useState({
+    loading: true,
+    data: {
+      new: [],
+      accepted: [],
+      rejected: [],
+    },
+  })
 
   const socketUrl = 'https://binnox-socket-c7299d8dfb25.herokuapp.com'
   // const socketUrl = 'http://localhost:1000'
@@ -189,6 +197,7 @@ function SocketProvider({ children }) {
     <SocketContext.Provider
       value={{
         socket,
+        orderGroupTransferList,
       }}
     >
       {children}

@@ -1074,7 +1074,9 @@ function OrderGroupTransferCardComponent({ order }) {
 
   const [showDropDown, setShowDropDown] = useState(false)
 
+  const [requestLoading, setRequestLoading] = useState(false)
   function updateOrderTransferGroupStatusFunction(status) {
+    setRequestLoading(true)
     // return console.log({ status })
     if (order?.transfer_approve || order.transfer_rejected) {
       if (order?.transfer_approve) {
@@ -1093,9 +1095,11 @@ function OrderGroupTransferCardComponent({ order }) {
       (callback) => {
         console.log('Received data:', { data: callback })
         if (callback.ok === true) {
+          setRequestLoading(false)
           toast.success(`Order ${status}ed successfully`)
         } else {
           toast.error('Error occurred')
+          setRequestLoading(false)
         }
         // setOrderList({ loading: false, data: callback.data?.reverse() })
       },
@@ -1132,7 +1136,9 @@ function OrderGroupTransferCardComponent({ order }) {
         <div>
           {' '}
           <CDropdown variant="btn-group">
-            <CDropdownToggle color="primary">Actions</CDropdownToggle>
+            <CDropdownToggle color="primary">
+              {requestLoading === false ? 'Actions' : 'Sending...'}
+            </CDropdownToggle>
             <CDropdownMenu>
               <CDropdownItem onClick={() => updateOrderTransferGroupStatusFunction('approve')}>
                 Approve

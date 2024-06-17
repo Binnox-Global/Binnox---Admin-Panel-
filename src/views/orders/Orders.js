@@ -329,6 +329,7 @@ export function NewOrdersGroupTransfer() {
   const [newOrders, setNewOrders] = useState([])
 
   useEffect(() => {
+    console.log({ NewOrder: orderGroupTransferList?.data?.new })
     setNewOrders(orderGroupTransferList?.data?.new)
   }, [orderGroupTransferList])
 

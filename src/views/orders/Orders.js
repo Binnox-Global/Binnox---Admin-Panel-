@@ -1750,6 +1750,56 @@ OrderGroupCardComponent.propTypes = {
   transfer: PropTypes.bool,
 }
 
+OrderGroupTransferCardComponent.propTypes = {
+  order: PropTypes.shape({
+    user: PropTypes.shape({
+      full_name: PropTypes.string,
+      email: PropTypes.string,
+      phone_number: PropTypes.number,
+      // ... other user properties
+    }),
+    discount: PropTypes.shape({
+      type: PropTypes.string,
+      discount: PropTypes.number,
+      // Add more nested properties if necessary
+    }),
+    pay_with_reword_point: PropTypes.shape({
+      value: PropTypes.number,
+      // Add more nested properties if necessary
+    }),
+    business: PropTypes.shape({
+      business_cover_image: PropTypes.string,
+      business_name: PropTypes.string,
+      business_number: PropTypes.string,
+      business_location: PropTypes.object,
+      // ... other business properties
+    }),
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        // Define the structure of each item in the 'items' array
+        // For example:
+        id: PropTypes.string,
+        name: PropTypes.string,
+        count: PropTypes.number,
+        // ... other properties of an item
+      }),
+    ),
+    note: PropTypes.string,
+    address: PropTypes.string,
+    sub_total: PropTypes.number,
+    total_amount: PropTypes.number,
+    service_fee: PropTypes.number,
+    delivery_fee: PropTypes.number,
+    createdAt: PropTypes.string,
+    _id: PropTypes.string,
+    statues: PropTypes.string,
+    transfer_approve: PropTypes.bool,
+    transfer_rejected: PropTypes.bool,
+    // ... other order properties
+  }).isRequired,
+  transfer: PropTypes.bool,
+}
+
 Orders.propTypes = {
   orderGroupList: PropTypes.shape({
     loading: PropTypes.bool.isRequired,

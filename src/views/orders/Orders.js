@@ -322,22 +322,15 @@ export function NewOrdersTransfer() {
 }
 
 export function NewOrdersGroupTransfer() {
+  // const { orderGroupTransferList, updateOrderTransferStatusFunction } =
+  //   React.useContext(AdminContext)
   const { orderGroupTransferList, updateOrderTransferStatusFunction } =
-    React.useContext(AdminContext)
+    React.useContext(SocketContext)
   const [newOrders, setNewOrders] = useState([])
 
   useEffect(() => {
-    // let newOrdersList = []
-    // console.log(orderGroupTransferList?.data)
-    // console.log('orderGroupTransferList', orderGroupTransferList)
-    console.log('NewOrdersGroupTransfer  orderGroupTransferList', {
-      DATA_NEW: orderGroupTransferList?.data?.new,
-    })
     setNewOrders(orderGroupTransferList?.data?.new)
   }, [orderGroupTransferList])
-  useEffect(() => {
-    console.log('NewOrdersGroupTransfer  newOrders', { newOrders })
-  }, [newOrders])
 
   return (
     <>
@@ -359,7 +352,11 @@ export function NewOrdersGroupTransfer() {
                     <>
                       {' '}
                       {newOrders?.map((orders, i) => {
-                        return <OrderGroupCardComponent key={i} order={orders} transfer={true} />
+                        return (
+                          <React.Fragment key={i}>
+                            <OrderGroupTransferCardComponent order={orders} />
+                          </React.Fragment>
+                        )
                       })}
                     </>
                   )}
@@ -1064,6 +1061,208 @@ function OrderGroupCardComponent({ order, transfer }) {
                 </CDropdownMenu>
               </CDropdown>
             )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function OrderGroupTransferCardComponent({ order }) {
+  const { socket } = useContext(SocketContext)
+
+  const [showDropDown, setShowDropDown] = useState(false)
+
+  function updateOrderTransferGroupStatusFunction(status) {
+    // return console.log({ status })
+    if (order?.transfer_approve || order.transfer_rejected) {
+      if (order?.transfer_approve) {
+        return toast.error('This Order has been Accepted')
+      } else if (order.transfer_rejected) {
+        return toast.error('This Order has been Rejected')
+      }
+    }
+
+    socket.emit(
+      'admin_orderWithTransferAction',
+      {
+        group_transfer_id: order._id,
+        status,
+      },
+      (callback) => {
+        console.log('Received data:', { data: callback })
+        if (callback.ok === true) {
+          toast.success(`Order ${status}ed successfully`)
+        } else {
+          toast.error('Error occurred')
+        }
+        // setOrderList({ loading: false, data: callback.data?.reverse() })
+      },
+    )
+
+    // updateOrderGroupTransferStatusFunction(order._id, status)
+  }
+  return (
+    <div className="OrderGroupCardComponent">
+      <div className="head">
+        <div className="d-flex gap-3" onClick={() => setShowDropDown(!showDropDown)}>
+          <CAvatar
+            size="md"
+            // src={item?.user?.user_avatar}
+            src="https://via.placeholder.com/600x400?text=Image"
+            status={'success'}
+            className="d-none d-md-block"
+          />
+          <div className="user-name">
+            {order?.user?.full_name}
+            <br />
+            <b>Contact:</b> {order?.user?.phone_number}
+            <br />
+            <b>Business: </b>
+            {order?.business?.business_name}
+          </div>
+        </div>
+        {order.statues === 'Delivered' || order.statues === 'Completed' ? (
+          moment(order?.createdAt).format('MMM Do YY, h:mm a')
+        ) : (
+          <CountdownTimer createdAt={order?.createdAt} />
+        )}
+
+        <div>
+          {' '}
+          <CDropdown variant="btn-group">
+            <CDropdownToggle color="primary">Actions</CDropdownToggle>
+            <CDropdownMenu>
+              <CDropdownItem onClick={() => updateOrderTransferGroupStatusFunction('approve')}>
+                Approve
+              </CDropdownItem>
+              <CDropdownItem onClick={() => updateOrderTransferGroupStatusFunction('reject')}>
+                Reject
+              </CDropdownItem>
+            </CDropdownMenu>
+          </CDropdown>
+        </div>
+        <div className="flot-container">
+          {order?.pay_with_reword_point?.value ? (
+            <div className="reword-tag">{<>₦{order?.pay_with_reword_point?.value}</>}</div>
+          ) : (
+            ''
+          )}
+          {order.discount ? (
+            <div className="discount-tag">
+              {order.discount.type == 'percent' && <>{order.discount.discount}%</>}
+              {order.discount.type == 'rate' && <>₦{order.discount.discount}</>}
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
+      </div>
+      <div
+        className="dropdown"
+        style={
+          showDropDown
+            ? { display: 'inline-flex' }
+            : {
+                display: 'none',
+              }
+        }
+      >
+        <div className="business-head flex-wrap">
+          <div className="d-flex gap-3">
+            {/* <div className="user-name"> */}
+            <img
+              src={
+                order?.business?.business_cover_image ||
+                'https://via.placeholder.com/600x400?text=Image'
+              }
+            />
+            <div>
+              {order?.business?.business_name}
+              <br />
+              <b>Contact:</b> {order?.business?.business_number}
+            </div>
+            {/* </div> */}
+          </div>
+
+          <div className="user-name">
+            {' '}
+            {order?.business?.business_location?.lat ||
+            order?.business?.business_location?.long ||
+            order?.business?.business_location?.lat !== '' ||
+            order?.business?.business_location?.long !== '' ? (
+              <LocationDropdown
+                location={`https://www.google.com/maps/search/?api=1&query=${order?.business?.business_location?.lat},${order?.business?.business_location?.long}`}
+              />
+            ) : (
+              'Location not valid'
+            )}
+          </div>
+        </div>
+        <hr />
+        <div className="d-flex  justify-content-between flex-wrap">
+          <p>
+            <b>Ordered: </b>
+            {moment(order?.createdAt).format('MMM Do YY, h:mm a')}
+          </p>
+          {order.statues === 'Delivered' || order.statues === 'Completed' ? (
+            order.statues
+          ) : (
+            <CountdownTimer createdAt={order?.createdAt} />
+          )}
+        </div>
+        <div className="product-body">
+          {order?.items.map((item, i) => {
+            // totalPrice += item.product.prices
+            return (
+              <div className="item m-1" key={i}>
+                <div className="d-flex align-items-center justify-content-center gap-2 ">
+                  <img src={item?.product?.image_url} />
+                  {item?.product?.name} x{item?.count}
+                </div>
+                {item?.product?.prices * item?.count}
+              </div>
+            )
+          })}
+          <hr />
+          <b>Message:</b>
+          {order?.note || 'No message'}
+          <hr />
+          <div className="d-flex justify-content-between">
+            <div>
+              {' '}
+              <p>
+                <b>Service Fee:</b> {order?.service_fee}
+              </p>
+              <p>
+                <b>Delivery Fee:</b> {order?.delivery_fee}
+              </p>
+            </div>
+            <div>
+              <p>
+                <b>Sub Total Fee: </b> {order?.sub_total}
+              </p>
+              <p>
+                <b>Total Fee: </b> {order?.total_amount}
+              </p>
+            </div>
+          </div>
+
+          <div className="d-flex  ">
+            <p>
+              <b>Status: </b>
+              {order?.statues}
+            </p>
+            <div className="ms-auto">
+              {!order.transfer_approve & !order.transfer_rejected ? (
+                'Not Attended to'
+              ) : (
+                <>
+                  {order.transfer_approve ? 'Approved' : null}
+                  {order.transfer_rejected ? 'Rejected' : null}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -142,12 +142,6 @@ function SocketProvider({ children }) {
       console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
       console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
 
-      if (data.pendingTransfer?.length) {
-        triggerNotification({
-          notificationMessage: `They are (${data.pendingTransfer?.length}) unattended order with transfer`,
-          notificationHeader: data.pendingTransfer?.length + ' Order With Transfer',
-        })
-      }
       console.log('admin_orderWithTransfer populate state')
       console.log('admin_orderWithTransfer populate state')
       setOrderGroupTransferList((prevOrderGroupTransferList) => ({
@@ -160,6 +154,13 @@ function SocketProvider({ children }) {
         },
       }))
       console.log('admin_orderWithTransfer populate state end')
+
+      if (data.pendingTransfer?.length) {
+        triggerNotification({
+          notificationMessage: `They are (${data.pendingTransfer?.length}) unattended order with transfer`,
+          notificationHeader: data.pendingTransfer?.length + ' Order With Transfer',
+        })
+      }
     })
     // socket to get orders
     socket.on('admin_orders', (data) => {

@@ -1078,6 +1078,10 @@ function OrderGroupTransferCardComponent({ order }) {
   function updateOrderTransferGroupStatusFunction(status) {
     setRequestLoading(true)
     // return console.log({ status })
+
+    if (!confirm(`are you sure you want to ${status} this order?`)) {
+      return toast.info('Action Canalled')
+    }
     if (order?.transfer_approve || order.transfer_rejected) {
       if (order?.transfer_approve) {
         return toast.error('This Order has been Accepted')

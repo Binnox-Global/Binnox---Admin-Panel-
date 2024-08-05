@@ -328,9 +328,6 @@ function UserAnalysisComponent() {
   const { orderGroupList } = useContext(AdminContext)
 
   const [groupOrderByUser, setGroupOrderByUser] = useState(null)
-  const [groupedOrdersByBusiness, setGroupedOrdersByBusiness] = useState(null)
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [selectedBusiness, setSelectedBusiness] = useState(null)
 
   useEffect(() => {
     if (orderGroupList.loading) return
@@ -340,6 +337,50 @@ function UserAnalysisComponent() {
     // console.log('UserAnalysisComponent', { groupOrder })
     setGroupOrderByUser(groupOrder)
   }, [orderGroupList])
+
+  const groupOrdersByUser = (orders) => {
+    const groupedOrders = {}
+
+    orders.forEach((order) => {
+      const userId = order.user._id
+      if (!groupedOrders[userId]) {
+        groupedOrders[userId] = {
+          user: order.user,
+          orders: [order],
+        }
+      } else {
+        groupedOrders[userId].orders.push(order)
+      }
+    })
+
+    return groupedOrders
+  }
+  return (
+    <div className="UserAnalysisComponent">
+      <div>
+        {groupOrderByUser === null ? (
+          <>Loading .....</>
+        ) : (
+          <>
+            {console.log({ groupOrderByUser })}
+            {Object.values(groupOrderByUser).map((userOrders) => (
+              <UserAnalysisDropdownComponent
+                userOrders={userOrders}
+                groupOrderByUser={groupOrderByUser}
+              />
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
+  const [groupedOrdersByBusiness, setGroupedOrdersByBusiness] = useState(null)
+
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [selectedBusiness, setSelectedBusiness] = useState(null)
 
   const groupOrdersByBusiness = () => {
     const selectedUserId = selectedUser._id
@@ -385,73 +426,38 @@ function UserAnalysisComponent() {
     console.log('UserAnalysisComponent', { groupedOrdersByBusiness })
     setGroupedOrdersByBusiness(groupedOrdersByBusiness)
   }, [selectedUser])
-
-  const groupOrdersByUser = (orders) => {
-    const groupedOrders = {}
-
-    orders.forEach((order) => {
-      const userId = order.user._id
-      if (!groupedOrders[userId]) {
-        groupedOrders[userId] = {
-          user: order.user,
-          orders: [order],
-        }
-      } else {
-        groupedOrders[userId].orders.push(order)
-      }
-    })
-
-    return groupedOrders
-  }
+  const [showDetails, setShowDetails] = useState(false)
   return (
-    <div className="UserAnalysisComponent">
-      <div>
-        {groupOrderByUser === null ? (
-          <>Loading .....</>
-        ) : (
-          <>
-            {Object.values(groupOrderByUser).map((userOrders) => (
-              <div key={userOrders.user._id} onClick={() => setSelectedUser(userOrders.user)}>
-                <div className="userInfoCard">
-                  <h3>{userOrders.user.full_name}</h3>
-                  <span className="">{userOrders.orders.length}</span>
-                </div>
-              </div>
-            ))}
-          </>
-        )}
+    <>
+      <div key={userOrders.user._id} onClick={() => setSelectedUser(userOrders.user)}>
+        <div className="userInfoCard">
+          <h3>{userOrders.user.full_name}</h3>
+          <span className="badge bg-primary">{userOrders.orders.length}</span>
+        </div>
       </div>
+      {/* ----------------------------------------------------------------------------------------------- */}
       <div>
         {selectedUser && (
           <div className="userRecordDetail">
             <div className="top-section">
-              <h2> {selectedUser.full_name}</h2>
-
-              <div className="top-card-group">
-                <div className="card">
-                  <b>Total Order</b>
-                  10
-                </div>
-                <div className="card">
-                  <b>Total used restaurant</b>
-                  10
-                </div>
-                <div className="card">
-                  <b>Total Amount Spent</b>
-                  10
-                </div>
-              </div>
+              {selectedUser && (
+                <button className="close-button" onClick={() => setSelectedUser(null)}>
+                  X
+                </button>
+              )}
             </div>
             <h2>Orders by Business</h2>
             <div className="business-section">
               {groupedOrdersByBusiness && (
                 <div className="business-list">
-                  <div
-                    className="business-name-tab bg-danger text-white"
-                    onClick={() => setSelectedBusiness(null)}
-                  >
-                    X
-                  </div>
+                  {selectedBusiness && (
+                    <button
+                      className="business-name-tab bg-danger text-white"
+                      onClick={() => setSelectedBusiness(null)}
+                    >
+                      X
+                    </button>
+                  )}
                   {Object.values(groupedOrdersByBusiness).map((businessOrders) => (
                     <div
                       className={`business-name-tab ${
@@ -467,6 +473,7 @@ function UserAnalysisComponent() {
                   ))}
                   {selectedBusiness && (
                     <div className="business-details">
+                      {console.log('selectedBusiness.orders', selectedBusiness.orders)}
                       <hr />
                       <b>{selectedBusiness.business.business_name}</b>
                       <p>Total Orders: {selectedBusiness.orders.length}</p>
@@ -480,9 +487,11 @@ function UserAnalysisComponent() {
           </div>
         )}
       </div>
-    </div>
+    </>
   )
 }
+
+
 
 ExpandableCardComponent.propTypes = {
   title: PropTypes.string.isRequired, // Required string prop

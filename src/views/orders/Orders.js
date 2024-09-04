@@ -803,9 +803,9 @@ function OrderGroupCardComponent({ order, transfer }) {
   const { updateOrderGroupTransferStatusFunction, updateOrderGroupStatusFunction } =
     useContext(AdminContext)
   const [showDropDown, setShowDropDown] = useState(false)
-  useEffect(() => {
-    // console.log('OrderGroupCardComponent', order)
-  }, [order])
+  // useEffect(() => {
+  //   if (order.statues == 'Pending') console.log('OrderGroupCardComponent', order.packages)
+  // }, [order])
   // function updateGroupOrderStatusFunction() {}
   function updateOrderTransferGroupStatusFunction(status) {
     if (order?.transfer_approve || order.transfer_rejected) {
@@ -977,18 +977,44 @@ function OrderGroupCardComponent({ order, transfer }) {
           )}
         </div>
         <div className="product-body">
-          {order?.items.map((item, i) => {
-            // totalPrice += item.product.prices
-            return (
-              <div className="item m-1" key={i}>
-                <div className="d-flex align-items-center justify-content-center gap-2 ">
-                  <img src={item?.product?.image_url} />
-                  {item?.product?.name} x{item?.count}
+          {
+            order?.items.map((item, i) => {
+              // totalPrice += item.product.prices
+              return (
+                <div className="item m-1" key={i}>
+                  <div className="d-flex align-items-center justify-content-center gap-2 ">
+                    <img src={item?.product?.image_url} />
+                    {item?.name || item?.product?.name} x{item?.count}
+                  </div>
+                  {item?.prices || item?.product?.name * item?.count}
                 </div>
-                {item?.product?.prices * item?.count}
-              </div>
-            )
-          })}
+              )
+            })
+          }
+          {
+            /* {console.log(order.packages)} */
+          }
+          {
+            order.packages?.map((orderPackage, index) => {
+              return (
+                <>
+                  <b>Pack{index + 1}</b>
+                  {orderPackage?.map((item, i) => {
+                    // totalPrice += item.product.prices
+                    return (
+                      <div className="item m-1" key={i}>
+                        <div className="d-flex align-items-center justify-content-center gap-2 ">
+                          <img src={item?.product?.image_url} />
+                          {item?.name} x{item?.count}
+                        </div>
+                        {item?.prices * item?.count}
+                      </div>
+                    )
+                  })}
+                </>
+              )
+            })
+          }
           <hr />
           <b>Message:</b>
           {order?.note || 'No message'}
@@ -1234,6 +1260,25 @@ function OrderGroupTransferCardComponent({ order }) {
                 </div>
                 {item?.product?.prices * item?.count}
               </div>
+            )
+          })}
+          {order.packages?.map((orderPackage, index) => {
+            return (
+              <>
+                <b>Pack{index + 1}</b>
+                {orderPackage?.map((item, i) => {
+                  // totalPrice += item.product.prices
+                  return (
+                    <div className="item m-1" key={i}>
+                      <div className="d-flex align-items-center justify-content-center gap-2 ">
+                        <img src={item?.product?.image_url} />
+                        {item?.name} x{item?.count}
+                      </div>
+                      {item?.prices * item?.count}
+                    </div>
+                  )
+                })}
+              </>
             )
           })}
           <hr />

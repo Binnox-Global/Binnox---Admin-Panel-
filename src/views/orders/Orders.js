@@ -1785,6 +1785,18 @@ OrderGroupCardComponent.propTypes = {
         // ... other properties of an item
       }),
     ),
+    packages: PropTypes.arrayOf(
+      PropTypes.shape({
+        // Define the structure of each item in the 'items' array
+        // For example:
+        id: PropTypes.string,
+        name: PropTypes.string,
+        count: PropTypes.number,
+        prices: PropTypes.number,
+
+        // ... other properties of an item
+      }),
+    ),
     note: PropTypes.string,
     address: PropTypes.string,
     sub_total: PropTypes.number,

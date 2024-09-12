@@ -1785,18 +1785,7 @@ OrderGroupCardComponent.propTypes = {
         // ... other properties of an item
       }),
     ),
-    packages: PropTypes.arrayOf(
-      PropTypes.arrayOf(
-        PropTypes.shape({
-          product: PropTypes.shape({
-            image_url: PropTypes.string,
-            prices: PropTypes.number,
-          }),
-          name: PropTypes.string,
-          count: PropTypes.number,
-        }),
-      ),
-    ),
+    packages: PropTypes.any.isRequired,
     note: PropTypes.string,
     address: PropTypes.string,
     sub_total: PropTypes.number,

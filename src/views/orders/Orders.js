@@ -1785,7 +1785,18 @@ OrderGroupCardComponent.propTypes = {
         // ... other properties of an item
       }),
     ),
-    packages: PropTypes.any.isRequired,
+    packages: PropTypes.arrayOf(
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          product: PropTypes.shape({
+            image_url: PropTypes.string,
+            prices: PropTypes.number,
+          }),
+          name: PropTypes.string,
+          count: PropTypes.number,
+        }),
+      ),
+    ),
     note: PropTypes.string,
     address: PropTypes.string,
     sub_total: PropTypes.number,
@@ -1835,6 +1846,18 @@ OrderGroupTransferCardComponent.propTypes = {
         count: PropTypes.number,
         // ... other properties of an item
       }),
+    ),
+    packages: PropTypes.arrayOf(
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          product: PropTypes.shape({
+            image_url: PropTypes.string,
+            prices: PropTypes.number,
+          }),
+          name: PropTypes.string,
+          count: PropTypes.number,
+        }),
+      ),
     ),
     note: PropTypes.string,
     address: PropTypes.string,

@@ -977,44 +977,38 @@ function OrderGroupCardComponent({ order, transfer }) {
           )}
         </div>
         <div className="product-body">
-          {
-            order?.items.map((item, i) => {
-              // totalPrice += item.product.prices
-              return (
-                <div className="item m-1" key={i}>
-                  <div className="d-flex align-items-center justify-content-center gap-2 ">
-                    <img src={item?.product?.image_url} />
-                    {item?.name || item?.product?.name} x{item?.count}
-                  </div>
-                  {item?.prices || item?.product?.name * item?.count}
+          {order?.items.map((item, i) => {
+            // totalPrice += item.product.prices
+            return (
+              <div className="item m-1" key={i}>
+                <div className="d-flex align-items-center justify-content-center gap-2 ">
+                  <img src={item?.product?.image_url} />
+                  {item?.name || item?.product?.name} x{item?.count}
                 </div>
-              )
-            })
-          }
-          {
-            /* {console.log(order.packages)} */
-          }
-          {
-            order.packages?.map((orderPackage, index) => {
-              return (
-                <>
-                  <b>Pack{index + 1}</b>
-                  {orderPackage?.map((item, i) => {
-                    // totalPrice += item.product.prices
-                    return (
-                      <div className="item m-1" key={i}>
-                        <div className="d-flex align-items-center justify-content-center gap-2 ">
-                          <img src={item?.product?.image_url} />
-                          {item?.name} x{item?.count}
-                        </div>
-                        {item?.prices * item?.count}
+                {item?.prices || item?.product?.name * item?.count}
+              </div>
+            )
+          })}
+          {/* {console.log(order.packages)} */}
+          {order.packages?.map((orderPackage, index) => {
+            return (
+              <>
+                <b>Pack{index + 1}</b>
+                {orderPackage?.map((item, i) => {
+                  // totalPrice += item.product.prices
+                  return (
+                    <div className="item m-1" key={i}>
+                      <div className="d-flex align-items-center justify-content-center gap-2 ">
+                        <img src={item?.product?.image_url} />
+                        {item?.name} x{item?.count}
                       </div>
-                    )
-                  })}
-                </>
-              )
-            })
-          }
+                      {item?.prices * item?.count}
+                    </div>
+                  )
+                })}
+              </>
+            )
+          })}
           <hr />
           <b>Message:</b>
           {order?.note || 'No message'}

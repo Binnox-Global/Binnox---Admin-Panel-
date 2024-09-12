@@ -363,10 +363,11 @@ function UserAnalysisComponent() {
         ) : (
           <>
             {console.log({ groupOrderByUser })}
-            {Object.values(groupOrderByUser).map((userOrders) => (
+            {Object.values(groupOrderByUser).map((userOrders, key) => (
               <UserAnalysisDropdownComponent
                 userOrders={userOrders}
                 groupOrderByUser={groupOrderByUser}
+                key={key}
               />
             ))}
           </>
@@ -517,8 +518,8 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
                       <p>Order Days: {selectedBusiness.orderDays.join(', ')}</p>
                       <b>Food Ordered</b>
                       {groupSelectedBusinessOrderedFood &&
-                        Object.values(groupSelectedBusinessOrderedFood)?.map((orderFood) => (
-                          <div>
+                        Object.values(groupSelectedBusinessOrderedFood)?.map((orderFood, index) => (
+                          <div key={index}>
                             {orderFood?.name} ({orderFood?.count})
                           </div>
                         ))}
@@ -534,9 +535,30 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
   )
 }
 
-
-
 ExpandableCardComponent.propTypes = {
   title: PropTypes.string.isRequired, // Required string prop
   children: PropTypes.node, // Optional prop that can be any type
+}
+
+UserAnalysisDropdownComponent.propTypes = {
+  userOrders: PropTypes.shape({
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
+    orders: PropTypes.arrayOf(
+      PropTypes.shape({
+        // order shape
+      }),
+    ),
+  }),
+  groupOrderByUser: PropTypes.arrayOf(
+    PropTypes.shape({
+      orders: PropTypes.arrayOf(
+        PropTypes.shape({
+          // order shape
+        }),
+      ),
+    }),
+  ),
 }

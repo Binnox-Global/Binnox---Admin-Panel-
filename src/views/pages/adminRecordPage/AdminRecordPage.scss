@@ -1,0 +1,48 @@
+.UserAnalysisComponent{
+  border: solid red 1px;
+  // display: flex;
+  .userInfoCard{
+    border: solid 1px ;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // width: 300px;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+  .close-button{
+    background-color: rgb(255, 74, 74);
+    width: 30px;
+    padding: 0;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+  }
+
+  .business-section{
+    .business-list{
+      border: red solid 1px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    
+    .business-name-tab{
+      border: rgb(54, 54, 54) solid 1px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 5px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    .business-details{
+      // display: ;
+      width: 100%;
+    }
+  }
+  }
+}

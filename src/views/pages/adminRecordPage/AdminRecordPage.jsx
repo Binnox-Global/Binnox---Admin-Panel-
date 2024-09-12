@@ -378,6 +378,7 @@ function UserAnalysisComponent() {
 
 function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
   const [groupedOrdersByBusiness, setGroupedOrdersByBusiness] = useState(null)
+  const [groupSelectedBusinessOrderedFood, setGroupSelectedBusinessOrderedFood] = useState(null)
 
   const [selectedUser, setSelectedUser] = useState(null)
   const [selectedBusiness, setSelectedBusiness] = useState(null)
@@ -418,6 +419,27 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
     return groupedOrders
   }
 
+  const groupSelectedBusinessOrderedFoodFunction = () => {
+    const items = {}
+
+    selectedBusiness?.orders?.forEach((order) => {
+      order.items.forEach((item) => {
+        const itemId = item.product._id
+        if (!items[itemId]) {
+          items[itemId] = {
+            name: item.product.name,
+            price: item.product.prices,
+            count: 1,
+          }
+        } else {
+          items[itemId].count++
+        }
+      })
+    })
+
+    return items
+  }
+
   useEffect(() => {
     if (!selectedUser) return
     console.log('UserAnalysisComponent', { selectedUser })
@@ -426,7 +448,15 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
     console.log('UserAnalysisComponent', { groupedOrdersByBusiness })
     setGroupedOrdersByBusiness(groupedOrdersByBusiness)
   }, [selectedUser])
-  const [showDetails, setShowDetails] = useState(false)
+
+  useEffect(() => {
+    if (!selectedBusiness) return
+    const groupedFood = groupSelectedBusinessOrderedFoodFunction()
+    if (!groupedFood) return
+    setGroupSelectedBusinessOrderedFood(groupedFood)
+
+    // console.log({ groupSelectedBusinessOrderedFood })
+  }, [selectedBusiness])
   return (
     <>
       <div key={userOrders.user._id} onClick={() => setSelectedUser(userOrders.user)}>
@@ -453,7 +483,10 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
                   {selectedBusiness && (
                     <button
                       className="business-name-tab bg-danger text-white"
-                      onClick={() => setSelectedBusiness(null)}
+                      onClick={() => {
+                        setSelectedBusiness(null)
+                        setGroupSelectedBusinessOrderedFood(null)
+                      }}
                     >
                       X
                     </button>
@@ -473,12 +506,22 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
                   ))}
                   {selectedBusiness && (
                     <div className="business-details">
-                      {console.log('selectedBusiness.orders', selectedBusiness.orders)}
+                      {console.log(
+                        'groupSelectedBusinessOrderedFood',
+                        groupSelectedBusinessOrderedFood,
+                      )}
                       <hr />
                       <b>{selectedBusiness.business.business_name}</b>
                       <p>Total Orders: {selectedBusiness.orders.length}</p>
                       <p>Total Amount Spent: {selectedBusiness.totalAmount}</p>
                       <p>Order Days: {selectedBusiness.orderDays.join(', ')}</p>
+                      <b>Food Ordered</b>
+                      {groupSelectedBusinessOrderedFood &&
+                        Object.values(groupSelectedBusinessOrderedFood)?.map((orderFood) => (
+                          <div>
+                            {orderFood?.name} ({orderFood?.count})
+                          </div>
+                        ))}
                     </div>
                   )}
                 </div>

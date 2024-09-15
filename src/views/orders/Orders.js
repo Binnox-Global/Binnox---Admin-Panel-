@@ -977,7 +977,7 @@ function OrderGroupCardComponent({ order, transfer }) {
           )}
         </div>
         <div className="product-body">
-          {order?.items.map((item, i) => {
+          {order?.items?.map((item, i) => {
             // totalPrice += item.product.prices
             return (
               <div className="item m-1" key={i}>
@@ -990,7 +990,7 @@ function OrderGroupCardComponent({ order, transfer }) {
             )
           })}
           {/* {console.log(order.packages)} */}
-          {order.packages?.map((orderPackage, index) => {
+          {order?.packages?.map((orderPackage, index) => {
             return (
               <>
                 <b>Pack{index + 1}</b>

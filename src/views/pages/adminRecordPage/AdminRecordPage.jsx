@@ -342,10 +342,10 @@ function UserAnalysisComponent() {
     const groupedOrders = {}
 
     orders.forEach((order) => {
-      const userId = order.user._id
+      const userId = order?.user?._id
       if (!groupedOrders[userId]) {
         groupedOrders[userId] = {
-          user: order.user,
+          user: order?.user,
           orders: [order],
         }
       } else {
@@ -400,19 +400,19 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
 
       if (!groupedOrders[businessId]) {
         groupedOrders[businessId] = {
-          business: order.business,
+          business: order?.business,
           orders: [order],
-          totalAmount: order.total_amount,
-          orderDays: [new Date(order.createdAt).toLocaleDateString('en-US', { weekday: 'long' })],
+          totalAmount: order?.total_amount,
+          orderDays: [new Date(order?.createdAt).toLocaleDateString('en-US', { weekday: 'long' })],
         }
       } else {
         groupedOrders[businessId].orders.push(order)
-        groupedOrders[businessId].totalAmount += order.total_amount
-        const orderDay = new Date(order.createdAt).toLocaleDateString('en-US', {
+        groupedOrders[businessId].totalAmount += order?.total_amount
+        const orderDay = new Date(order?.createdAt).toLocaleDateString('en-US', {
           weekday: 'long',
         })
-        if (!groupedOrders[businessId].orderDays.includes(orderDay)) {
-          groupedOrders[businessId].orderDays.push(orderDay)
+        if (!groupedOrders[businessId].orderDays?.includes(orderDay)) {
+          groupedOrders[businessId].orderDays?.push(orderDay)
         }
       }
     })
@@ -425,11 +425,11 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
 
     selectedBusiness?.orders?.forEach((order) => {
       order.items.forEach((item) => {
-        const itemId = item.product._id
+        const itemId = item?.product?._id
         if (!items[itemId]) {
           items[itemId] = {
-            name: item.product.name,
-            price: item.product.prices,
+            name: item?.product?.name,
+            price: item?.product?.prices,
             count: 1,
           }
         } else {
@@ -460,10 +460,10 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
   }, [selectedBusiness])
   return (
     <>
-      <div key={userOrders.user._id} onClick={() => setSelectedUser(userOrders.user)}>
+      <div key={userOrders?.user?._id} onClick={() => setSelectedUser(userOrders?.user)}>
         <div className="userInfoCard">
-          <h3>{userOrders.user.full_name}</h3>
-          <span className="badge bg-primary">{userOrders.orders.length}</span>
+          <h3>{userOrders?.user?.full_name || 'No Name'}</h3>
+          <span className="badge bg-primary">{userOrders?.orders?.length}</span>
         </div>
       </div>
       {/* ----------------------------------------------------------------------------------------------- */}
@@ -495,14 +495,14 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
                   {Object.values(groupedOrdersByBusiness).map((businessOrders) => (
                     <div
                       className={`business-name-tab ${
-                        selectedBusiness?.business._id === businessOrders?.business._id
+                        selectedBusiness?.business?._id === businessOrders?.business?._id
                           ? ' selected'
                           : ''
                       }`}
-                      key={businessOrders.business._id}
+                      key={businessOrders?.business._id}
                       onClick={() => setSelectedBusiness(businessOrders)}
                     >
-                      {businessOrders.business.business_name} ({businessOrders.orders.length})
+                      {businessOrders?.business?.business_name} ({businessOrders?.orders?.length})
                     </div>
                   ))}
                   {selectedBusiness && (
@@ -512,10 +512,10 @@ function UserAnalysisDropdownComponent({ userOrders, groupOrderByUser }) {
                         groupSelectedBusinessOrderedFood,
                       )}
                       <hr />
-                      <b>{selectedBusiness.business.business_name}</b>
-                      <p>Total Orders: {selectedBusiness.orders.length}</p>
-                      <p>Total Amount Spent: {selectedBusiness.totalAmount}</p>
-                      <p>Order Days: {selectedBusiness.orderDays.join(', ')}</p>
+                      <b>{selectedBusiness?.business?.business_name}</b>
+                      <p>Total Orders: {selectedBusiness?.orders?.length}</p>
+                      <p>Total Amount Spent: {selectedBusiness?.totalAmount}</p>
+                      <p>Order Days: {selectedBusiness?.orderDays?.join(', ')}</p>
                       <b>Food Ordered</b>
                       {groupSelectedBusinessOrderedFood &&
                         Object.values(groupSelectedBusinessOrderedFood)?.map((orderFood, index) => (

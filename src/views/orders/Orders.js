@@ -833,14 +833,21 @@ function OrderGroupCardComponent({ order, transfer }) {
   return (
     <div className="OrderGroupCardComponent">
       <div className="head">
-        <div className="d-flex gap-3" onClick={() => setShowDropDown(!showDropDown)}>
-          <CAvatar
+        <div
+          className="d-flex gap-3"
+          onClick={() => {
+            setShowDropDown(!showDropDown)
+
+            // console.log({ order })
+          }}
+        >
+          {/* <CAvatar
             size="md"
             // src={item?.user?.user_avatar}
             src="https://via.placeholder.com/600x400?text=Image"
             status={'success'}
             className="d-none d-md-block"
-          />
+          /> */}
           <div className="user-name">
             {order?.user?.full_name}
             <br />
@@ -936,12 +943,12 @@ function OrderGroupCardComponent({ order, transfer }) {
         <div className="business-head flex-wrap">
           <div className="d-flex gap-3">
             {/* <div className="user-name"> */}
-            <img
+            {/* <img
               src={
                 order?.business?.business_cover_image ||
                 'https://via.placeholder.com/600x400?text=Image'
               }
-            />
+            /> */}
             <div>
               {order?.business?.business_name}
               <br />
@@ -982,7 +989,7 @@ function OrderGroupCardComponent({ order, transfer }) {
             return (
               <div className="item m-1" key={i}>
                 <div className="d-flex align-items-center justify-content-center gap-2 ">
-                  <img src={item?.product?.image_url} />
+                  {/* <img src={item?.product?.image_url} /> */}
                   {item?.name || item?.product?.name} x{item?.count}
                 </div>
                 {item?.prices || item?.product?.name * item?.count}
@@ -999,7 +1006,7 @@ function OrderGroupCardComponent({ order, transfer }) {
                   return (
                     <div className="item m-1" key={i}>
                       <div className="d-flex align-items-center justify-content-center gap-2 ">
-                        <img src={item?.product?.image_url} />
+                        {/* <img src={item?.product?.image_url} /> */}
                         {item?.name} x{item?.count}
                       </div>
                       {item?.prices * item?.count}

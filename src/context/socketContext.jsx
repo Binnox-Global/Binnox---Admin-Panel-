@@ -14,6 +14,7 @@ function SocketProvider({ children }) {
     loading: true,
     data: [],
   })
+  const [playSoundNotification, setPlaySoundNotification] = useState(true)
   const [socket, setSocket] = useState(null)
   const [cookies, removeCookie] = useCookies()
 
@@ -25,6 +26,22 @@ function SocketProvider({ children }) {
       rejected: [],
     },
   })
+  useEffect(() => {
+    // console.log({ playSoundNotification })
+    localStorage.getItem('binnox-admin-playSoundNotification')
+      ? setPlaySoundNotification(
+          JSON.parse(localStorage.getItem('binnox-admin-playSoundNotification')),
+        )
+      : setPlaySoundNotification(true)
+  }, [])
+
+  function toggleSoundFunction() {
+    setPlaySoundNotification((prev) => !prev)
+    localStorage.setItem(
+      'binnox-admin-playSoundNotification',
+      JSON.stringify(!playSoundNotification),
+    )
+  }
 
   const socketUrl = 'https://binnox-socket-c7299d8dfb25.herokuapp.com'
   // const socketUrl = 'http://localhost:1000'
@@ -45,12 +62,16 @@ function SocketProvider({ children }) {
     // audio.addEventListener('error', (e) => {
     //   console.error('Error loading audio:', e)
     // })
-
-    // audio.muted = true // Mute the audio initially
-    audio.play().catch((error) => {
-      console.error('Error playing audio:', error)
-    })
-
+    if (playSoundNotification) {
+      console.log('Play sound is on', { playSoundNotification })
+      // audio.muted = true // Mute the audio initially
+      audio.play().catch((error) => {
+        console.error('Error playing audio:', error)
+      })
+    } else {
+      console.log('Play sound is off', { playSoundNotification })
+      audio.pause()
+    }
     setIsNotifying(false)
 
     if (permission === 'granted') {
@@ -139,18 +160,18 @@ function SocketProvider({ children }) {
   useEffect(() => {
     if (!socket) return
     socket.on('admin_orderWithTransfer', (data) => {
-      console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
-      console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
+      // console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
+      // console.log('admin_orderWithTransfer', { pendingTransfer: data.pendingTransfer })
 
-      console.log('admin_orderWithTransfer populate state')
-      console.log('admin_orderWithTransfer populate state')
+      // console.log('admin_orderWithTransfer populate state')
+      // console.log('admin_orderWithTransfer populate state')
       setOrderGroupTransferList((prevOrderGroupTransferList) => ({
         ...prevOrderGroupTransferList,
         loading: false,
         data: {
-          new: data.pendingTransfer.reverse(),
-          accepted: data.approvedTransfer.reverse(),
-          rejected: data.rejectedTransfer.reverse(),
+          new: data.pendingTransfer,
+          accepted: data.approvedTransfer,
+          rejected: data.rejectedTransfer,
         },
       }))
       console.log('admin_orderWithTransfer populate state end')
@@ -199,6 +220,9 @@ function SocketProvider({ children }) {
       value={{
         socket,
         orderGroupTransferList,
+        playSoundNotification,
+        setPlaySoundNotification,
+        toggleSoundFunction,
       }}
     >
       {children}

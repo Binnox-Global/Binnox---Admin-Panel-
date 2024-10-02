@@ -3,9 +3,12 @@ import { useLocation } from 'react-router-dom'
 
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 import { AdminContext } from 'src/context/adminContext'
+import { SocketContext } from 'src/context/socketContext'
+import './ToggleButton.scss'
 
 const AppBreadcrumb = () => {
   const { refreshDashboardFunction } = useContext(AdminContext)
+  const { playSoundNotification, toggleSoundFunction } = useContext(SocketContext)
   const currentLocation = useLocation().pathname
   // console.log('currentLocation', currentLocation)
 
@@ -59,9 +62,49 @@ const AppBreadcrumb = () => {
           )
         })}
       </CBreadcrumb>
-      <button className=" btn btn-primary" onClick={() => refreshDashboardFunction()}>
+      {/* <button className=" btn btn-primary" onClick={() => refreshDashboardFunction()}>
         ReLoad
-      </button>
+
+      </button> */}
+      <div>
+        <div>{playSoundNotification ? 'Off' : 'On'} Sound</div>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={playSoundNotification ? true : false}
+            onChange={(e) => {
+              toggleSoundFunction()
+              // console.log(e)
+            }}
+          />
+          <span className="slider round"></span>
+        </label>
+        {/* /* From Uiverse.io by Javierrocadev * /
+        <div className="checkbox-wrapper-35">
+          <input
+            value="private"
+            name="switch"
+            id="switch"
+            type="checkbox"
+            className="switch"
+            onChange={(e) => {
+              setPlaySoundNotification((prev) => !prev)
+              console.log({ switch: e.target })
+            }}
+          />
+          <label htmlFor="switch">
+            <span className="switch-x-text">This is </span>
+            <span className="switch-x-toggletext">
+              <span className="switch-x-unchecked">
+                <span className="switch-x-hiddenlabel">Unchecked: </span>Off
+              </span>
+              <span className="switch-x-checked">
+                <span className="switch-x-hiddenlabel">Checked: </span>On
+              </span>
+            </span>
+          </label>
+        </div> */}
+      </div>
     </>
   )
 }

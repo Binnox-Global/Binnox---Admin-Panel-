@@ -120,6 +120,9 @@ function OrderTabComponent({ orderGroupList }) {
     //   data: [],
     // },
   ])
+  let testBusinessArray = ['645c0931e596014f28530cf8', '66e6cb167ff7ebfeb467a7ff']
+
+  const [showTestOrder, setShowTestOrder] = useState(false)
   useEffect(() => {
     // console.log('first', { data: orderGroupList.data })
     const pendingOrders = []
@@ -128,22 +131,28 @@ function OrderTabComponent({ orderGroupList }) {
     const deliveredOrders = []
     const completedOrders = []
     orderGroupList?.data?.map((order, i) => {
-      if (order.statues === 'Pending') {
-        pendingOrders.push(order)
+      if (!showTestOrder && testBusinessArray.includes(order?.business?._id)) {
+        // Do nothing if showTestOrder is false and the business is in the testBusinessArray
+        // console.log(order?.business)
+      } else {
+        if (order.statues === 'Pending') {
+          pendingOrders.push(order)
+        }
+        if (order.statues === 'Processing') {
+          // console.log(order)
+          processingOrders.push(order)
+        }
+        if (order.statues === 'Assigned') {
+          assignedOrders.push(order)
+        }
+        if (order.statues === 'Delivered' || order.statues === 'Completed') {
+          deliveredOrders.push(order)
+        }
+        // }
+        if (order.statues === 'Completed') {
+          completedOrders.push(order)
+        }
       }
-      if (order.statues === 'Processing') {
-        // console.log(order)
-        processingOrders.push(order)
-      }
-      if (order.statues === 'Assigned') {
-        assignedOrders.push(order)
-      }
-      if (order.statues === 'Delivered' || order.statues === 'Completed') {
-        deliveredOrders.push(order)
-      }
-      // if (order.statues === 'Completed') {
-      //   completedOrders.push(order)
-      // }
     })
     // Update the state with the new counts
     setTabHeader((prevTabHeader) => [
@@ -153,7 +162,29 @@ function OrderTabComponent({ orderGroupList }) {
       { ...prevTabHeader[3], count: deliveredOrders.length, data: deliveredOrders },
       // { ...prevTabHeader[4], count: completedOrders.length, data: completedOrders },
     ])
-  }, [orderGroupList])
+  }, [orderGroupList, showTestOrder])
+
+  const [countPerPage, setCountPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPage, setTotalPage] = useState(0)
+
+  useEffect(() => {
+    setCurrentPage(0)
+    let maxPageLength = tabHeader[activeKey].data.length
+    setTotalPage(Math.ceil(maxPageLength / countPerPage))
+  }, [countPerPage, orderGroupList, activeKey, tabHeader])
+
+  const nextPageFunction = () => {
+    if (currentPage < totalPage - 1) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  const prevPageFunction = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
 
   return (
     <>
@@ -194,13 +225,48 @@ function OrderTabComponent({ orderGroupList }) {
                     <>
                       {/* TODO: this will be a filter for business */}
 
-                      {tab.data?.map((order, i) => {
-                        return <OrderGroupCardComponent key={i} order={order} />
-                      })}
+                      {tab.data
+                        ?.slice(currentPage * countPerPage, (currentPage + 1) * countPerPage)
+                        .map((order, i) => {
+                          return <OrderGroupCardComponent key={i} order={order} />
+                        })}
                     </>
                   )}
                 </>
               )}
+              <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div className="mt-3">
+                  <select
+                    name="count"
+                    id="count"
+                    className="mx-3 me-2 my-auto border rounded p-0.5"
+                    onChange={(e) => setCountPerPage(() => e.target.value)}
+                  >
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                  </select>
+                  <button onClick={prevPageFunction} className="btn btn-sm btn-primary">
+                    Prev
+                  </button>{' '}
+                  <span className="mx-3 ">
+                    {currentPage + 1} of {totalPage}
+                  </span>
+                  <button onClick={nextPageFunction} className="btn btn-sm btn-primary">
+                    Next
+                  </button>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="checkbox"
+                      className="me-2"
+                      onChange={() => setShowTestOrder((prev) => !prev)}
+                    />
+                    {!showTestOrder ? 'Include' : 'Remove'} Test Orders
+                  </label>
+                </div>
+              </div>
             </CTabPane>
           )
         })}
@@ -328,10 +394,44 @@ export function NewOrdersGroupTransfer() {
     React.useContext(SocketContext)
   const [newOrders, setNewOrders] = useState([])
 
+  let testBusinessArray = ['645c0931e596014f28530cf8', '66e6cb167ff7ebfeb467a7ff']
+  const [showTestOrder, setShowTestOrder] = useState(false)
+
   useEffect(() => {
-    console.log({ NewOrder: orderGroupTransferList?.data?.new })
-    setNewOrders(orderGroupTransferList?.data?.new)
-  }, [orderGroupTransferList])
+    let newTransferOrder = []
+    orderGroupTransferList?.data?.new?.map((order, i) => {
+      if (!showTestOrder && testBusinessArray.includes(order?.business?._id)) {
+        // Do nothing if showTestOrder is false and the business is in the testBusinessArray
+        // console.log(order?.business)
+      } else {
+        newTransferOrder.push(order)
+      }
+    })
+    // console.log({ NewOrder: orderGroupTransferList?.data?.new })
+    setNewOrders(newTransferOrder)
+  }, [orderGroupTransferList, showTestOrder])
+
+  const [countPerPage, setCountPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPage, setTotalPage] = useState(0)
+
+  useEffect(() => {
+    setCurrentPage(0)
+    let maxPageLength = newOrders.length
+    setTotalPage(Math.ceil(maxPageLength / countPerPage))
+  }, [countPerPage, newOrders])
+
+  const nextPageFunction = () => {
+    if (currentPage < totalPage - 1) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  const prevPageFunction = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
 
   return (
     <>
@@ -363,6 +463,39 @@ export function NewOrdersGroupTransfer() {
                   )}
                 </>
               )}
+              <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div className="mt-3">
+                  <select
+                    name="count"
+                    id="count"
+                    className="mx-3 me-2 my-auto border rounded p-0.5"
+                    onChange={(e) => setCountPerPage(() => e.target.value)}
+                  >
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                  </select>
+                  <button onClick={prevPageFunction} className="btn btn-sm btn-primary">
+                    Prev
+                  </button>{' '}
+                  <span className="mx-3 ">
+                    {currentPage + 1} of {totalPage}
+                  </span>
+                  <button onClick={nextPageFunction} className="btn btn-sm btn-primary">
+                    Next
+                  </button>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="checkbox"
+                      className="me-2"
+                      onChange={() => setShowTestOrder((prev) => !prev)}
+                    />
+                    {!showTestOrder ? 'Include' : 'Remove'} Test Orders
+                  </label>
+                </div>
+              </div>
             </CCardBody>
           </CCard>
         </CCol>
@@ -838,7 +971,7 @@ function OrderGroupCardComponent({ order, transfer }) {
           onClick={() => {
             setShowDropDown(!showDropDown)
 
-            // console.log({ order })
+            console.log({ order })
           }}
         >
           {/* <CAvatar
@@ -1126,7 +1259,7 @@ function OrderGroupTransferCardComponent({ order }) {
       },
       (callback) => {
         console.log('Received data:', { data: callback })
-        if (callback.ok === true) {
+        if (callback.okay === true) {
           setRequestLoading(false)
           toast.success(`Order ${status}ed successfully`)
         } else {
@@ -1143,13 +1276,13 @@ function OrderGroupTransferCardComponent({ order }) {
     <div className="OrderGroupCardComponent">
       <div className="head">
         <div className="d-flex gap-3" onClick={() => setShowDropDown(!showDropDown)}>
-          <CAvatar
+          {/* <CAvatar
             size="md"
             // src={item?.user?.user_avatar}
             src="https://via.placeholder.com/600x400?text=Image"
             status={'success'}
             className="d-none d-md-block"
-          />
+          /> */}
           <div className="user-name">
             {order?.user?.full_name}
             <br />
@@ -1210,12 +1343,12 @@ function OrderGroupTransferCardComponent({ order }) {
         <div className="business-head flex-wrap">
           <div className="d-flex gap-3">
             {/* <div className="user-name"> */}
-            <img
+            {/* <img
               src={
                 order?.business?.business_cover_image ||
                 'https://via.placeholder.com/600x400?text=Image'
               }
-            />
+            /> */}
             <div>
               {order?.business?.business_name}
               <br />
@@ -1256,7 +1389,7 @@ function OrderGroupTransferCardComponent({ order }) {
             return (
               <div className="item m-1" key={i}>
                 <div className="d-flex align-items-center justify-content-center gap-2 ">
-                  <img src={item?.product?.image_url} />
+                  {/* <img src={item?.product?.image_url} /> */}
                   {item?.product?.name} x{item?.count}
                 </div>
                 {item?.product?.prices * item?.count}
@@ -1272,7 +1405,7 @@ function OrderGroupTransferCardComponent({ order }) {
                   return (
                     <div className="item m-1" key={i}>
                       <div className="d-flex align-items-center justify-content-center gap-2 ">
-                        <img src={item?.product?.image_url} />
+                        {/* <img src={item?.product?.image_url} /> */}
                         {item?.name} x{item?.count}
                       </div>
                       {item?.prices * item?.count}

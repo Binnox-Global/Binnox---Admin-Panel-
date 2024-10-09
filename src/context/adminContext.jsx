@@ -729,7 +729,7 @@ account_type=${account_type}`,
 
           let active = []
           let others = []
-          res.data.update.forEach((business) => {
+          res.data.update.reverse().forEach((business) => {
             if (
               business?.business_active &&
               business.business_verified &&

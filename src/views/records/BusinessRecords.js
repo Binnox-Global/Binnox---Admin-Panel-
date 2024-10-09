@@ -48,9 +48,9 @@ export function ActiveBusinessRecords({ show_max }) {
   const filterBusinessList = () => {
     const lowerCaseQuery = searchQuery.toLowerCase()
     const newFilteredData = businessList?.active?.filter((item) => {
-      const fullName = item.business_name.toLowerCase()
-      const email = item.business_email.toLowerCase()
-      const phoneNumber = `0${item.business_number?.toString()}`
+      const fullName = item?.business_name.toLowerCase()
+      const email = item?.business_email.toLowerCase()
+      const phoneNumber = `0${item?.business_number?.toString()}`
       return (
         fullName.includes(lowerCaseQuery) ||
         email.includes(lowerCaseQuery) ||
@@ -76,8 +76,8 @@ export function ActiveBusinessRecords({ show_max }) {
                 </>
               ) : (
                 <div className="ms-auto badge bg-primary d-block py-2">
-                  {searchQuery !== '' ? <>{filteredData.length} / </> : null}
-                  {businessList.active.length}
+                  {searchQuery !== '' ? <>{filteredData?.length} / </> : null}
+                  {businessList?.active?.length}
                 </div>
               )}
             </div>
@@ -129,7 +129,7 @@ export function ActiveBusinessRecords({ show_max }) {
                 ) : (
                   <>
                     {searchQuery
-                      ? filteredData.map((item, index) => {
+                      ? filteredData?.map((item, index) => {
                           return (
                             <CTableRow v-for="item in tableItems" key={index}>
                               <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
@@ -324,7 +324,7 @@ export function ActiveBusinessRecords({ show_max }) {
                             </CTableRow>
                           )
                         })
-                      : businessList?.active.map((item, index) => {
+                      : businessList?.active?.map((item, index) => {
                           return (
                             <CTableRow v-for="item in tableItems" key={index}>
                               <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
@@ -566,8 +566,8 @@ export function OtherBusinessRecords() {
           <CCardHeader className="d-flex">
             Other Businesses{' '}
             <div className="ms-auto badge bg-primary d-block py-2">
-              {searchQuery !== '' ? <>{filteredData.length} / </> : null}
-              {businessList.others.length}
+              {searchQuery !== '' ? <>{filteredData?.length} / </> : null}
+              {businessList?.others?.length}
             </div>
           </CCardHeader>
           <CCardBody>
@@ -607,7 +607,7 @@ export function OtherBusinessRecords() {
                 ) : (
                   <>
                     {searchQuery
-                      ? filteredData.map((item, index) => {
+                      ? filteredData?.map((item, index) => {
                           return (
                             <CTableRow v-for="item in tableItems" key={index}>
                               <CTableDataCell className="text-center">{index + 1}</CTableDataCell>
@@ -761,7 +761,7 @@ export function OtherBusinessRecords() {
                             </CTableRow>
                           )
                         })
-                      : businessList?.others.map((item, index) => {
+                      : businessList?.others?.map((item, index) => {
                           return (
                             <CTableRow v-for="item in tableItems" key={index}>
                               <CTableDataCell className="text-center">{index + 1}</CTableDataCell>

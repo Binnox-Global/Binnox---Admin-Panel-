@@ -707,8 +707,7 @@ account_type=${account_type}`,
   async function verifyAccountFunction(account_type, account_id) {
     axios
       .put(
-        `${apiUrl}/admin/verify?account_id=${account_id}&
-account_type=${account_type}`,
+        `${apiUrl}/admin/verify?account_id=${account_id}&account_type=${account_type}`,
         {},
         {
           headers: {
@@ -726,9 +725,26 @@ account_type=${account_type}`,
           })
         }
         if (account_type === 'business') {
+          // console.log({ first: res.data.update })
+
+          let active = []
+          let others = []
+          res.data.update.forEach((business) => {
+            if (
+              business?.business_active &&
+              business.business_verified &&
+              business.business_online
+            ) {
+              active.push(business)
+            } else {
+              others.push(business)
+            }
+          })
+
           return setBusinessList({
             loading: false,
-            data: res.data.update.reverse(),
+            active,
+            others,
           })
         }
 
